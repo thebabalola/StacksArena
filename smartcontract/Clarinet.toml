@@ -1,18 +1,23 @@
 [project]
-name = 'stacks-guard'
-description = 'Risk Manager on Stacks'
+name = 'stacks-arena'
+description = 'Bitcoin-Native Gaming Platform — Lottery, Tournaments & Game Assets on Stacks L2'
 authors = []
 telemetry = true
 cache_dir = './.cache'
 requirements = []
 
-[contracts.risk-manager]
-path = 'contracts/risk-manager.clar'
+[contracts.lottery-pool]
+path = 'contracts/lottery-pool.clar'
 clarity_version = 4
 epoch = '3.3'
 
-[contracts.pausable-trait]
-path = 'contracts/pausable-trait.clar'
+[contracts.tournament-manager]
+path = 'contracts/tournament-manager.clar'
+clarity_version = 4
+epoch = '3.3'
+
+[contracts.game-assets]
+path = 'contracts/game-assets.clar'
 clarity_version = 4
 epoch = '3.3'
 
