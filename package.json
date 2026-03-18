@@ -1,0 +1,7 @@
+{
+  "name": "stacksarena",
+  "version": "1.0.0",
+  "dependencies": {
+    "next": "16.0.8"
+  }
+}
