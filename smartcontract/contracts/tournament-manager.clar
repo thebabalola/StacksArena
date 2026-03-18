@@ -1,5 +1,5 @@
 ;; =============================================
-;; STACKS ARENA — Tournament Manager Contract
+;; STACKS ARENA -- Tournament Manager Contract
 ;; =============================================
 ;; Fully barrier-free tournament system on Bitcoin L2.
 ;; Any wallet can create tournaments, join them, record results, and claim prizes.
@@ -9,7 +9,6 @@
 ;; -----------------------------------------------
 ;; Constants
 ;; -----------------------------------------------
-(define-constant CONTRACT-ADDR (as-contract tx-sender))
 (define-constant ERR-TOURNAMENT-NOT-FOUND (err u200))
 (define-constant ERR-TOURNAMENT-NOT-ACTIVE (err u201))
 (define-constant ERR-TOURNAMENT-FULL (err u202))
@@ -21,12 +20,9 @@
 (define-constant ERR-NOT-WINNER (err u208))
 (define-constant ERR-PRIZE-CLAIMED (err u209))
 (define-constant ERR-INVALID-ENTRY-FEE (err u210))
-(define-constant ERR-TOURNAMENT-STARTED (err u211))
 (define-constant ERR-MIN-PLAYERS-NOT-MET (err u212))
-(define-constant ERR-TRANSFER-FAILED (err u213))
 (define-constant ERR-NOT-CREATOR (err u214))
 (define-constant ERR-INVALID-DURATION (err u215))
-(define-constant ERR-SELF-JOIN (err u216))
 
 ;; Status
 (define-constant STATUS-OPEN u0)
@@ -37,6 +33,7 @@
 ;; -----------------------------------------------
 ;; Data Variables
 ;; -----------------------------------------------
+(define-constant CONTRACT-ADDRESS .tournament-manager)
 (define-data-var tournament-counter uint u0)
 (define-data-var total-tournaments-completed uint u0)
 (define-data-var total-prize-pool-distributed uint u0)
@@ -83,10 +80,10 @@
 )
 
 ;; -----------------------------------------------
-;; Public Functions — ALL BARRIER-FREE
+;; Public Functions -- ALL BARRIER-FREE
 ;; -----------------------------------------------
 
-;; Create a tournament — any wallet can call
+;; Create a tournament -- any wallet can call
 ;; entry-fee: in microSTX (even u1 is valid, or u0 for free tournaments)
 (define-public (create-tournament
     (title (string-ascii 64))
@@ -137,7 +134,7 @@
   )
 )
 
-;; Join a tournament — any wallet can call
+;; Join a tournament -- any wallet can call
 ;; Pays entry fee (if any) and registers as participant
 (define-public (join-tournament (tournament-id uint))
   (let (
@@ -152,7 +149,7 @@
 
     ;; Pay entry fee if > 0
     (if (> (get entry-fee tournament) u0)
-      (try! (stx-transfer? (get entry-fee tournament) tx-sender CONTRACT-ADDR))
+      (try! (stx-transfer? (get entry-fee tournament) tx-sender CONTRACT-ADDRESS))
       true
     )
 
@@ -186,7 +183,7 @@
   )
 )
 
-;; Submit a score — any joined player can submit their score
+;; Submit a score -- any joined player can submit their score
 (define-public (submit-score (tournament-id uint) (score uint))
   (let (
     (tournament (unwrap! (map-get? tournaments tournament-id) ERR-TOURNAMENT-NOT-FOUND))
@@ -206,7 +203,7 @@
   )
 )
 
-;; Finalize tournament and declare winner — any wallet can trigger after end-block
+;; Finalize tournament and declare winner -- any wallet can trigger after end-block
 ;; Winner gets 70% of prize pool, runner-up gets 30%
 (define-public (finalize-tournament (tournament-id uint) (winner principal) (runner-up principal))
   (let (
@@ -238,7 +235,7 @@
   )
 )
 
-;; Claim winner prize (70% of pool) — only winner can call
+;; Claim winner prize (70% of pool) -- only winner can call
 (define-public (claim-winner-prize (tournament-id uint))
   (let (
     (tournament (unwrap! (map-get? tournaments tournament-id) ERR-TOURNAMENT-NOT-FOUND))
@@ -251,7 +248,7 @@
     (asserts! (> winner-share u0) (err u230))
 
     (map-set tournaments tournament-id (merge tournament { prize-claimed: true }))
-    (try! (as-contract (stx-transfer? winner-share tx-sender (unwrap! (get winner tournament) ERR-NOT-WINNER))))
+    (try! (stx-transfer? winner-share CONTRACT-ADDRESS (unwrap! (get winner tournament) ERR-NOT-WINNER)))
 
     ;; Update winner stats
     (let ((stats (default-to { tournaments-joined: u0, tournaments-won: u0, total-earnings: u0 }
@@ -273,7 +270,7 @@
   )
 )
 
-;; Claim runner-up prize (30% of pool) — only runner-up can call
+;; Claim runner-up prize (30% of pool) -- only runner-up can call
 (define-public (claim-runner-up-prize (tournament-id uint))
   (let (
     (tournament (unwrap! (map-get? tournaments tournament-id) ERR-TOURNAMENT-NOT-FOUND))
@@ -286,7 +283,7 @@
     (asserts! (> runner-up-share u0) (err u231))
 
     (map-set tournaments tournament-id (merge tournament { runner-up-claimed: true }))
-    (try! (as-contract (stx-transfer? runner-up-share tx-sender (unwrap! (get runner-up tournament) ERR-NOT-WINNER))))
+    (try! (stx-transfer? runner-up-share CONTRACT-ADDRESS (unwrap! (get runner-up tournament) ERR-NOT-WINNER)))
 
     ;; Update runner-up stats
     (let ((stats (default-to { tournaments-joined: u0, tournaments-won: u0, total-earnings: u0 }
@@ -307,7 +304,7 @@
   )
 )
 
-;; Cancel tournament — only creator can call, only before finalization
+;; Cancel tournament -- only creator can call, only before finalization
 ;; Refunds are handled per-player via refund-entry-fee
 (define-public (cancel-tournament (tournament-id uint))
   (let (
@@ -326,7 +323,7 @@
   )
 )
 
-;; Refund entry fee from cancelled tournament — any affected player can call
+;; Refund entry fee from cancelled tournament -- any affected player can call
 (define-public (refund-entry-fee (tournament-id uint))
   (let (
     (tournament (unwrap! (map-get? tournaments tournament-id) ERR-TOURNAMENT-NOT-FOUND))
@@ -338,7 +335,7 @@
 
     ;; Remove player to prevent double refund
     (map-set tournament-players { tournament-id: tournament-id, player: tx-sender } false)
-    (try! (as-contract (stx-transfer? (get entry-fee tournament) tx-sender tx-sender)))
+    (try! (stx-transfer? (get entry-fee tournament) CONTRACT-ADDRESS tx-sender))
 
     (print {
       event: "entry-fee-refunded",
@@ -409,3 +406,5 @@
     ERR-TOURNAMENT-NOT-FOUND
   )
 )
+
+;; Initialize contract principal

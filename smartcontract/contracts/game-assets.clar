@@ -1,5 +1,5 @@
 ;; =============================================
-;; STACKS ARENA — Game Assets NFT Contract
+;; STACKS ARENA -- Game Assets NFT Contract
 ;; =============================================
 ;; Fully barrier-free game asset (NFT) system on Bitcoin L2.
 ;; Any wallet can mint assets, transfer them, level up, and fuse assets.
@@ -18,7 +18,6 @@
 (define-constant ERR-MAX-LEVEL (err u306))
 (define-constant ERR-SAME-ASSET (err u307))
 (define-constant ERR-DIFFERENT-TYPE (err u308))
-(define-constant ERR-TRANSFER-FAILED (err u309))
 
 ;; Rarity tiers
 (define-constant RARITY-COMMON u1)
@@ -65,10 +64,10 @@
 (define-map wallet-assets { owner: principal, index: uint } uint)
 
 ;; -----------------------------------------------
-;; Public Functions — ALL BARRIER-FREE
+;; Public Functions -- ALL BARRIER-FREE
 ;; -----------------------------------------------
 
-;; Mint a new game asset — any wallet can call, completely free
+;; Mint a new game asset -- any wallet can call, completely free
 (define-public (mint-asset
     (asset-type (string-ascii 32))
     (name (string-ascii 64))
@@ -119,11 +118,10 @@
   )
 )
 
-;; Transfer an asset to another wallet — owner only
+;; Transfer an asset to another wallet -- owner only
 (define-public (transfer-asset (asset-id uint) (recipient principal))
   (let (
     (asset (unwrap! (map-get? assets asset-id) ERR-ASSET-NOT-FOUND))
-    (sender-count (default-to u0 (map-get? wallet-asset-count tx-sender)))
     (recipient-count (default-to u0 (map-get? wallet-asset-count recipient)))
   )
     (asserts! (is-eq tx-sender (get owner asset)) ERR-NOT-OWNER)
@@ -147,7 +145,7 @@
   )
 )
 
-;; Add XP to an asset — any wallet can grant XP to their own asset
+;; Add XP to an asset -- any wallet can grant XP to their own asset
 (define-public (add-xp (asset-id uint) (xp-amount uint))
   (let (
     (asset (unwrap! (map-get? assets asset-id) ERR-ASSET-NOT-FOUND))
@@ -168,7 +166,7 @@
   )
 )
 
-;; Level up an asset — spends accumulated XP
+;; Level up an asset -- spends accumulated XP
 (define-public (level-up (asset-id uint))
   (let (
     (asset (unwrap! (map-get? assets asset-id) ERR-ASSET-NOT-FOUND))
@@ -200,7 +198,7 @@
   )
 )
 
-;; Fuse two assets of the same type — creates a stronger asset, burns the originals
+;; Fuse two assets of the same type -- creates a stronger asset, burns the originals
 (define-public (fuse-assets (asset-id-1 uint) (asset-id-2 uint))
   (let (
     (asset1 (unwrap! (map-get? assets asset-id-1) ERR-ASSET-NOT-FOUND))
@@ -219,7 +217,7 @@
     (asserts! (not (get locked asset1)) ERR-ASSET-LOCKED)
     (asserts! (not (get locked asset2)) ERR-ASSET-LOCKED)
 
-    ;; Lock the source assets (burn equivalent — they can't be used or transferred anymore)
+    ;; Lock the source assets (burn equivalent -- they can't be used or transferred anymore)
     (map-set assets asset-id-1 (merge asset1 { locked: true }))
     (map-set assets asset-id-2 (merge asset2 { locked: true }))
 

@@ -1,5 +1,5 @@
 ;; =============================================
-;; STACKS ARENA — Lottery Pool Contract
+;; STACKS ARENA -- Lottery Pool Contract
 ;; =============================================
 ;; A fully barrier-free lottery system on Bitcoin L2.
 ;; Any wallet can create rounds, buy tickets, trigger draws, and claim prizes.
@@ -9,7 +9,6 @@
 ;; -----------------------------------------------
 ;; Constants
 ;; -----------------------------------------------
-(define-constant CONTRACT-ADDR (as-contract tx-sender))
 (define-constant ERR-ROUND-NOT-FOUND (err u100))
 (define-constant ERR-ROUND-NOT-ACTIVE (err u101))
 (define-constant ERR-ROUND-STILL-ACTIVE (err u102))
@@ -21,12 +20,11 @@
 (define-constant ERR-PRIZE-ALREADY-CLAIMED (err u108))
 (define-constant ERR-WINNER-NOT-DRAWN (err u109))
 (define-constant ERR-ZERO-COUNT (err u110))
-(define-constant ERR-TRANSFER-FAILED (err u111))
-(define-constant ERR-ALREADY-ENTERED (err u112))
 
 ;; -----------------------------------------------
 ;; Data Variables
 ;; -----------------------------------------------
+(define-constant CONTRACT-ADDRESS .lottery-pool)
 (define-data-var round-counter uint u0)
 (define-data-var global-ticket-counter uint u0)
 (define-data-var total-prize-distributed uint u0)
@@ -61,10 +59,10 @@
 (define-map round-has-entered { round-id: uint, buyer: principal } bool)
 
 ;; -----------------------------------------------
-;; Public Functions — ALL BARRIER-FREE
+;; Public Functions -- ALL BARRIER-FREE
 ;; -----------------------------------------------
 
-;; Create a new lottery round — any wallet can call
+;; Create a new lottery round -- any wallet can call
 ;; ticket-price: price per ticket in microSTX (even u1 is valid)
 ;; duration-blocks: how many blocks the round lasts
 (define-public (create-round (ticket-price uint) (duration-blocks uint))
@@ -101,7 +99,7 @@
   )
 )
 
-;; Buy tickets for a round — any wallet can call
+;; Buy tickets for a round -- any wallet can call
 ;; No maximum limit. Cost = ticket-price * count
 (define-public (buy-tickets (round-id uint) (count uint))
   (let (
@@ -116,7 +114,7 @@
     (asserts! (> count u0) ERR-ZERO-COUNT)
 
     ;; Transfer STX from buyer to contract
-    (try! (stx-transfer? total-cost tx-sender CONTRACT-ADDR))
+    (try! (stx-transfer? total-cost tx-sender CONTRACT-ADDRESS))
 
     ;; If first time entering this round, add to participant index
     (if (not already-entered)
@@ -151,7 +149,7 @@
   )
 )
 
-;; Draw a winner after the round ends — any wallet can trigger
+;; Draw a winner after the round ends -- any wallet can trigger
 ;; Uses block data for pseudo-randomness to select from participant pool
 (define-public (draw-winner (round-id uint))
   (let (
@@ -189,7 +187,7 @@
   )
 )
 
-;; Claim prize — only the winner can call
+;; Claim prize -- only the winner can call
 (define-public (claim-prize (round-id uint))
   (let (
     (round (unwrap! (map-get? rounds round-id) ERR-ROUND-NOT-FOUND))
@@ -200,7 +198,7 @@
     (asserts! (not (get claimed round)) ERR-PRIZE-ALREADY-CLAIMED)
 
     (map-set rounds round-id (merge round { claimed: true }))
-    (try! (as-contract (stx-transfer? prize tx-sender (unwrap! (get winner round) ERR-NOT-WINNER))))
+    (try! (stx-transfer? prize CONTRACT-ADDRESS (unwrap! (get winner round) ERR-NOT-WINNER)))
 
     (var-set total-prize-distributed (+ (var-get total-prize-distributed) prize))
     (print {
@@ -261,3 +259,5 @@
     ERR-ROUND-NOT-FOUND
   )
 )
+
+;; Initialize contract principal
