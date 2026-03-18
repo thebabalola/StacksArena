@@ -8,7 +8,7 @@ This document tracks the development of the Stacks Arena gaming platform.
 
 ### Issue #1: Lottery Pool Contract
 **Status:** COMPLETED
-**Description:** Implement barrier-free lottery system with participant tracking and pseudo-random draws.
+**Description:** Implement  lottery system with participant tracking and pseudo-random draws.
 - **Tasks:**
   - [x] Implement `create-round` with configurable ticket price and duration
   - [x] Implement `buy-tickets` with participant indexing
@@ -66,7 +66,7 @@ This document tracks the development of the Stacks Arena gaming platform.
 ### Issue #6: Testnet Deployment
 **Status:** PENDING
 - [ ] Deploy all 3 contracts to Stacks testnet
-- [ ] Verify barrier-free access from external wallets
+- [ ] Verify  access from external wallets
 - [ ] Run end-to-end lottery round test
 
 ### Issue #7: Mainnet Deployment
@@ -79,6 +79,6 @@ This document tracks the development of the Stacks Arena gaming platform.
 
 ## Completed Milestones
 - [x] Project scaffold
-- [x] All 3 core contracts written (barrier-free, Clarity 4)
+- [x] All 3 core contracts written (, Clarity 4)
 - [x] Clarinet configuration updated
 - [x] Documentation updated

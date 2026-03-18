@@ -1,6 +1,6 @@
 # Smart Contracts — Stacks Arena
 
-This directory contains the Clarity 4 smart contracts for Stacks Arena, a barrier-free gaming platform on Bitcoin L2.
+This directory contains the Clarity 4 smart contracts for Stacks Arena, a  gaming platform on Bitcoin L2.
 
 ## Contracts
 
@@ -13,7 +13,7 @@ A fully open lottery system. Any wallet can create rounds, buy tickets, trigger 
 - `round-participants` — Indexed participants for fair draw
 - `round-has-entered` — Dedup tracker for participant indexing
 
-**Write functions (all barrier-free):**
+**Write functions (all ):**
 - `create-round(ticket-price, duration-blocks)` — Start a new lottery round
 - `buy-tickets(round-id, count)` — Purchase tickets with STX
 - `draw-winner(round-id)` — Trigger pseudo-random winner selection after round ends
@@ -36,7 +36,7 @@ A complete tournament lifecycle manager. Create, join, compete, finalize, claim 
 - `player-scores` — Score tracking per player per tournament
 - `player-stats` — Global career stats (joins, wins, earnings)
 
-**Write functions (all barrier-free):**
+**Write functions (all ):**
 - `create-tournament(title, description, entry-fee, max-players, min-players, duration-blocks)` — Create a tournament (free or paid)
 - `join-tournament(tournament-id)` — Join and pay entry fee
 - `submit-score(tournament-id, score)` — Record your score
@@ -61,7 +61,7 @@ NFT-style game assets with stats, leveling, and fusion mechanics.
 - `wallet-asset-count` — Asset count per wallet
 - `wallet-assets` — Indexed assets per wallet for enumeration
 
-**Write functions (all barrier-free):**
+**Write functions (all ):**
 - `mint-asset(asset-type, name, power, defense, speed, rarity)` — Free mint, any wallet
 - `transfer-asset(asset-id, recipient)` — Owner transfers to another wallet
 - `add-xp(asset-id, xp-amount)` — Grant XP to your asset

@@ -2,7 +2,7 @@
 
 **Bitcoin-Native Gaming Platform on Stacks L2**
 
-Stacks Arena is a fully barrier-free gaming hub built on Bitcoin via the Stacks blockchain. Three ways to play — lottery pools, skill tournaments, and collectible game assets — all without admin gates, gatekeepers, or minimum financial requirements.
+Stacks Arena is a fully  gaming hub built on Bitcoin via the Stacks blockchain. Three ways to play — lottery pools, skill tournaments, and collectible game assets — all without admin gates, gatekeepers, or minimum financial requirements.
 
 Any wallet can interact with every core function. No whitelists. No approvals. Just connect and play.
 
@@ -59,7 +59,7 @@ clarinet console
 ## Project Structure
 
 ```
-StacksGuard/
+StacksArena/
   smartcontract/
     contracts/
       lottery-pool.clar          # Lottery system
