@@ -9,17 +9,24 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
-            contract-name: scredence-traits-alpha
+            contract-name: StacksArena-lottery-pool
             expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
             cost: 327315
-            path: contracts/scredence-traits-alpha.clar
+            path: contracts/lottery-pool.clar
             anchor-block-only: true
             clarity-version: 4
         - contract-publish:
-            contract-name: scredence-verification-alpha
+            contract-name: StacksArena-tournament-manager
             expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
             cost: 327315
-            path: contracts/scredence-verification-alpha.clar
+            path: contracts/tournament-manager.clar
+            anchor-block-only: true
+            clarity-version: 4
+        - contract-publish:
+            contract-name: StacksArena-game-assets
+            expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+            cost: 327315
+            path: contracts/game-assets.clar
             anchor-block-only: true
             clarity-version: 4
       epoch: "3.3"

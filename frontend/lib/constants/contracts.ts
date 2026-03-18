@@ -1,9 +1,10 @@
-// StacksGuard Contract Addresses
-// Dummy addresses — update these after mainnet deployment
+// StacksArena Contract Addresses
+// Deployer: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+// Update status: awaiting mainnet deployment confirmation
 export const CONTRACTS = {
-  LOTTERY_POOL: "SP1STACKSGUARD000000000000000000000.lottery-pool",
-  TOURNAMENT_MANAGER: "SP1STACKSGUARD000000000000000000000.tournament-manager",
-  GAME_ASSETS: "SP1STACKSGUARD000000000000000000000.game-assets",
+  LOTTERY_POOL: "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.StacksArena-lottery-pool",
+  TOURNAMENT_MANAGER: "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.StacksArena-tournament-manager",
+  GAME_ASSETS: "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.StacksArena-game-assets",
 } as const;
 
 export const STACKS_NETWORK_CONFIG = {
@@ -12,8 +13,8 @@ export const STACKS_NETWORK_CONFIG = {
 } as const;
 
 export const PLATFORM_CONFIG = {
-  name: "StacksGuard",
+  name: "StacksArena",
   tagline: "Bitcoin Gaming Arena",
   version: "1.0.0",
-  deployer: "SP1STACKSGUARD000000000000000000000",
+  deployer: "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2",
 } as const;
