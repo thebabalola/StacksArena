@@ -1,32 +1,31 @@
----
 id: 0
 name: Mainnet deployment
 network: mainnet
-stacks-node: "https://api.hiro.so"
-bitcoin-node: "http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332"
+stacks-node: https://api.hiro.so
+bitcoin-node: http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332
 plan:
   batches:
-    - id: 0
-      transactions:
-        - contract-publish:
-            contract-name: StacksArena-lottery-pool
-            expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-            cost: 327315
-            path: contracts/lottery-pool.clar
-            anchor-block-only: true
-            clarity-version: 4
-        - contract-publish:
-            contract-name: StacksArena-tournament-manager
-            expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-            cost: 327315
-            path: contracts/tournament-manager.clar
-            anchor-block-only: true
-            clarity-version: 4
-        - contract-publish:
-            contract-name: StacksArena-game-assets
-            expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-            cost: 327315
-            path: contracts/game-assets.clar
-            anchor-block-only: true
-            clarity-version: 4
-      epoch: "3.3"
+  - id: 0
+    transactions:
+    - transaction-type: contract-publish
+      contract-name: StacksArena-game-assets
+      expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+      cost: 110710
+      path: contracts/game-assets.clar
+      anchor-block-only: true
+      clarity-version: 4
+    - transaction-type: contract-publish
+      contract-name: StacksArena-lottery-pool
+      expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+      cost: 91560
+      path: contracts/lottery-pool.clar
+      anchor-block-only: true
+      clarity-version: 4
+    - transaction-type: contract-publish
+      contract-name: StacksArena-tournament-manager
+      expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+      cost: 151570
+      path: contracts/tournament-manager.clar
+      anchor-block-only: true
+      clarity-version: 4
+    epoch: '3.3'

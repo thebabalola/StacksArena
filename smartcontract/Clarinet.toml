@@ -6,17 +6,17 @@ telemetry = true
 cache_dir = './.cache'
 requirements = []
 
-[contracts.lottery-pool]
+[contracts.StacksArena-lottery-pool]
 path = 'contracts/lottery-pool.clar'
 clarity_version = 4
 epoch = '3.3'
 
-[contracts.tournament-manager]
+[contracts.StacksArena-tournament-manager]
 path = 'contracts/tournament-manager.clar'
 clarity_version = 4
 epoch = '3.3'
 
-[contracts.game-assets]
+[contracts.StacksArena-game-assets]
 path = 'contracts/game-assets.clar'
 clarity_version = 4
 epoch = '3.3'
