@@ -41,13 +41,18 @@
     start-time: uint,
     end-time: uint,
     winner: (optional principal),
+    winning-ticket: (optional uint),
     drawn: bool,
     claimed: bool,
     tickets-sold: uint,
     active: bool,
-    participant-count: uint
+    participant-count: uint,
+    range-count: uint
   }
 )
+
+;; Track each purchase range: round-id -> range-index -> { owner, start, end }
+(define-map round-ranges { round-id: uint, range-index: uint } { owner: principal, start: uint, end: uint })
 
 ;; Track each buyer's ticket count per round
 (define-map round-tickets { round-id: uint, buyer: principal } uint)
@@ -80,11 +85,13 @@
       start-time: stacks-block-height,
       end-time: end-time,
       winner: none,
+      winning-ticket: none,
       drawn: false,
       claimed: false,
       tickets-sold: u0,
       active: true,
-      participant-count: u0
+      participant-count: u0,
+      range-count: u0
     })
 
     (var-set round-counter round-id)
@@ -116,24 +123,35 @@
     ;; Transfer STX from buyer to contract
     (try! (stx-transfer? total-cost tx-sender CONTRACT-ADDRESS))
 
-    ;; If first time entering this round, add to participant index
-    (if (not already-entered)
-      (begin
-        (map-set round-participants { round-id: round-id, index: current-participant-count } tx-sender)
-        (map-set round-has-entered { round-id: round-id, buyer: tx-sender } true)
-        (map-set round-tickets { round-id: round-id, buyer: tx-sender } count)
-        (map-set rounds round-id (merge round {
-          prize-pool: (+ (get prize-pool round) total-cost),
-          tickets-sold: (+ (get tickets-sold round) count),
-          participant-count: (+ current-participant-count u1)
-        }))
+    ;; Record this purchase range
+    (let (
+      (total-tickets (get tickets-sold round))
+      (range-id (get range-count round))
+    )
+      (map-set round-ranges { round-id: round-id, range-index: range-id }
+        { owner: tx-sender, start: total-tickets, end: (+ total-tickets count) }
       )
-      (begin
-        (map-set round-tickets { round-id: round-id, buyer: tx-sender } (+ existing-tickets count))
-        (map-set rounds round-id (merge round {
-          prize-pool: (+ (get prize-pool round) total-cost),
-          tickets-sold: (+ (get tickets-sold round) count)
-        }))
+      
+      (if (not already-entered)
+        (begin
+          (map-set round-participants { round-id: round-id, index: current-participant-count } tx-sender)
+          (map-set round-has-entered { round-id: round-id, buyer: tx-sender } true)
+          (map-set round-tickets { round-id: round-id, buyer: tx-sender } count)
+          (map-set rounds round-id (merge round {
+            prize-pool: (+ (get prize-pool round) total-cost),
+            tickets-sold: (+ (get tickets-sold round) count),
+            participant-count: (+ current-participant-count u1),
+            range-count: (+ range-id u1)
+          }))
+        )
+        (begin
+          (map-set round-tickets { round-id: round-id, buyer: tx-sender } (+ existing-tickets count))
+          (map-set rounds round-id (merge round {
+            prize-pool: (+ (get prize-pool round) total-cost),
+            tickets-sold: (+ (get tickets-sold round) count),
+            range-count: (+ range-id u1)
+          }))
+        )
       )
     )
 
@@ -149,65 +167,73 @@
   )
 )
 
-;; Draw a winner after the round ends -- any wallet can trigger
-;; Uses block data for pseudo-randomness to select from participant pool
+;; Draw a winning ticket index -- any wallet can trigger
+;; Uses block data for entropy to select a ticket from 0 to total-tickets-sold - 1
 (define-public (draw-winner (round-id uint))
   (let (
     (round (unwrap! (map-get? rounds round-id) ERR-ROUND-NOT-FOUND))
-    (participant-count (get participant-count round))
+    (total-tickets (get tickets-sold round))
   )
     (asserts! (get active round) ERR-ROUND-NOT-ACTIVE)
     (asserts! (>= stacks-block-height (get end-time round)) ERR-ROUND-STILL-ACTIVE)
-    (asserts! (> (get tickets-sold round) u0) ERR-NO-TICKETS-SOLD)
+    (asserts! (> total-tickets u0) ERR-NO-TICKETS-SOLD)
     (asserts! (not (get drawn round)) ERR-WINNER-ALREADY-DRAWN)
 
-    ;; Pseudo-random index using block height and prize pool as entropy
+    ;; Pseudo-random ticket index
     (let (
-      (seed (+ stacks-block-height (get prize-pool round) (get tickets-sold round)))
-      (winner-index (mod seed participant-count))
-      (winner (unwrap! (map-get? round-participants { round-id: round-id, index: winner-index }) ERR-ROUND-NOT-FOUND))
+      (seed (+ stacks-block-height (get prize-pool round) total-tickets))
+      (winning-index (mod seed total-tickets))
     )
       (map-set rounds round-id (merge round {
-        winner: (some winner),
+        winning-ticket: (some winning-index),
         drawn: true,
         active: false
       }))
 
-      (var-set total-rounds-completed (+ (var-get total-rounds-completed) u1))
       (print {
-        event: "winner-drawn",
+        event: "winning-ticket-drawn",
         round-id: round-id,
-        winner: winner,
-        prize: (get prize-pool round),
-        total-tickets: (get tickets-sold round),
-        total-participants: participant-count
+        winning-ticket: winning-index,
+        total-tickets: total-tickets
       })
-      (ok winner)
+      (ok winning-index)
     )
   )
 )
 
-;; Claim prize -- only the winner can call
-(define-public (claim-prize (round-id uint))
+;; Claim being the winner by providing the range index that covers the winning ticket
+(define-public (claim-winner (round-id uint) (range-index uint))
   (let (
     (round (unwrap! (map-get? rounds round-id) ERR-ROUND-NOT-FOUND))
-    (prize (get prize-pool round))
+    (winning-ticket (unwrap! (get winning-ticket round) ERR-WINNER-NOT-DRAWN))
+    (range (unwrap! (map-get? round-ranges { round-id: round-id, range-index: range-index }) ERR-ROUND-NOT-FOUND))
   )
-    (asserts! (get drawn round) ERR-WINNER-NOT-DRAWN)
-    (asserts! (is-eq (get winner round) (some tx-sender)) ERR-NOT-WINNER)
     (asserts! (not (get claimed round)) ERR-PRIZE-ALREADY-CLAIMED)
+    (asserts! (>= winning-ticket (get start range)) ERR-NOT-WINNER)
+    (asserts! (< winning-ticket (get end range)) ERR-NOT-WINNER)
 
-    (map-set rounds round-id (merge round { claimed: true }))
-    (try! (stx-transfer? prize CONTRACT-ADDRESS (unwrap! (get winner round) ERR-NOT-WINNER)))
+    (map-set rounds round-id (merge round {
+      winner: (some (get owner range)),
+      claimed: true
+    }))
 
-    (var-set total-prize-distributed (+ (var-get total-prize-distributed) prize))
-    (print {
-      event: "prize-claimed",
-      round-id: round-id,
-      winner: tx-sender,
-      amount: prize
-    })
-    (ok prize)
+    (let (
+      (prize (get prize-pool round))
+      (winner (get owner range))
+    )
+      (try! (stx-transfer? prize CONTRACT-ADDRESS winner))
+      (var-set total-prize-distributed (+ (var-get total-prize-distributed) prize))
+      (var-set total-rounds-completed (+ (var-get total-rounds-completed) u1))
+
+      (print {
+        event: "prize-claimed",
+        round-id: round-id,
+        winner: winner,
+        amount: prize,
+        winning-ticket: winning-ticket
+      })
+      (ok prize)
+    )
   )
 )
 
@@ -251,6 +277,7 @@
         prize-pool: pool-ascii,
         tickets-sold: tickets-ascii,
         participants: participants-ascii,
+        winning-ticket: (match (get winning-ticket round) v (match (to-ascii? v) s s err "0") "N/A"),
         drawn: (get drawn round),
         claimed: (get claimed round),
         active: (get active round)
