@@ -56,6 +56,8 @@
     status: uint,
     winner: (optional principal),
     runner-up: (optional principal),
+    top-score: uint,
+    runner-up-score: uint,
     prize-claimed: bool,
     runner-up-claimed: bool
   }
@@ -117,6 +119,8 @@
       status: STATUS-OPEN,
       winner: none,
       runner-up: none,
+      top-score: u0,
+      runner-up-score: u0,
       prize-claimed: false,
       runner-up-claimed: false
     })
@@ -193,6 +197,24 @@
     (asserts! (or (is-eq (get status tournament) STATUS-OPEN) (is-eq (get status tournament) STATUS-ACTIVE)) ERR-TOURNAMENT-NOT-ACTIVE)
 
     (map-set player-scores { tournament-id: tournament-id, player: tx-sender } score)
+    
+    ;; Update top scores in real-time
+    (if (> score (get top-score tournament))
+      (map-set tournaments tournament-id (merge tournament {
+        runner-up: (get winner tournament),
+        runner-up-score: (get top-score tournament),
+        winner: (some tx-sender),
+        top-score: score
+      }))
+      (if (and (> score (get runner-up-score tournament)) (not (is-eq (some tx-sender) (get winner tournament))))
+        (map-set tournaments tournament-id (merge tournament {
+          runner-up: (some tx-sender),
+          runner-up-score: score
+        }))
+        true
+      )
+    )
+
     (print {
       event: "score-submitted",
       tournament-id: tournament-id,
@@ -203,32 +225,26 @@
   )
 )
 
-;; Finalize tournament and declare winner -- any wallet can trigger after end-block
-;; Winner gets 70% of prize pool, runner-up gets 30%
-(define-public (finalize-tournament (tournament-id uint) (winner principal) (runner-up principal))
+;; Finalize tournament -- any wallet can trigger after end-block
+;; Uses real-time tracked winners
+(define-public (finalize-tournament (tournament-id uint))
   (let (
     (tournament (unwrap! (map-get? tournaments tournament-id) ERR-TOURNAMENT-NOT-FOUND))
-    (winner-is-player (default-to false (map-get? tournament-players { tournament-id: tournament-id, player: winner })))
-    (runner-up-is-player (default-to false (map-get? tournament-players { tournament-id: tournament-id, player: runner-up })))
   )
     (asserts! (not (is-eq (get status tournament) STATUS-FINALIZED)) ERR-ALREADY-FINALIZED)
     (asserts! (>= stacks-block-height (get end-block tournament)) ERR-TOURNAMENT-NOT-ENDED)
     (asserts! (>= (get current-players tournament) (get min-players tournament)) ERR-MIN-PLAYERS-NOT-MET)
-    (asserts! winner-is-player ERR-NOT-JOINED)
-    (asserts! runner-up-is-player ERR-NOT-JOINED)
 
     (map-set tournaments tournament-id (merge tournament {
-      status: STATUS-FINALIZED,
-      winner: (some winner),
-      runner-up: (some runner-up)
+      status: STATUS-FINALIZED
     }))
 
     (var-set total-tournaments-completed (+ (var-get total-tournaments-completed) u1))
     (print {
       event: "tournament-finalized",
       tournament-id: tournament-id,
-      winner: winner,
-      runner-up: runner-up,
+      winner: (get winner tournament),
+      runner-up: (get runner-up tournament),
       prize-pool: (get prize-pool tournament)
     })
     (ok true)
