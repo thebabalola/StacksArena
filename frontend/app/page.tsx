@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Trophy, Ticket, Layers, Zap, Shield, Star, ChevronRight, Users, DollarSign, Award, Package } from "lucide-react";
+import { ArrowRight, Trophy, Ticket, Layers, Zap, Shield, Star, ChevronRight, Users, DollarSign, Award, Package, Swords } from "lucide-react";
 import { HeroIllustration } from "./components/hero-illustration";
 import { useStacks } from "@/lib/hooks/use-stacks";
 
@@ -52,74 +52,85 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#0F172A] min-h-[92vh] flex items-center">
-        <div className="absolute inset-0 opacity-[0.025]"
-          style={{ backgroundImage: "linear-gradient(#F97316 1px,transparent 1px),linear-gradient(90deg,#F97316 1px,transparent 1px)", backgroundSize: "60px 60px" }} />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/8 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-companion/8 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative overflow-hidden bg-[#0a0a1a] min-h-[95vh] flex items-center">
+        {/* Animated grid background */}
+        <div className="absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage: "linear-gradient(#F97316 1px,transparent 1px),linear-gradient(90deg,#F97316 1px,transparent 1px)", backgroundSize: "48px 48px" }} />
+        {/* Gradient orbs */}
+        <div className="absolute top-[15%] left-[20%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[20%] right-[15%] w-[400px] h-[400px] bg-companion/10 rounded-full blur-[100px] pointer-events-none" />
+        {/* Diagonal line accents */}
+        <svg className="absolute top-0 right-0 w-[600px] h-[600px] opacity-[0.06] pointer-events-none" viewBox="0 0 600 600">
+          <line x1="0" y1="600" x2="600" y2="0" stroke="#F97316" strokeWidth="1" />
+          <line x1="100" y1="600" x2="600" y2="100" stroke="#8B5CF6" strokeWidth="0.5" />
+          <line x1="200" y1="600" x2="600" y2="200" stroke="#F97316" strokeWidth="0.5" />
+        </svg>
 
-        <div className="relative mx-auto max-w-7xl px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
+        <div className="relative mx-auto max-w-7xl px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
           <div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/15 border border-primary/30 mb-6">
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-xs font-bold uppercase tracking-widest text-primary">Built on Bitcoin · Stacks L2</span>
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+              className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-primary/10 border border-primary/25 mb-8 backdrop-blur-sm">
+              <Swords className="w-4 h-4 text-primary" />
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary font-[var(--font-heading)]">Built on Bitcoin · Stacks L2</span>
             </motion.div>
 
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tight text-white mb-6">
-              Compete.<br />Win.<br /><span className="text-primary">Dominate.</span>
+            <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6 }}
+              className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight text-white mb-6 font-[var(--font-display)]">
+              COMPETE.<br />
+              <span className="text-primary text-glow animate-neon-flicker">WIN.</span><br />
+              DOMINATE.
             </motion.h1>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="text-lg text-slate-300 leading-relaxed mb-8 max-w-lg">
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+              className="text-lg text-slate-400 leading-relaxed mb-10 max-w-lg">
               The premier Bitcoin-anchored gaming arena. Enter tournaments, win lottery jackpots, and collect rare on-chain game assets — secured by the world&apos;s most powerful blockchain.
             </motion.p>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
               className="flex flex-wrap items-center gap-4">
               {isConnected ? (
-                <Link href="/arena" className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-white hover:bg-primary/90 shadow-xl shadow-primary/30 transition-all hover:scale-105 active:scale-95">
-                  Enter Arena <ArrowRight className="w-4 h-4" />
+                <Link href="/arena" className="group inline-flex items-center gap-3 rounded-lg bg-primary px-8 py-4 text-sm font-bold text-white hover:bg-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 active:scale-95 border-glow">
+                  ENTER ARENA <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               ) : (
-                <button onClick={connect} className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-white hover:bg-primary/90 shadow-xl shadow-primary/30 transition-all hover:scale-105 active:scale-95">
-                  Connect &amp; Play <ArrowRight className="w-4 h-4" />
+                <button onClick={connect} className="group inline-flex items-center gap-3 rounded-lg bg-primary px-8 py-4 text-sm font-bold text-white hover:bg-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 active:scale-95 border-glow">
+                  CONNECT &amp; PLAY <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               )}
-              <Link href="/assets" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-3.5 text-sm font-bold text-white hover:bg-white/10 transition-all">
-                View Assets <ChevronRight className="w-4 h-4" />
+              <Link href="/assets" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-8 py-4 text-sm font-bold text-white/80 hover:bg-white/5 hover:border-white/20 transition-all">
+                VIEW ASSETS <ChevronRight className="w-4 h-4" />
               </Link>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-              className="flex items-center gap-6 mt-10">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
+              className="flex items-center gap-8 mt-12 pt-8 border-t border-white/5">
               {[{ icon: Shield, label: "Bitcoin Secured" }, { icon: Zap, label: "Instant Settlement" }, { icon: Star, label: "Provably Fair" }].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-1.5 text-slate-400">
-                  <Icon className="w-3.5 h-3.5 text-primary" />
-                  <span className="text-xs font-medium">{label}</span>
+                <div key={label} className="flex items-center gap-2 text-slate-500">
+                  <Icon className="w-4 h-4 text-primary/70" />
+                  <span className="text-xs font-medium uppercase tracking-wider">{label}</span>
                 </div>
               ))}
             </motion.div>
           </div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}>
+          <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.3 }}
+            className="hidden lg:block">
             <HeroIllustration />
           </motion.div>
         </div>
       </section>
 
-      {/* STATS */}
-      <section className="bg-secondary/50 border-y border-border">
-        <div className="mx-auto max-w-7xl px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* STATS BAR */}
+      <section className="bg-secondary/40 border-y border-border backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map(({ icon: Icon, label, target, prefix, suffix }) => (
             <div key={label} className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                 <Icon className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-black"><Counter target={target} prefix={prefix} suffix={suffix} /></p>
-                <p className="text-xs text-muted-foreground font-medium">{label}</p>
+                <p className="text-xl font-black font-[var(--font-display)] tracking-wider"><Counter target={target} prefix={prefix} suffix={suffix} /></p>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">{label}</p>
               </div>
             </div>
           ))}
@@ -127,31 +138,32 @@ export default function Home() {
       </section>
 
       {/* FEATURES */}
-      <section ref={featuresRef} className="py-24 px-6">
+      <section ref={featuresRef} className="py-28 px-6">
         <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-16">
+          <div className="text-center mb-20">
             <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}}
-              className="text-sm font-bold uppercase tracking-widest text-primary mb-3">Platform Features</motion.p>
+              className="text-xs font-bold uppercase tracking-[0.3em] text-primary mb-4">Platform Features</motion.p>
             <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }}
-              className="text-4xl md:text-5xl font-black tracking-tight">
-              Everything you need to<br /><span className="text-primary">game on Bitcoin.</span>
+              className="text-4xl md:text-6xl font-black tracking-tight font-[var(--font-display)]">
+              EVERYTHING YOU NEED TO<br />
+              <span className="text-primary text-glow">GAME ON BITCOIN.</span>
             </motion.h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feat, i) => {
               const Icon = feat.icon;
               return (
-                <motion.div key={feat.href} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 * i + 0.2 }}>
-                  <Link href={feat.href} className="group flex flex-col h-full p-8 rounded-3xl border border-border bg-card hover:border-primary/40 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer">
-                    <div className={`w-14 h-14 ${feat.bgClass} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+                <motion.div key={feat.href} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.15 * i + 0.2 }}>
+                  <Link href={feat.href} className="group flex flex-col h-full p-8 rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:border-primary/50 hover:-translate-y-2 transition-all duration-300 cursor-pointer hover:shadow-[0_0_40px_rgba(249,115,22,0.08)]">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-companion/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform">
                       <Icon className={`w-6 h-6 ${feat.colorClass}`} />
                     </div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">{feat.sub}</p>
-                    <h3 className="text-xl font-black mb-3 group-hover:text-primary transition-colors">{feat.title}</h3>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-companion mb-2">{feat.sub}</p>
+                    <h3 className="text-2xl font-black mb-3 group-hover:text-primary transition-colors font-[var(--font-display)] tracking-wide">{feat.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed flex-1">{feat.desc}</p>
-                    <div className="mt-6 flex items-center justify-between">
-                      <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">{feat.stat}</span>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                    <div className="mt-6 flex items-center justify-between pt-4 border-t border-border/50">
+                      <span className="text-[10px] font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-md uppercase tracking-wider">{feat.stat}</span>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-2 transition-all" />
                     </div>
                   </Link>
                 </motion.div>
@@ -162,18 +174,21 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-20 px-6 bg-secondary/30">
-        <div className="mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary mb-3">How It Works</p>
-            <h2 className="text-3xl md:text-4xl font-black">Three steps to start<br />earning on Bitcoin.</h2>
+      <section className="py-24 px-6 bg-secondary/20">
+        <div className="mx-auto max-w-5xl">
+          <div className="text-center mb-16">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary mb-4">How It Works</p>
+            <h2 className="text-3xl md:text-5xl font-black font-[var(--font-display)] tracking-wide">THREE STEPS TO START<br />EARNING ON BITCOIN.</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step, i) => (
               <motion.div key={step.num} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-                className="flex flex-col gap-4 p-6 rounded-2xl bg-card border border-border">
-                <span className="text-5xl font-black text-primary/20 leading-none">{step.num}</span>
-                <h3 className="text-lg font-bold -mt-2">{step.title}</h3>
+                className="relative flex flex-col gap-4 p-8 rounded-2xl bg-card/50 border border-border backdrop-blur-sm overflow-hidden">
+                <span className="text-7xl font-black text-primary/10 leading-none font-[var(--font-display)]">{step.num}</span>
+                <div className="absolute top-6 right-6 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-xs font-black text-primary">{i + 1}</span>
+                </div>
+                <h3 className="text-xl font-bold -mt-2 font-[var(--font-display)] tracking-wide">{step.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
@@ -182,16 +197,16 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6">
+      <section className="py-24 px-6">
         <div className="mx-auto max-w-4xl">
           <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-primary p-12 text-center shadow-2xl shadow-primary/30">
+            className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-orange-500 to-primary p-14 text-center shadow-[0_0_60px_rgba(249,115,22,0.25)]">
             <div className="absolute inset-0 opacity-10"
-              style={{ backgroundImage: "radial-gradient(circle at 20% 50%,white 1px,transparent 1px),radial-gradient(circle at 80% 50%,white 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
-            <h2 className="relative text-3xl md:text-4xl font-black text-white mb-4">Ready to Enter the Arena?</h2>
-            <p className="relative text-white/80 mb-8 max-w-md mx-auto">Connect your Stacks wallet and start competing for Bitcoin-backed prizes today.</p>
-            <button onClick={connect} className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-black text-primary hover:bg-white/90 transition-all hover:scale-105 active:scale-95 shadow-lg">
-              Connect Wallet <ArrowRight className="w-4 h-4" />
+              style={{ backgroundImage: "repeating-linear-gradient(45deg,transparent,transparent 10px,white 10px,white 11px)" }} />
+            <h2 className="relative text-4xl md:text-5xl font-black text-white mb-5 font-[var(--font-display)] tracking-wide">READY TO ENTER THE ARENA?</h2>
+            <p className="relative text-white/80 mb-10 max-w-lg mx-auto text-lg">Connect your Stacks wallet and start competing for Bitcoin-backed prizes today.</p>
+            <button onClick={connect} className="group inline-flex items-center gap-3 rounded-lg bg-white px-10 py-4 text-sm font-black text-primary hover:bg-white/95 transition-all hover:scale-105 active:scale-95 shadow-lg uppercase tracking-wider">
+              Connect Wallet <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </motion.div>
         </div>
