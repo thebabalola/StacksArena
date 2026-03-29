@@ -4,7 +4,6 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Trophy, Ticket, Layers, Zap, Shield, Star, ChevronRight, Users, DollarSign, Award, Package, Swords } from "lucide-react";
-import { HeroIllustration } from "./components/hero-illustration";
 import { useStacks } from "@/lib/hooks/use-stacks";
 
 function Counter({ target, prefix = "", suffix = "" }: { target: number; prefix?: string; suffix?: string }) {
@@ -66,8 +65,8 @@ export default function Home() {
           <line x1="200" y1="600" x2="600" y2="200" stroke="#F97316" strokeWidth="0.5" />
         </svg>
 
-        <div className="relative mx-auto max-w-7xl px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
-          <div>
+        <div className="relative mx-auto max-w-7xl px-6 py-20 flex flex-col items-center justify-center text-center w-full">
+          <div className="max-w-3xl">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
               className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-primary/10 border border-primary/25 mb-8 backdrop-blur-sm">
               <Swords className="w-4 h-4 text-primary" />
@@ -112,11 +111,6 @@ export default function Home() {
               ))}
             </motion.div>
           </div>
-
-          <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.3 }}
-            className="hidden lg:block">
-            <HeroIllustration />
-          </motion.div>
         </div>
       </section>
 
