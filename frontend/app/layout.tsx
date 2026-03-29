@@ -40,6 +40,9 @@ export const metadata: Metadata = {
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0a1a" },
   ],
+  other: {
+    "talentapp:project_verification": "c3c9fbd28c251ba34f40d1a57747785d7aeaefab14d6d5091de10d1b8423b8f0a26b06ec4676a8488d6483d818523fc735c49718f21ee1f11ad14e273b602aa5",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
