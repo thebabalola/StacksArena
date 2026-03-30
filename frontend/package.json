@@ -1,7 +1,7 @@
 {
   "name": "stacksarena-frontend",
   "version": "0.1.0",
-  "description": "SCredence service verification frontend - Web interface for Bitcoin-anchored professional credentials",
+  "description": "StacksArena - Bitcoin gaming arena on Stacks L2. Tournaments, lottery, and game assets.",
   "private": true,
   "scripts": {
     "dev": "next dev",

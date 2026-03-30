@@ -37,7 +37,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-border mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">© 2025 StacksArena Protocol. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© 2026 StacksArena Protocol. All rights reserved.</p>
           <p className="text-xs text-muted-foreground">Secured by Bitcoin via Stacks L2</p>
         </div>
       </div>
