@@ -1,10 +1,12 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ArrowRight, Trophy, Ticket, Layers, Zap, Shield, Star, ChevronRight, Users, DollarSign, Award, Package, Swords } from "lucide-react";
+import { ArrowRight, Trophy, Ticket, Layers, Zap, Shield, Star, ChevronRight, Users, DollarSign, Award, Package, Swords, RefreshCw } from "lucide-react";
 import { useStacks } from "@/lib/hooks/use-stacks";
+import { useTournament, useLottery, useGameAssets } from "@/lib/hooks/use-contract";
+import { CONTRACTS } from "@/lib/constants/contracts";
 
 function Counter({ target, prefix = "", suffix = "" }: { target: number; prefix?: string; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -13,7 +15,7 @@ function Counter({ target, prefix = "", suffix = "" }: { target: number; prefix?
   useEffect(() => {
     if (!inView) return;
     let n = 0;
-    const step = target / 80;
+    const step = Math.max(1, target / 80);
     const timer = setInterval(() => {
       n = Math.min(n + step, target);
       setCount(Math.floor(n));
@@ -24,27 +26,57 @@ function Counter({ target, prefix = "", suffix = "" }: { target: number; prefix?
   return <span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
 }
 
-const features = [
-  { icon: Trophy, colorClass: "text-primary", bgClass: "bg-primary/10", title: "Tournament Arena", sub: "Compete & Win", desc: "Enter skill-based weekly tournaments with STX entry fees. Top players split the entire prize pool, tracked and distributed automatically on-chain.", href: "/arena", stat: "148 Completed" },
-  { icon: Ticket, colorClass: "text-companion", bgClass: "bg-companion/10", title: "Lottery Pool", sub: "Spin & Jackpot", desc: "Buy provably fair lottery tickets. One lucky winner claims the entire jackpot. Randomness derived from Bitcoin block hashes — no admin override possible.", href: "/lottery", stat: "847K STX Paid" },
-  { icon: Layers, colorClass: "text-primary", bgClass: "bg-primary/10", title: "Game Assets", sub: "Collect & Trade", desc: "Mint rare on-chain game assets with XP, levels, and rarity tiers from Common to Legendary. Fuse assets to create legendary items. True ownership on Bitcoin.", href: "/assets", stat: "12K+ Minted" },
-];
-
-const stats = [
-  { icon: Users, label: "Active Players", target: 2400, suffix: "+" },
-  { icon: DollarSign, label: "Total Prize Pool", prefix: "$", target: 847000 },
-  { icon: Award, label: "Tournaments", target: 148 },
-  { icon: Package, label: "Assets Minted", target: 12000, suffix: "+" },
-];
-
-const steps = [
-  { num: "01", title: "Connect Wallet", desc: "Link your Stacks wallet (Leather or Xverse) with one click. Your identity is secured on Bitcoin." },
-  { num: "02", title: "Join or Create", desc: "Enter an open tournament, buy lottery tickets, or mint your first game asset with STX." },
-  { num: "03", title: "Compete & Earn", desc: "Win STX prizes from tournaments and lotteries. Level up your assets and trade with other players." },
-];
-
 export default function Home() {
   const { connect, isConnected } = useStacks();
+  const { getArenaStats } = useTournament();
+  const { getPlatformStats } = useLottery();
+  const { getCollectionStats } = useGameAssets();
+
+  const [stats, setStats] = useState({
+    tournaments: 0, lotteryRounds: 0, assetsMinted: 0,
+    prizePool: 0, totalTickets: 0, totalPlayers: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  const fetchStats = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [arena, lottery, collection] = await Promise.all([
+        getArenaStats(), getPlatformStats(), getCollectionStats(),
+      ]);
+      setStats({
+        tournaments: Number(arena?.value?.value?.["total-tournaments"]?.value ?? 0),
+        lotteryRounds: Number(lottery?.value?.value?.["total-rounds"]?.value ?? 0),
+        assetsMinted: Number(collection?.value?.value?.["total-minted"]?.value ?? 0),
+        prizePool: Number(arena?.value?.value?.["total-prize-pool"]?.value ?? 0),
+        totalTickets: Number(lottery?.value?.value?.["total-tickets-sold"]?.value ?? 0),
+        totalPlayers: Number(arena?.value?.value?.["total-players"]?.value ?? 0),
+      });
+    } catch (e) { console.error("Failed to fetch stats:", e); }
+    finally { setLoading(false); }
+  }, [getArenaStats, getPlatformStats, getCollectionStats]);
+
+  useEffect(() => { fetchStats(); }, [fetchStats]);
+
+  const features = [
+    { icon: Trophy, colorClass: "text-primary", title: "Tournament Arena", sub: "Compete & Win", desc: "Enter skill-based tournaments with STX entry fees. Top players split the entire prize pool, tracked and distributed automatically on-chain.", href: "/arena", stat: `${stats.tournaments} Created` },
+    { icon: Ticket, colorClass: "text-companion", title: "Lottery Pool", sub: "Spin & Jackpot", desc: "Buy lottery tickets. One lucky winner claims the entire jackpot. Randomness derived from Bitcoin block hashes.", href: "/lottery", stat: `${stats.lotteryRounds} Rounds` },
+    { icon: Layers, colorClass: "text-primary", title: "Game Assets", sub: "Collect & Trade", desc: "Mint rare on-chain game assets with XP, levels, and rarity tiers. Fuse assets to create legendary items.", href: "/assets", stat: `${stats.assetsMinted} Minted` },
+  ];
+
+  const onChainStats = [
+    { icon: Users, label: "Total Players", target: stats.totalPlayers, suffix: "" },
+    { icon: DollarSign, label: "Total Prize Pool", prefix: "", target: stats.prizePool, suffix: " uSTX" },
+    { icon: Award, label: "Tournaments", target: stats.tournaments },
+    { icon: Package, label: "Assets Minted", target: stats.assetsMinted },
+  ];
+
+  const steps = [
+    { num: "01", title: "Connect Wallet", desc: "Link your Stacks wallet (Leather or Xverse) with one click. Your identity is secured on Bitcoin." },
+    { num: "02", title: "Join or Create", desc: "Enter an open tournament, buy lottery tickets, or mint your first game asset with STX." },
+    { num: "03", title: "Compete & Earn", desc: "Win STX prizes from tournaments and lotteries. Level up your assets and trade with other players." },
+  ];
+
   const featuresRef = useRef(null);
   const inView = useInView(featuresRef, { once: true, margin: "-80px" });
 
@@ -52,18 +84,9 @@ export default function Home() {
     <div className="min-h-screen">
       {/* HERO */}
       <section className="relative overflow-hidden bg-[#0a0a1a] min-h-[95vh] flex items-center">
-        {/* Animated grid background */}
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: "linear-gradient(#F97316 1px,transparent 1px),linear-gradient(90deg,#F97316 1px,transparent 1px)", backgroundSize: "48px 48px" }} />
-        {/* Gradient orbs */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "linear-gradient(#F97316 1px,transparent 1px),linear-gradient(90deg,#F97316 1px,transparent 1px)", backgroundSize: "48px 48px" }} />
         <div className="absolute top-[15%] left-[20%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[20%] right-[15%] w-[400px] h-[400px] bg-companion/10 rounded-full blur-[100px] pointer-events-none" />
-        {/* Diagonal line accents */}
-        <svg className="absolute top-0 right-0 w-[600px] h-[600px] opacity-[0.06] pointer-events-none" viewBox="0 0 600 600">
-          <line x1="0" y1="600" x2="600" y2="0" stroke="#F97316" strokeWidth="1" />
-          <line x1="100" y1="600" x2="600" y2="100" stroke="#8B5CF6" strokeWidth="0.5" />
-          <line x1="200" y1="600" x2="600" y2="200" stroke="#F97316" strokeWidth="0.5" />
-        </svg>
 
         <div className="relative mx-auto max-w-7xl px-6 py-20 flex flex-col items-center justify-center text-center w-full">
           <div className="max-w-3xl">
@@ -75,14 +98,12 @@ export default function Home() {
 
             <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6 }}
               className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight text-white mb-6 font-[var(--font-display)]">
-              COMPETE.<br />
-              <span className="text-primary text-glow animate-neon-flicker">WIN.</span><br />
-              DOMINATE.
+              COMPETE.<br /><span className="text-primary text-glow animate-neon-flicker">WIN.</span><br />DOMINATE.
             </motion.h1>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
               className="text-lg text-slate-400 leading-relaxed mb-10 max-w-lg">
-              The premier Bitcoin-anchored gaming arena. Enter tournaments, win lottery jackpots, and collect rare on-chain game assets — secured by the world&apos;s most powerful blockchain.
+              The Bitcoin-anchored gaming arena. Enter tournaments, win lottery jackpots, and collect rare on-chain game assets.
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
@@ -114,20 +135,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* STATS BAR */}
+      {/* STATS BAR — Real on-chain data */}
       <section className="bg-secondary/40 border-y border-border backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map(({ icon: Icon, label, target, prefix, suffix }) => (
-            <div key={label} className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                <Icon className="w-5 h-5 text-primary" />
+        <div className="mx-auto max-w-7xl px-6 py-8">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Live On-Chain Stats</p>
+            <button onClick={fetchStats} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+              <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} /> Refresh
+            </button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {onChainStats.map(({ icon: Icon, label, target, prefix, suffix }) => (
+              <div key={label} className="flex items-center gap-4">
+                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xl font-black font-[var(--font-display)] tracking-wider">
+                    {loading ? "..." : <Counter target={target} prefix={prefix} suffix={suffix} />}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">{label}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xl font-black font-[var(--font-display)] tracking-wider"><Counter target={target} prefix={prefix} suffix={suffix} /></p>
-                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">{label}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <p className="text-[10px] text-muted-foreground mt-3 text-center">Contract: {CONTRACTS.TOURNAMENT_MANAGER.slice(0, 28)}...</p>
         </div>
       </section>
 
@@ -139,8 +171,7 @@ export default function Home() {
               className="text-xs font-bold uppercase tracking-[0.3em] text-primary mb-4">Platform Features</motion.p>
             <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }}
               className="text-4xl md:text-6xl font-black tracking-tight font-[var(--font-display)]">
-              EVERYTHING YOU NEED TO<br />
-              <span className="text-primary text-glow">GAME ON BITCOIN.</span>
+              EVERYTHING YOU NEED TO<br /><span className="text-primary text-glow">GAME ON BITCOIN.</span>
             </motion.h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -148,7 +179,7 @@ export default function Home() {
               const Icon = feat.icon;
               return (
                 <motion.div key={feat.href} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.15 * i + 0.2 }}>
-                  <Link href={feat.href} className="group flex flex-col h-full p-8 rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:border-primary/50 hover:-translate-y-2 transition-all duration-300 cursor-pointer hover:shadow-[0_0_40px_rgba(249,115,22,0.08)]">
+                  <Link href={feat.href} className="group flex flex-col h-full p-8 rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:border-primary/50 hover:-translate-y-2 transition-all duration-300 cursor-pointer">
                     <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-companion/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform">
                       <Icon className={`w-6 h-6 ${feat.colorClass}`} />
                     </div>
@@ -195,8 +226,7 @@ export default function Home() {
         <div className="mx-auto max-w-4xl">
           <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
             className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-orange-500 to-primary p-14 text-center shadow-[0_0_60px_rgba(249,115,22,0.25)]">
-            <div className="absolute inset-0 opacity-10"
-              style={{ backgroundImage: "repeating-linear-gradient(45deg,transparent,transparent 10px,white 10px,white 11px)" }} />
+            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "repeating-linear-gradient(45deg,transparent,transparent 10px,white 10px,white 11px)" }} />
             <h2 className="relative text-4xl md:text-5xl font-black text-white mb-5 font-[var(--font-display)] tracking-wide">READY TO ENTER THE ARENA?</h2>
             <p className="relative text-white/80 mb-10 max-w-lg mx-auto text-lg">Connect your Stacks wallet and start competing for Bitcoin-backed prizes today.</p>
             <button onClick={connect} className="group inline-flex items-center gap-3 rounded-lg bg-white px-10 py-4 text-sm font-black text-primary hover:bg-white/95 transition-all hover:scale-105 active:scale-95 shadow-lg uppercase tracking-wider">
