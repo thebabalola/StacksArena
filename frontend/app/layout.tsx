@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Bebas_Neue } from "next/font/google";
 import { Navbar } from "./components/navbar";
+import { Sidebar } from "./components/sidebar";
 import { Footer } from "./components/footer";
 import { ThemeProvider } from "./components/providers/theme-provider";
 import "./globals.css";
@@ -23,23 +24,19 @@ export const metadata: Metadata = {
     description: "Compete. Win. Dominate. The premier Bitcoin-secured gaming arena on Stacks L2.",
     type: "website",
     siteName: "StacksArena",
-    images: [{ url: "/logo.svg", width: 64, height: 64, alt: "StacksArena Shield Logo" }],
+    images: [{ url: "/stacksarena-logo.svg", width: 512, height: 512, alt: "StacksArena Shield Logo" }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "StacksArena — Bitcoin Gaming Arena",
     description: "Join on-chain tournaments, win lottery jackpots, collect rare game assets on Stacks L2.",
-    images: ["/logo.svg"],
+    images: ["/stacksarena-logo.svg"],
   },
   icons: {
-    icon: "/favicon.svg",
-    apple: "/logo.svg",
-    shortcut: "/favicon.svg",
+    icon: "/stacksarena-logo.svg",
+    apple: "/stacksarena-logo.svg",
+    shortcut: "/stacksarena-logo.svg",
   },
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a1a" },
-  ],
   other: {
     "talentapp:project_verification": "c3c9fbd28c251ba34f40d1a57747785d7aeaefab14d6d5091de10d1b8423b8f0a26b06ec4676a8488d6483d818523fc735c49718f21ee1f11ad14e273b602aa5",
   },
@@ -48,12 +45,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${orbitron.variable} ${bebas.variable} antialiased min-h-screen bg-background text-foreground`}>
+      <body className={`${orbitron.variable} ${bebas.variable} antialiased min-h-screen bg-[#020617] text-foreground`}>
         <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
+          <div className="flex min-h-screen">
+            <Sidebar />
+            <div className="flex-1 flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
           </div>
         </ThemeProvider>
       </body>
