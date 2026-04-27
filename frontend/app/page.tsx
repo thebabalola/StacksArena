@@ -74,91 +74,102 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#050510]">
-      {/* HERO SECTION - REFACTORED TO THREE PILLAR */}
-      <section className="relative overflow-hidden min-h-[90vh] flex flex-col items-center justify-center pt-10">
-        {/* Floating Background Elements */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.15 }} transition={{ duration: 2 }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[160px]" />
-          
-          {/* Stacks Central Symbol */}
-          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1.5 }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20 transform -translate-y-20">
-            <svg viewBox="0 0 100 100" className="w-[400px] h-[400px] text-companion drop-shadow-[0_0_50px_rgba(139,92,246,0.3)]">
-              <path fill="currentColor" d="M50 0L88.97 22.5V67.5L50 90L11.03 67.5V22.5L50 0ZM50 13L22.03 29.5V60.5L50 77L77.97 60.5V29.5L50 13Z" />
-              <path fill="currentColor" d="M50 25L70.78 37.5V62.5L50 75L29.22 62.5V37.5L50 25Z" className="animate-pulse" />
-            </svg>
-          </motion.div>
-
-          {/* Bitcoin Floating Asset */}
-          <motion.div animate={{ y: [0, -20, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[20%] right-[15%] hidden lg:block">
-            <div className="w-24 h-24 rounded-full bg-orange-500/10 border border-orange-500/20 backdrop-blur-xl flex items-center justify-center p-5 shadow-[0_0_40px_rgba(249,115,22,0.2)]">
-              <Bitcoin className="w-full h-full text-orange-500" />
-            </div>
-          </motion.div>
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden min-h-[95vh] flex items-center justify-center text-center">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[#050510]/80 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050510] via-transparent to-transparent z-10" />
+          <img src="/stacksarena-heroimg.png" alt="Hero Background" className="w-full h-full object-cover opacity-70" />
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl px-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 max-w-2xl">
-             <div className="flex items-center gap-4">
-               <img src="/stacksarena-logo.png" alt="Logo" className="w-16 h-16" />
-               <div>
-                 <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white font-[var(--font-display)]">
-                   STACKS<span className="text-primary italic">ARENA</span>
-                 </h1>
-                 <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.4em] mt-1">
-                   The Bitcoin-anchored gaming arena
-                 </p>
-               </div>
-             </div>
-             <div className="mt-6 text-xl md:text-2xl font-black text-white uppercase tracking-widest font-[var(--font-display)]">
-                COMPETE. WIN. <span className="text-primary italic">DOMINATE.</span>
-             </div>
+        <div className="relative z-20 w-full max-w-5xl px-6 pt-20">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+            className="flex flex-col items-center">
+            
+            <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6 }}
+              className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight text-white mb-6 font-[var(--font-display)] uppercase">
+              COMPETE.<br /><span className="text-primary text-glow animate-neon-flicker italic">WIN.</span><br />DOMINATE.
+            </motion.h1>
+
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+              className="text-lg md:text-xl text-slate-300 font-bold leading-relaxed mb-10 max-w-2xl mx-auto">
+              The Bitcoin-anchored gaming arena. Enter tournaments, win lottery jackpots, and collect rare on-chain game assets.
+            </motion.p>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+              className="flex flex-wrap items-center justify-center gap-4">
+              {isConnected ? (
+                <Link href="/arena" className="group inline-flex items-center gap-3 rounded-xl bg-primary px-10 py-5 text-sm font-black text-white hover:bg-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 active:scale-95 border-glow uppercase tracking-wide">
+                  CONNECT &amp; PLAY <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              ) : (
+                <button onClick={connect} className="group inline-flex items-center gap-3 rounded-xl bg-primary px-10 py-5 text-sm font-black text-white hover:bg-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 active:scale-95 border-glow uppercase tracking-wide">
+                  CONNECT &amp; PLAY <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              )}
+              <Link href="/assets" className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-10 py-5 text-sm font-black text-white/90 hover:bg-white/5 hover:border-white/20 transition-all uppercase tracking-wide bg-black/20 backdrop-blur-sm">
+                VIEW ASSETS <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
+              className="flex items-center justify-center gap-6 md:gap-10 mt-12 pt-8 border-t border-white/10">
+              {[{ icon: Shield, label: "Bitcoin Secured" }, { icon: Zap, label: "Instant Settlement" }, { icon: Star, label: "Provably Fair" }].map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-2 text-slate-400">
+                  <Icon className="w-4 h-4 text-primary" />
+                  <span className="text-[11px] font-black uppercase tracking-widest">{label}</span>
+                </div>
+              ))}
+            </motion.div>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20 max-w-5xl">
-            {featureCards.map((feat, i) => {
-              const Icon = feat.icon;
-              return (
-                <motion.div key={feat.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 * i + 0.5 }}>
-                  <Link href={feat.href} className="group relative block p-8 rounded-2xl bg-[#0a0a1a]/60 backdrop-blur-xl border border-white/5 hover:border-companion/40 transition-all hover:-translate-y-2 h-full shadow-2xl overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-companion/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center mb-6 relative z-10 border border-white/5">
-                      <Icon className={`w-6 h-6 ${feat.colorClass} drop-shadow-[0_0_8px_currentColor]`} />
-                    </div>
-                    <h3 className="text-xs font-black text-white mb-3 tracking-widest font-[var(--font-display)] relative z-10 uppercase">{feat.title}</h3>
-                    <p className="text-[11px] text-slate-500 leading-relaxed font-bold relative z-10">{feat.desc}</p>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </div>
         </div>
+      </section>
 
-        {/* BOTTOM STATS BAR */}
-        <div className="relative z-10 w-full max-w-7xl px-6 pb-12">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
-            className="w-full rounded-2xl bg-[#0a0a1a]/80 border border-white/5 p-6 md:p-10 backdrop-blur-2xl grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: Users, label: "PLAYERS", target: 12400, suffix: "K+" },
-              { icon: Trophy, label: "TOURNAMENTS", target: 3200, suffix: "+" },
-              { icon: Bitcoin, label: "TOTAL PRIZES", target: 245.7, suffix: " BTC", prefix: "" },
-              { icon: Swords, label: "ASSETS MINTED", target: 8700, suffix: "+" }
-            ].map((stat) => (
-              <div key={stat.label} className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-companion/10 flex items-center justify-center relative">
-                   <stat.icon className="w-5 h-5 text-companion" />
-                </div>
-                <div>
-                  <p className="text-xl md:text-2xl font-black text-white font-[var(--font-display)] tracking-wide">
-                     {stat.prefix}<Counter target={stat.target} suffix={stat.suffix} />
-                  </p>
-                  <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{stat.label}</p>
-                </div>
+      {/* STATS BAR */}
+      <section className="relative z-30 -mt-16 w-full max-w-7xl mx-auto px-6 mb-20">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
+          className="w-full rounded-2xl bg-[#0a0a1a]/90 border border-white/5 p-6 md:p-10 backdrop-blur-2xl grid grid-cols-2 md:grid-cols-4 gap-8 shadow-2xl relative">
+          <div className="absolute inset-0 cyber-mesh opacity-10 rounded-2xl pointer-events-none" />
+          {[
+            { icon: Users, label: "PLAYERS", target: 12400, suffix: "K+" },
+            { icon: Trophy, label: "TOURNAMENTS", target: 3200, suffix: "+" },
+            { icon: Bitcoin, label: "TOTAL PRIZES", target: 245.7, suffix: " BTC", prefix: "" },
+            { icon: Swords, label: "ASSETS MINTED", target: 8700, suffix: "+" }
+          ].map((stat) => (
+            <div key={stat.label} className="flex items-center gap-4 relative z-10">
+              <div className="w-12 h-12 rounded-xl bg-companion/10 flex items-center justify-center shrink-0">
+                 <stat.icon className="w-5 h-5 text-companion" />
               </div>
-            ))}
-          </motion.div>
+              <div>
+                <p className="text-xl md:text-2xl font-black text-white font-[var(--font-display)] tracking-wide">
+                   {stat.prefix}<Counter target={stat.target} suffix={stat.suffix} />
+                </p>
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{stat.label}</p>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* FEATURE CARDS */}
+      <section className="py-10 px-6">
+        <div className="mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6">
+          {featureCards.map((feat, i) => {
+            const Icon = feat.icon;
+            return (
+              <motion.div key={feat.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 * i + 0.5 }}>
+                <Link href={feat.href} className="group relative block p-8 rounded-2xl bg-[#0a0a1a]/60 backdrop-blur-xl border border-white/5 hover:border-companion/40 transition-all hover:-translate-y-2 h-full shadow-2xl overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-companion/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center mb-6 relative z-10 border border-white/5">
+                    <Icon className={`w-6 h-6 ${feat.colorClass} drop-shadow-[0_0_8px_currentColor]`} />
+                  </div>
+                  <h3 className="text-xs font-black text-white mb-3 tracking-widest font-[var(--font-display)] relative z-10 uppercase">{feat.title}</h3>
+                  <p className="text-[11px] text-slate-500 leading-relaxed font-bold relative z-10">{feat.desc}</p>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
