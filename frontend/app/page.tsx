@@ -38,10 +38,7 @@ export default function Home() {
     tournaments: 0, lotteryRounds: 0, assetsMinted: 0,
     prizePool: 0, totalTickets: 0, totalPlayers: 0,
   });
-  const [loading, setLoading] = useState(true);
-
   const fetchStats = useCallback(async () => {
-    setLoading(true);
     try {
       const [arena, lottery, collection] = await Promise.all([
         getArenaStats(), getPlatformStats(), getCollectionStats(),
@@ -55,7 +52,6 @@ export default function Home() {
         totalPlayers: Number(arena?.value?.value?.["total-players"]?.value ?? 0),
       });
     } catch (e) { console.error("Failed to fetch stats:", e); }
-    finally { setLoading(false); }
   }, [getArenaStats, getPlatformStats, getCollectionStats]);
 
   useEffect(() => { fetchStats(); }, [fetchStats]);

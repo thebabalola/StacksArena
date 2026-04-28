@@ -10,6 +10,7 @@ const orbitron = Orbitron({ variable: "--font-heading", subsets: ["latin"], weig
 const bebas = Bebas_Neue({ variable: "--font-display", subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://stacksarena.vercel.app"),
   title: {
     default: "StacksArena — Bitcoin Gaming Arena on Stacks L2",
     template: "%s | StacksArena",
