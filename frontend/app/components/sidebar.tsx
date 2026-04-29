@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useStacks } from "@/lib/hooks/use-stacks";
 
 const menuItems = [
-  { name: "Dashboard", href: "/arena#dashboard", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Arena", href: "/arena", icon: Sword },
   { name: "Tournaments", href: "/arena#tournaments", icon: Trophy },
   { name: "Lottery", href: "/lottery", icon: Ticket },
