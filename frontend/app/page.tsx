@@ -201,10 +201,17 @@ export default function Home() {
                <div className="absolute inset-0 cyber-mesh opacity-20" />
                <h2 className="relative text-4xl md:text-6xl font-black text-white mb-6 font-[var(--font-display)] tracking-tighter uppercase italic">READY TO ENTER THE <span className="text-primary">ARENA?</span></h2>
                <p className="relative text-slate-400 mb-10 max-w-lg mx-auto text-lg font-bold">Connect your Stacks wallet and start competing for Bitcoin-backed prizes today.</p>
-               <button onClick={connect} className="group relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow">
-                 <span className="relative z-10">Connect Arena Wallet</span>
-                 <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-               </button>
+               {isConnected ? (
+                 <Link href="/arena" className="group inline-block relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow">
+                   <span className="relative z-10">Enter Arena</span>
+                   <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                 </Link>
+               ) : (
+                 <button onClick={connect} className="group relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow">
+                   <span className="relative z-10">Connect Arena Wallet</span>
+                   <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                 </button>
+               )}
             </div>
           </motion.div>
         </div>
