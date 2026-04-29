@@ -128,10 +128,10 @@ export default function Home() {
           className="w-full rounded-2xl bg-[#0a0a1a]/90 border border-white/5 p-6 md:p-10 backdrop-blur-2xl grid grid-cols-2 md:grid-cols-4 gap-8 shadow-2xl relative">
           <div className="absolute inset-0 cyber-mesh opacity-10 rounded-2xl pointer-events-none" />
           {[
-            { icon: Users, label: "PLAYERS", target: 12400, suffix: "K+" },
-            { icon: Trophy, label: "TOURNAMENTS", target: 3200, suffix: "+" },
-            { icon: Bitcoin, label: "TOTAL PRIZES", target: 245.7, suffix: " BTC", prefix: "" },
-            { icon: Swords, label: "ASSETS MINTED", target: 8700, suffix: "+" }
+            { icon: Users, label: "PLAYERS", target: stats.totalPlayers, suffix: "" },
+            { icon: Trophy, label: "TOURNAMENTS", target: stats.tournaments, suffix: "" },
+            { icon: Bitcoin, label: "TOTAL PRIZES", target: stats.prizePool / 1000000, suffix: " STX", prefix: "" },
+            { icon: Swords, label: "ASSETS MINTED", target: stats.assetsMinted, suffix: "" }
           ].map((stat) => (
             <div key={stat.label} className="flex items-center gap-4 relative z-10">
               <div className="w-12 h-12 rounded-xl bg-companion/10 flex items-center justify-center shrink-0">
