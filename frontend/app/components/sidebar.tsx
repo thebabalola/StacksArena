@@ -12,7 +12,7 @@ const menuItems = [
   { name: "Tournaments", href: "/arena#tournaments", icon: Trophy },
   { name: "Lottery", href: "/lottery", icon: Ticket },
   { name: "Assets", href: "/assets", icon: Layers },
-  { name: "Profile", href: "/arena#profile", icon: UserIcon },
+  { name: "Profile", href: "/profile", icon: UserIcon },
 ];
 
 const secondaryItems = [
