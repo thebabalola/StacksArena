@@ -14,7 +14,10 @@ export const CONTRACTS = {
   GAME_ASSETS: "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.StacksArena-game-assets",
 } as const;
 
-export const STACKS_NETWORK_CONFIG = STACKS_MAINNET;
+export const STACKS_NETWORK_CONFIG = {
+  ...STACKS_MAINNET,
+  baseUrl: STACKS_MAINNET.client.baseUrl,
+};
 
 export const PLATFORM_CONFIG = {
   name: "StacksArena",

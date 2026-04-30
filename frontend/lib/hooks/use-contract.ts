@@ -439,9 +439,45 @@ export function useGameAssets() {
     );
   };
 
+  const getWalletCount = useCallback(async (owner: string) => {
+    try {
+      const result = await fetchCallReadOnlyFunction({
+        contractAddress: addr,
+        contractName: name,
+        functionName: 'get-wallet-count',
+        functionArgs: [Cl.principal(owner)],
+        network: STACKS_NETWORK_CONFIG as any,
+        senderAddress: stxAddress || addr,
+      });
+      return cvToJSON(result);
+    } catch (e) {
+      console.error('get-wallet-count error', e);
+      return null;
+    }
+  }, [addr, name, stxAddress]);
+
+  const getWalletAssetAt = useCallback(async (owner: string, index: number) => {
+    try {
+      const result = await fetchCallReadOnlyFunction({
+        contractAddress: addr,
+        contractName: name,
+        functionName: 'get-wallet-asset-at',
+        functionArgs: [Cl.principal(owner), Cl.uint(index)],
+        network: STACKS_NETWORK_CONFIG as any,
+        senderAddress: stxAddress || addr,
+      });
+      return cvToJSON(result);
+    } catch (e) {
+      console.error('get-wallet-asset-at error', e);
+      return null;
+    }
+  }, [addr, name, stxAddress]);
+
   return {
     getAsset,
     getCollectionStats,
+    getWalletCount,
+    getWalletAssetAt,
     mintAsset,
     transferAsset,
     addXp,

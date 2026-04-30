@@ -27,42 +27,100 @@ interface Asset {
   owner: string;
 }
 
-import { Star, Zap, TrendingUp, Loader2, RefreshCw, Swords, Shield, Hammer, Backpack, Trophy, Box, LayoutDashboard } from "lucide-react";
+import { Star, Zap, TrendingUp, Loader2, RefreshCw, Swords, Shield, Hammer, Backpack, Trophy, Box, LayoutDashboard, Plus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/components/ui/dialog";
 
 export default function AssetsPage() {
-  const { connect, isConnected } = useStacks();
-  const { getAsset, getCollectionStats } = useGameAssets();
+  const { connect, isConnected, stxAddress } = useStacks();
+  const { getAsset, getCollectionStats, getWalletCount, getWalletAssetAt, mintAsset, loading } = useGameAssets();
 
   const [assets, setAssets] = useState<Asset[]>([]);
   const [totalMinted, setTotalMinted] = useState(0);
   const [fetching, setFetching] = useState(true);
+  const [isMintOpen, setIsMintOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    type: "WEAPON",
+    power: 50,
+    defense: 30,
+    speed: 20,
+    rarity: 1
+  });
 
   const fetchAssets = useCallback(async () => {
     setFetching(true);
     try {
       const stats = await getCollectionStats();
-      const total = Number(stats?.value?.value?.["total-minted"]?.value ?? 0);
-      setTotalMinted(total);
+      setTotalMinted(Number(stats?.value?.["total-minted"]?.value ?? 0));
 
-      // Predefined items for the screenshot alignment
-      const list: Asset[] = [
-        { id: 1042, name: "Shadow Blade", assetType: "WEAPON", xp: 1200, level: 12, rarity: 5, power: 88, owner: "SP123...456" },
-        { id: 1041, name: "Titan Armor", assetType: "SHIELD", xp: 180, level: 9, rarity: 4, power: 72, owner: "SP123...456" },
-        { id: 1040, name: "Rune Helm", assetType: "HELMET", xp: 27, level: 6, rarity: 3, power: 45, owner: "SP123...456" },
-        { id: 1039, name: "Forest Boots", assetType: "BOOTS", xp: 80, level: 3, rarity: 1, power: 18, owner: "SP123...456" },
-      ];
-      setAssets(list);
+      if (isConnected && stxAddress) {
+        const countRes = await getWalletCount(stxAddress);
+        const count = Number(countRes?.value ?? 0);
+        
+        const list: Asset[] = [];
+        for (let i = 0; i < count; i++) {
+          const assetIdRes = await getWalletAssetAt(stxAddress, i);
+          const assetId = Number(assetIdRes?.value ?? 0);
+          
+          const assetData = await getAsset(assetId);
+          if (assetData?.value) {
+            const v = assetData.value;
+            list.push({
+              id: assetId,
+              name: v.name?.value ?? "Unknown",
+              assetType: v["asset-type"]?.value ?? "ITEM",
+              xp: Number(v.xp?.value ?? 0),
+              level: Number(v.level?.value ?? 0),
+              rarity: Number(v.rarity?.value ?? 1),
+              power: Number(v.power?.value ?? 0),
+              owner: stxAddress
+            });
+          }
+        }
+        setAssets(list.reverse());
+      } else {
+        // Mock data for non-connected users
+        setAssets([
+          { id: 1042, name: "Shadow Blade", assetType: "WEAPON", xp: 1200, level: 12, rarity: 5, power: 88, owner: "" },
+          { id: 1041, name: "Titan Armor", assetType: "SHIELD", xp: 180, level: 9, rarity: 4, power: 72, owner: "" },
+          { id: 1040, name: "Rune Helm", assetType: "HELMET", xp: 27, level: 6, rarity: 3, power: 45, owner: "" },
+          { id: 1039, name: "Forest Boots", assetType: "BOOTS", xp: 80, level: 3, rarity: 1, power: 18, owner: "" },
+        ]);
+      }
     } catch (e) { console.error("Failed to fetch assets:", e); }
     finally { setFetching(false); }
-  }, [getCollectionStats, getAsset]);
+  }, [getCollectionStats, getWalletCount, getWalletAssetAt, getAsset, isConnected, stxAddress]);
+
+  const handleMint = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await mintAsset(
+      formData.type,
+      formData.name,
+      formData.power,
+      formData.defense,
+      formData.speed,
+      formData.rarity,
+      () => {
+        setIsMintOpen(false);
+        fetchAssets();
+      }
+    );
+  };
 
   useEffect(() => { fetchAssets(); }, [fetchAssets]);
 
   const getAssetIcon = (type: string) => {
-    switch (type) {
+    switch (type.toUpperCase()) {
       case "WEAPON": return Swords;
       case "SHIELD": return Shield;
-      case "HELMET": return Hammer; // Placeholder for helmet
+      case "HELMET": return Hammer;
       case "BOOTS": return Zap;
       default: return Box;
     }
@@ -77,9 +135,57 @@ export default function AssetsPage() {
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mt-2">Mint, collect, and upgrade your legendary items.</p>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={!isConnected ? connect : undefined}
-              className="rounded-xl bg-primary px-8 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-primary/90 transition-all shadow-2xl hover:scale-105 border-glow">
-              MINT NEW ASSET
+            <Dialog open={isMintOpen} onOpenChange={setIsMintOpen}>
+              <DialogTrigger asChild>
+                <button onClick={!isConnected ? (e => { e.preventDefault(); connect(); }) : undefined}
+                  className="rounded-xl bg-primary px-8 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-primary/90 transition-all shadow-2xl hover:scale-105 border-glow">
+                  MINT NEW ASSET
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#0a0a1a] border-white/10 text-white">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-black italic uppercase">Forge <span className="text-primary">New Asset</span></DialogTitle>
+                  <DialogDescription className="text-slate-400">Create a unique NFT asset for your arsenal.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleMint} className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Asset Name</label>
+                    <input required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
+                      placeholder="e.g. Dragon Slayer"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-all" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Type</label>
+                      <select value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-all appearance-none">
+                        <option value="WEAPON">WEAPON</option>
+                        <option value="SHIELD">SHIELD</option>
+                        <option value="HELMET">HELMET</option>
+                        <option value="BOOTS">BOOTS</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Rarity</label>
+                      <select value={formData.rarity} onChange={e => setFormData({...formData, rarity: Number(e.target.value)})}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-all appearance-none">
+                        <option value={1}>COMMON</option>
+                        <option value={3}>RARE</option>
+                        <option value={4}>EPIC</option>
+                        <option value={5}>LEGENDARY</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" disabled={loading}
+                    className="w-full py-4 rounded-xl bg-primary text-white text-sm font-black uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-3">
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
+                    BEGIN MINTING
+                  </button>
+                </form>
+              </DialogContent>
+            </Dialog>
+            <button onClick={fetchAssets} className="flex items-center gap-2 text-[10px] font-black text-slate-500 hover:text-primary transition-colors uppercase tracking-widest">
+              <RefreshCw className={`w-3 h-3 ${fetching ? "animate-spin" : ""}`} /> Refresh
             </button>
           </div>
         </motion.div>
@@ -87,6 +193,14 @@ export default function AssetsPage() {
         {fetching && assets.length === 0 ? (
           <div className="flex items-center justify-center py-40">
             <Loader2 className="w-12 h-12 text-primary animate-spin" />
+          </div>
+        ) : assets.length === 0 ? (
+          <div className="text-center py-40">
+            <Box className="w-16 h-16 text-slate-700 mx-auto mb-6 opacity-20" />
+            <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">No assets found in your collection.</p>
+            <button onClick={() => setIsMintOpen(true)} className="mt-6 text-primary font-black uppercase tracking-widest text-[10px] hover:underline underline-offset-4">
+              Mint your first asset
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -118,7 +232,7 @@ export default function AssetsPage() {
                       <div className="flex flex-col gap-1.5 flex-1 pr-4">
                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Level {asset.level}</span>
                         <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                           <div className="h-full bg-primary shadow-[0_0_10px_rgba(249,115,22,0.5)]" style={{ width: `${(asset.level / 20) * 100}%` }} />
+                           <div className="h-full bg-primary shadow-[0_0_10px_rgba(249,115,22,0.5)]" style={{ width: `${Math.min(100, (asset.level / 50) * 100)}%` }} />
                         </div>
                       </div>
                       <div className="text-right shrink-0">
@@ -151,7 +265,7 @@ export default function AssetsPage() {
              <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
              <Hammer className="w-6 h-6 animate-float" /> FUSE ASSETS
            </button>
-           <button className="group relative flex items-center justify-center gap-4 p-10 rounded-2xl bg-white/[0.02] border border-white/10 text-white font-black uppercase tracking-[0.4em] shadow-2xl hover:bg-white/5 hover:border-companion/40 transition-all hover:scale-[1.02] active:scale-[0.98]">
+           <button onClick={fetchAssets} className="group relative flex items-center justify-center gap-4 p-10 rounded-2xl bg-white/[0.02] border border-white/10 text-white font-black uppercase tracking-[0.4em] shadow-2xl hover:bg-white/5 hover:border-companion/40 transition-all hover:scale-[1.02] active:scale-[0.98]">
              <LayoutDashboard className="w-6 h-6 text-companion" /> MY COLLECTION
            </button>
         </div>
