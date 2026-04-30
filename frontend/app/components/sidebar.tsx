@@ -10,7 +10,7 @@ import { useBalance } from "@/lib/hooks/use-balance";
 const menuItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Arena", href: "/arena", icon: Sword },
-  { name: "Tournaments", href: "/arena#tournaments", icon: Trophy },
+  { name: "Tournaments", href: "/tournaments", icon: Trophy },
   { name: "Lottery", href: "/lottery", icon: Ticket },
   { name: "Assets", href: "/assets", icon: Layers },
   { name: "Profile", href: "/profile", icon: UserIcon },
