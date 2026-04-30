@@ -37,7 +37,7 @@ export default function TournamentsPage() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    entryFee: 1000000,
+    entryFeeSTX: "1.0",
     maxPlayers: 10,
     minPlayers: 2,
     durationBlocks: 144
@@ -80,10 +80,11 @@ export default function TournamentsPage() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    const entryFeeMicro = Math.floor(parseFloat(formData.entryFeeSTX) * 1000000);
     await createTournament(
       formData.title,
       formData.description,
-      formData.entryFee,
+      entryFeeMicro,
       formData.maxPlayers,
       formData.minPlayers,
       formData.durationBlocks,
@@ -128,8 +129,9 @@ export default function TournamentsPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Entry Fee (uSTX)</label>
-                        <input type="number" required value={formData.entryFee} onChange={e => setFormData({...formData, entryFee: Number(e.target.value)})}
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Entry Fee (STX)</label>
+                        <input type="text" required value={formData.entryFeeSTX} onChange={e => setFormData({...formData, entryFeeSTX: e.target.value})}
+                          placeholder="0.00003"
                           className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:border-primary outline-none transition-all" />
                       </div>
                       <div className="space-y-2">
