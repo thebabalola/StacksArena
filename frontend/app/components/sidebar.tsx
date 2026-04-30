@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, Sword, Ticket, Layers, Info, Settings, HelpCircle, Trophy, LayoutDashboard, User as UserIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useStacks } from "@/lib/hooks/use-stacks";
+import { useBalance } from "@/lib/hooks/use-balance";
 
 const menuItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -27,7 +28,8 @@ function formatAddress(address?: string | null) {
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { isConnected, stxAddress } = useStacks();
+  const { isConnected, stxAddress, profile } = useStacks();
+  const { balance } = useBalance();
 
   return (
     <aside className="hidden lg:flex flex-col w-64 glass-panel border-r border-white/5 h-screen sticky top-0 z-40">
@@ -77,7 +79,7 @@ export function Sidebar() {
                <p className="text-[9px] font-bold text-slate-500 truncate">{formatAddress(stxAddress)}</p>
                <div className="flex items-center gap-1 mt-0.5">
                  <div className="w-1 h-1 rounded-full bg-primary" />
-                 <span className="text-[9px] font-black text-primary tracking-widest uppercase">12,463 STX</span>
+                 <span className="text-[9px] font-black text-primary tracking-widest uppercase">{balance} STX</span>
                </div>
              </div>
            </div>

@@ -2,9 +2,17 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import { Trophy, Users, Clock, Zap, Loader2, RefreshCw } from "lucide-react";
+import { Trophy, Users, Clock, Zap, Loader2, RefreshCw, Plus } from "lucide-react";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useTournament } from "@/lib/hooks/use-contract";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/components/ui/dialog";
 
 interface Tournament {
   id: number;
@@ -24,6 +32,15 @@ export default function ArenaPage() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [stats, setStats] = useState({ total: 0, totalPrize: 0 });
   const [fetching, setFetching] = useState(true);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    entryFee: 1000000,
+    maxPlayers: 10,
+    minPlayers: 2,
+    durationBlocks: 144
+  });
 
   const fetchTournaments = useCallback(async () => {
     setFetching(true);
@@ -60,6 +77,22 @@ export default function ArenaPage() {
     }
   }, [getArenaStats, getTournament]);
 
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await createTournament(
+      formData.title,
+      formData.description,
+      formData.entryFee,
+      formData.maxPlayers,
+      formData.minPlayers,
+      formData.durationBlocks,
+      () => {
+        setIsCreateOpen(false);
+        fetchTournaments();
+      }
+    );
+  };
+
   useEffect(() => { fetchTournaments(); }, [fetchTournaments]);
 
   return (
@@ -70,9 +103,67 @@ export default function ArenaPage() {
             <h1 className="text-4xl font-black mb-2">Tournament <span className="text-primary">Arena</span></h1>
             <p className="text-muted-foreground">{stats.total} tournaments created · {stats.totalPrize} uSTX total prize pool</p>
           </div>
-          <button onClick={fetchTournaments} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors">
-            <RefreshCw className={`w-3 h-3 ${fetching ? "animate-spin" : ""}`} /> Refresh
-          </button>
+          <div className="flex items-center gap-4">
+            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+              <DialogTrigger asChild>
+                <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                  <Plus className="w-4 h-4" /> Create Tournament
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-card border-border text-foreground">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-black">Create <span className="text-primary">Tournament</span></DialogTitle>
+                  <DialogDescription className="text-muted-foreground">Set the rules for your new tournament arena.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleCreate} className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Tournament Title</label>
+                    <input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})}
+                      className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:border-primary outline-none transition-all"
+                      placeholder="Grand Bitcoin Championship" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Description</label>
+                    <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}
+                      className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:border-primary outline-none transition-all h-20"
+                      placeholder="Welcome to the ultimate arena..." />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Entry Fee (uSTX)</label>
+                      <input type="number" required value={formData.entryFee} onChange={e => setFormData({...formData, entryFee: Number(e.target.value)})}
+                        className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:border-primary outline-none transition-all" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Duration (Blocks)</label>
+                      <input type="number" required value={formData.durationBlocks} onChange={e => setFormData({...formData, durationBlocks: Number(e.target.value)})}
+                        className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:border-primary outline-none transition-all" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Min Players</label>
+                      <input type="number" required value={formData.minPlayers} onChange={e => setFormData({...formData, minPlayers: Number(e.target.value)})}
+                        className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:border-primary outline-none transition-all" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Max Players</label>
+                      <input type="number" required value={formData.maxPlayers} onChange={e => setFormData({...formData, maxPlayers: Number(e.target.value)})}
+                        className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:border-primary outline-none transition-all" />
+                    </div>
+                  </div>
+                  <button type="submit" disabled={loading}
+                    className="w-full py-3 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all flex items-center justify-center gap-2">
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+                    Deploy Tournament
+                  </button>
+                </form>
+              </DialogContent>
+            </Dialog>
+            <button onClick={fetchTournaments} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors">
+              <RefreshCw className={`w-3 h-3 ${fetching ? "animate-spin" : ""}`} /> Refresh
+            </button>
+          </div>
         </motion.div>
 
         {fetching && tournaments.length === 0 ? (
@@ -83,7 +174,10 @@ export default function ArenaPage() {
           <div className="text-center py-20 text-muted-foreground">
             <Trophy className="w-12 h-12 mx-auto mb-4 opacity-30" />
             <p className="text-lg font-bold">No tournaments yet</p>
-            <p className="text-sm">Create the first tournament to get started</p>
+            <p className="text-sm mb-6">Create the first tournament to get started</p>
+            <button onClick={() => setIsCreateOpen(true)} className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+              <Plus className="w-4 h-4" /> Create Tournament
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
