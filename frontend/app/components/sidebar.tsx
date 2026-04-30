@@ -71,11 +71,11 @@ export function Sidebar() {
            <div className="rounded-2xl bg-white/[0.03] p-3 border border-white/5 flex items-center gap-3">
              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-companion to-primary/20 p-[1px]">
                <div className="w-full h-full rounded-xl bg-[#0a0a1a] flex items-center justify-center overflow-hidden">
-                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=PlayerOne" alt="Avatar" className="w-full h-full object-cover" />
+                 <img src={profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${stxAddress || 'Player'}`} alt="Avatar" className="w-full h-full object-cover" />
                </div>
              </div>
              <div className="flex-1 min-w-0">
-               <p className="text-[11px] font-black text-white truncate">PlayerOne</p>
+               <p className="text-[11px] font-black text-white truncate">{profile?.username || "Warrior"}</p>
                <p className="text-[9px] font-bold text-slate-500 truncate">{formatAddress(stxAddress)}</p>
                <div className="flex items-center gap-1 mt-0.5">
                  <div className="w-1 h-1 rounded-full bg-primary" />
