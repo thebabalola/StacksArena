@@ -29,7 +29,7 @@ export function Navbar() {
         <div className="lg:hidden">
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
             <img src="/stacksarena-logo.png" alt="StacksArena" className="w-8 h-8 transition-transform group-hover:scale-110" />
-            <span className="text-lg font-black tracking-tight text-white font-[var(--font-display)]">
+            <span className="text-lg font-black tracking-tight text-foreground font-[var(--font-display)]">
               STACKS<span className="text-primary italic">ARENA</span>
             </span>
           </Link>
@@ -52,7 +52,7 @@ export function Navbar() {
                   <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center relative z-10">
                     <User className="w-3.5 h-3.5 text-primary" />
                   </div>
-                  <span className="font-bold text-xs text-white/90 relative z-10">{formatAddress(stxAddress)}</span>
+                  <span className="font-bold text-xs text-foreground relative z-10">{formatAddress(stxAddress)}</span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-500 group-data-[state=open]:rotate-180 transition-transform relative z-10" />
                 </button>
               </DropdownMenuTrigger>
