@@ -43,13 +43,18 @@ export default function Home() {
       const [arena, lottery, collection] = await Promise.all([
         getArenaStats(), getPlatformStats(), getCollectionStats(),
       ]);
+      
+      const a = arena?.value;
+      const l = lottery?.value;
+      const c = collection?.value;
+
       setStats({
-        tournaments: Number(arena?.value?.value?.["total-tournaments"]?.value ?? 0),
-        lotteryRounds: Number(lottery?.value?.value?.["total-rounds"]?.value ?? 0),
-        assetsMinted: Number(collection?.value?.value?.["total-minted"]?.value ?? 0),
-        prizePool: Number(arena?.value?.value?.["total-prize-pool"]?.value ?? 0),
-        totalTickets: Number(lottery?.value?.value?.["total-tickets-sold"]?.value ?? 0),
-        totalPlayers: Number(arena?.value?.value?.["total-players"]?.value ?? 0),
+        tournaments: Number(a?.["total-tournaments"]?.value ?? 0),
+        lotteryRounds: Number(l?.["total-rounds"]?.value ?? 0),
+        assetsMinted: Number(c?.["total-minted"]?.value ?? 0),
+        prizePool: Number(a?.["total-prize-distributed"]?.value ?? 0),
+        totalTickets: Number(l?.["total-tickets-sold"]?.value ?? 0),
+        totalPlayers: Number(a?.["tournaments-completed"]?.value ?? 0),
       });
     } catch (e) { console.error("Failed to fetch stats:", e); }
   }, [getArenaStats, getPlatformStats, getCollectionStats]);

@@ -47,16 +47,17 @@ export default function TournamentsPage() {
     setFetching(true);
     try {
       const arenaStats = await getArenaStats();
-      const total = Number(arenaStats?.value?.value?.["total-tournaments"]?.value ?? 0);
-      const totalPrize = Number(arenaStats?.value?.value?.["total-prize-pool"]?.value ?? 0);
+      const a = arenaStats?.value;
+      const total = Number(a?.["total-tournaments"]?.value ?? 0);
+      const totalPrize = Number(a?.["total-prize-distributed"]?.value ?? 0);
 
       setStats({ total, totalPrize });
 
       const list: Tournament[] = [];
       for (let i = Math.max(0, total - 12); i < total; i++) {
         const t = await getTournament(i);
-        if (t?.value?.value) {
-          const v = t.value.value;
+        if (t?.value) {
+          const v = t.value;
           list.push({
             id: i,
             title: v.title?.value ?? `Tournament #${i}`,

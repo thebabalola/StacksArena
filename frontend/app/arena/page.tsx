@@ -17,12 +17,12 @@ export default function ArenaDashboard() {
     async function fetchStats() {
       try {
         const arenaStats = await getArenaStats();
-        if (arenaStats?.value?.value) {
-          const v = arenaStats.value.value;
+        if (arenaStats?.value) {
+          const v = arenaStats.value;
           setStats({
             total: Number(v["total-tournaments"]?.value ?? 0),
-            totalPrize: Number(v["total-prize-pool"]?.value ?? 0),
-            activePlayers: Number(v["total-players"]?.value ?? 0)
+            totalPrize: Number(v["total-prize-distributed"]?.value ?? 0),
+            activePlayers: Number(v["tournaments-completed"]?.value ?? 0)
           });
         }
       } catch (e) {
@@ -44,8 +44,8 @@ export default function ArenaDashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <StatCard icon={Sword} label="Total Arenas" value={stats.total.toString()} sub="Global Competitions" color="text-primary" />
-          <StatCard icon={Trophy} label="Prize Liquidity" value={`${(stats.totalPrize/1000000).toFixed(2)} STX`} sub="Total uSTX Distributed" color="text-yellow-500" />
-          <StatCard icon={Users} label="Active Warriors" value={stats.activePlayers.toString()} sub="Registered Players" color="text-green-500" />
+          <StatCard icon={Trophy} label="Prize Liquidity" value={`${(stats.totalPrize/1000000).toFixed(2)} STX`} sub="Total STX Distributed" color="text-yellow-500" />
+          <StatCard icon={Users} label="Arenas Closed" value={stats.activePlayers.toString()} sub="Finalized Events" color="text-green-500" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
