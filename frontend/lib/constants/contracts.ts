@@ -6,16 +6,15 @@
 //   StacksArena-lottery-pool:       9bbb6920df9a29eaa26d6f0c3ca95271289470f79854f1720de5bc5a51b7b60f
 //   StacksArena-tournament-manager: ad3131685ddc27b310e6e74c9403dc60933a684ae9b713cc108af832bc094847
 
+import { StacksMainnet } from "@stacks/network";
+
 export const CONTRACTS = {
   LOTTERY_POOL: "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.StacksArena-lottery-pool",
   TOURNAMENT_MANAGER: "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.StacksArena-tournament-manager",
   GAME_ASSETS: "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.StacksArena-game-assets",
 } as const;
 
-export const STACKS_NETWORK_CONFIG = {
-  chainId: 1, // Mainnet
-  coreApiUrl: "https://api.hiro.so",
-} as const;
+export const STACKS_NETWORK_CONFIG = new StacksMainnet();
 
 export const PLATFORM_CONFIG = {
   name: "StacksArena",
