@@ -8,22 +8,40 @@ import { useStacks } from "@/lib/hooks/use-stacks";
 import { useTournament, useLottery, useGameAssets } from "@/lib/hooks/use-contract";
 import { CONTRACTS } from "@/lib/constants/contracts";
 
-function Counter({ target, prefix = "", suffix = "" }: { target: number; prefix?: string; suffix?: string }) {
+function Counter({ target, prefix = "", suffix = "", decimals = 0 }: { target: number; prefix?: string; suffix?: string; decimals?: number }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
   useEffect(() => {
     if (!inView) return;
     let n = 0;
-    const step = Math.max(1, target / 80);
+    const duration = 2000;
+    const steps = 80;
+    const stepValue = target / steps;
+    const interval = duration / steps;
+    
     const timer = setInterval(() => {
-      n = Math.min(n + step, target);
-      setCount(Math.floor(n));
-      if (n >= target) clearInterval(timer);
-    }, 25);
+      n += stepValue;
+      if (n >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(n);
+      }
+    }, interval);
     return () => clearInterval(timer);
   }, [inView, target]);
-  return <span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
+
+  return (
+    <span ref={ref}>
+      {prefix}
+      {count.toLocaleString("en-US", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}
+      {suffix}
+    </span>
+  );
 }
 
 
@@ -52,9 +70,9 @@ export default function Home() {
         tournaments: Number(a?.["total-tournaments"]?.value ?? 0),
         lotteryRounds: Number(l?.["total-rounds"]?.value ?? 0),
         assetsMinted: Number(c?.["total-minted"]?.value ?? 0),
-        prizePool: Number(a?.["total-prize-distributed"]?.value ?? 0),
+        prizePool: (Number(a?.["total-prize-distributed"]?.value ?? 0) + Number(l?.["total-prize-distributed"]?.value ?? 0)) / 1000000,
         totalTickets: Number(l?.["total-tickets-sold"]?.value ?? 0),
-        totalPlayers: Number(a?.["tournaments-completed"]?.value ?? 0),
+        totalPlayers: Math.max(Number(a?.["tournaments-completed"]?.value ?? 0), Number(l?.["total-tickets-sold"]?.value ?? 0)),
       });
     } catch (e) { console.error("Failed to fetch stats:", e); }
   }, [getArenaStats, getPlatformStats, getCollectionStats]);
@@ -133,10 +151,10 @@ export default function Home() {
           className="w-full rounded-2xl bg-[#0a0a1a]/90 border border-white/5 p-6 md:p-10 backdrop-blur-2xl grid grid-cols-2 md:grid-cols-4 gap-8 shadow-2xl relative">
           <div className="absolute inset-0 cyber-mesh opacity-10 rounded-2xl pointer-events-none" />
           {[
-            { icon: Users, label: "PLAYERS", target: stats.totalPlayers, suffix: "" },
-            { icon: Trophy, label: "TOURNAMENTS", target: stats.tournaments, suffix: "" },
-            { icon: Bitcoin, label: "TOTAL PRIZES", target: stats.prizePool / 1000000, suffix: " STX", prefix: "" },
-            { icon: Swords, label: "ASSETS MINTED", target: stats.assetsMinted, suffix: "" }
+            { icon: Users, label: "PLAYERS", target: stats.totalPlayers, suffix: "", decimals: 0 },
+            { icon: Trophy, label: "TOURNAMENTS", target: stats.tournaments, suffix: "", decimals: 0 },
+            { icon: Bitcoin, label: "TOTAL PRIZES", target: stats.prizePool, suffix: " STX", prefix: "", decimals: 2 },
+            { icon: Swords, label: "ASSETS MINTED", target: stats.assetsMinted, suffix: "", decimals: 0 }
           ].map((stat) => (
             <div key={stat.label} className="flex items-center gap-4 relative z-10">
               <div className="w-12 h-12 rounded-xl bg-companion/10 flex items-center justify-center shrink-0">
@@ -144,7 +162,7 @@ export default function Home() {
               </div>
               <div>
                 <p className="text-xl md:text-2xl font-black text-white font-[var(--font-display)] tracking-wide">
-                   {stat.prefix}<Counter target={stat.target} suffix={stat.suffix} />
+                   {stat.prefix}<Counter target={stat.target} suffix={stat.suffix} decimals={stat.decimals} />
                 </p>
                 <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{stat.label}</p>
               </div>
