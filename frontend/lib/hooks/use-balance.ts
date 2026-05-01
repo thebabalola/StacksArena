@@ -13,7 +13,7 @@ export function useBalance() {
     if (!stxAddress) return;
     setIsLoading(true);
     try {
-      const response = await fetch(`${STACKS_NETWORK_CONFIG.coreApiUrl}/extended/v1/address/${stxAddress}/balances`);
+      const response = await fetch(`${STACKS_NETWORK_CONFIG.baseUrl}/extended/v1/address/${stxAddress}/balances`);
       const data = await response.json();
       const stxBalance = BigInt(data.stx.balance);
       // Convert microSTX to STX and format

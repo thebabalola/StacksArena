@@ -54,17 +54,18 @@ export default function TournamentsPage() {
       setStats({ total, totalPrize });
 
       const list: Tournament[] = [];
-      for (let i = Math.max(0, total - 12); i < total; i++) {
+      const start = Math.max(1, total - 11);
+      for (let i = start; i <= total; i++) {
         const t = await getTournament(i);
         if (t?.value) {
           const v = t.value;
           list.push({
             id: i,
             title: v.title?.value ?? `Tournament #${i}`,
-            entryFee: Number(v["entry-fee"]?.value ?? 0),
-            prizePool: Number(v["prize-pool"]?.value ?? 0),
+            entryFee: Number(v["entry-fee"]?.value ?? 0) / 1000000,
+            prizePool: Number(v["prize-pool"]?.value ?? 0) / 1000000,
             players: Number(v["current-players"]?.value ?? 0),
-            maxPlayers: Number(v["max-players"]?.value ?? 0),
+            maxPlayers: Math.max(1, Number(v["max-players"]?.value ?? 0)),
             status: Number(v.status?.value ?? 0) === 0 ? "ACTIVE" : Number(v.status?.value) === 1 ? "ENDED" : "CANCELLED",
             timeRemaining: Number(v["end-time"]?.value ?? 0),
           });
@@ -194,11 +195,11 @@ export default function TournamentsPage() {
                   <div className="flex items-center justify-between">
                     <div className="text-xs">
                       <p className="text-muted-foreground">Prize Pool</p>
-                      <p className="font-bold">{t.prizePool.toLocaleString()} uSTX</p>
+                      <p className="font-bold">{t.prizePool.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} STX</p>
                     </div>
                     <div className="text-xs text-right">
                       <p className="text-muted-foreground">Entry</p>
-                      <p className="font-bold text-primary">{t.entryFee.toLocaleString()}</p>
+                      <p className="font-bold text-primary">{t.entryFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} STX</p>
                     </div>
                   </div>
                 </div>
