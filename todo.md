@@ -24,3 +24,13 @@
 ## 🧪 Testing & Validation
 - [ ] **Devnet Simulation**: Run full user flows (Lock -> Wait/Penalty -> Withdraw) on a local Devnet.
 - [ ] **Edge Case Testing**: Verify behavior for multi-sig approvals and milestone releases.
+
+
+
+=============
+
+3. Roadmap & TODO
+[NEW] StacksArena/todo.md: Created a comprehensive task list for the transition, including:
+Refactoring Clarity contracts to implement vault logic.
+Updating frontend hooks for lock-condition evaluation.
+Implementing visual progress indicators for the dashboard.
