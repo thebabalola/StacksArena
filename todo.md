@@ -4,10 +4,10 @@
 > This document tracks the pending tasks and technical requirements for the **Stacks Arena** project as it transitions to a Bitcoin-native vault protocol.
 
 ## 🚀 Phase 1: Core Protocol Development
-- [ ] **Contract Refactor**: Rewrite `smartcontract/contracts/` to implement the vault logic described in the PRD.
-    - [ ] `VaultFactory.clar`: Creation logic for new vault instances.
-    - [ ] `CommitVault.clar`: Core locking, penalty, and withdrawal logic.
-    - [ ] `ConditionEngine.clar`: Rule evaluation logic.
+- [x] **Contract Refactor**: Rewrite `smartcontract/contracts/` to implement the vault logic described in the PRD.
+    - [x] `VaultFactory.clar`: Creation logic for new vault instances.
+    - [x] `CommitVault.clar`: Core locking, penalty, and withdrawal logic.
+    - [x] `ConditionEngine.clar`: Rule evaluation logic.
 - [ ] **Unit Tests**: Create new tests in `smartcontract/tests/` to validate vault security and lock conditions.
 - [ ] **Mainnet Deployment Plan**: Define the deployment sequence for the new Clarity contracts.
 
