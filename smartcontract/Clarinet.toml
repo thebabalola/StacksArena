@@ -1,23 +1,23 @@
 [project]
 name = 'stacks-arena'
-description = 'Bitcoin-Native Gaming Platform — Lottery, Tournaments & Game Assets on Stacks L2'
+description = 'Bitcoin-native commitment protocol. Lock Bitcoin under programmable rules on Stacks L2.'
 authors = []
 telemetry = true
 cache_dir = './.cache'
 requirements = []
 
-[contracts.StacksArena-lottery-pool]
-path = 'contracts/lottery-pool.clar'
+[contracts.ConditionEngine]
+path = 'contracts/ConditionEngine.clar'
 clarity_version = 4
 epoch = '3.3'
 
-[contracts.StacksArena-tournament-manager]
-path = 'contracts/tournament-manager.clar'
+[contracts.CommitVault]
+path = 'contracts/CommitVault.clar'
 clarity_version = 4
 epoch = '3.3'
 
-[contracts.StacksArena-game-assets]
-path = 'contracts/game-assets.clar'
+[contracts.VaultFactory]
+path = 'contracts/VaultFactory.clar'
 clarity_version = 4
 epoch = '3.3'
 
