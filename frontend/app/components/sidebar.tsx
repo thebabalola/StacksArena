@@ -2,17 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sword, Ticket, Layers, Info, Settings, HelpCircle, Trophy, LayoutDashboard, User as UserIcon } from "lucide-react";
+import { Home, ShieldCheck, Lock, History, BarChart3, Info, Settings, HelpCircle, Trophy, LayoutDashboard, User as UserIcon, PlusCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useBalance } from "@/lib/hooks/use-balance";
 
 const menuItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Arena", href: "/arena", icon: Sword },
-  { name: "Tournaments", href: "/tournaments", icon: Trophy },
-  { name: "Lottery", href: "/lottery", icon: Ticket },
-  { name: "Assets", href: "/assets", icon: Layers },
+  { name: "Create Vault", href: "/create", icon: PlusCircle },
+  { name: "Active Locks", href: "/vaults", icon: Lock },
+  { name: "Global Stats", href: "/stats", icon: BarChart3 },
   { name: "Profile", href: "/profile", icon: UserIcon },
 ];
 
@@ -46,7 +45,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 px-4 space-y-0.5">
-        <div className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] px-4 mb-4">Core Systems</div>
+        <div className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] px-4 mb-4">Vault Systems</div>
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -75,7 +74,7 @@ export function Sidebar() {
                </div>
              </div>
              <div className="flex-1 min-w-0">
-               <p className="text-[11px] font-black text-white truncate">{profile?.username || "Warrior"}</p>
+               <p className="text-[11px] font-black text-white truncate">{profile?.username || "Committer"}</p>
                <p className="text-[9px] font-bold text-slate-500 truncate">{formatAddress(stxAddress)}</p>
                <div className="flex items-center gap-1 mt-0.5">
                  <div className="w-1 h-1 rounded-full bg-primary" />
@@ -88,7 +87,7 @@ export function Sidebar() {
         <div className="rounded-2xl bg-white/[0.02] p-4 border border-white/5">
           <div className="flex items-center gap-2">
              <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
-             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Live Arena</span>
+             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Protocol Live</span>
           </div>
         </div>
       </div>

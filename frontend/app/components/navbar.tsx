@@ -1,19 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { ThemeToggle } from "./ui/theme-toggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { ChevronDown, LogOut, User, Sword, Ticket, Layers, Home } from "lucide-react";
-
-const navItems = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "Arena", href: "/arena", icon: Sword },
-  { name: "Lottery", href: "/lottery", icon: Ticket },
-  { name: "Assets", href: "/assets", icon: Layers },
-];
+import { ChevronDown, LogOut, User, Lock, PlusCircle, LayoutDashboard, BarChart3 } from "lucide-react";
 
 function formatAddress(address?: string | null) {
   if (!address) return "";
@@ -38,7 +29,7 @@ export function Navbar() {
         <div className="hidden lg:block">
            <div className="flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#F97316]" />
-             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{isConnected ? "Player Session Active" : "Waiting for Connection"}</span>
+             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{isConnected ? "Vault Session Active" : "Waiting for Commitment"}</span>
            </div>
         </div>
 
@@ -65,7 +56,7 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <button onClick={connect} className="group relative overflow-hidden rounded-xl bg-primary px-7 py-3 text-xs font-black uppercase tracking-widest text-white transition-all hover:scale-105 active:scale-95 shadow-[0_15px_40px_rgba(249,115,22,0.35)]">
-              <span className="relative z-10">Connect Arena</span>
+              <span className="relative z-10">Connect Wallet</span>
               <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
             </button>
           )}
