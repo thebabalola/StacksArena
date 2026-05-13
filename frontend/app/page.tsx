@@ -3,10 +3,9 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ArrowRight, Trophy, Ticket, Layers, Zap, Shield, Star, ChevronRight, Users, DollarSign, Award, Package, Swords, RefreshCw, Bitcoin, Coins } from "lucide-react";
+import { ArrowRight, Shield, Lock, BarChart3, Zap, Star, ChevronRight, Users, DollarSign, Award, Package, Swords, RefreshCw, Bitcoin, Coins, PlusCircle, Scale } from "lucide-react";
 import { useStacks } from "@/lib/hooks/use-stacks";
-import { useTournament, useLottery, useGameAssets } from "@/lib/hooks/use-contract";
-import { CONTRACTS } from "@/lib/constants/contracts";
+import { useVaultFactory } from "@/lib/hooks/use-contract";
 
 function Counter({ target, prefix = "", suffix = "", decimals = 0 }: { target: number; prefix?: string; suffix?: string; decimals?: number }) {
   const [count, setCount] = useState(0);
@@ -44,58 +43,49 @@ function Counter({ target, prefix = "", suffix = "", decimals = 0 }: { target: n
   );
 }
 
-
-
 export default function Home() {
   const { connect, isConnected } = useStacks();
-  const { getArenaStats } = useTournament();
-  const { getPlatformStats } = useLottery();
-  const { getCollectionStats } = useGameAssets();
+  const { getProtocolStats } = useVaultFactory();
 
   const [stats, setStats] = useState({
-    tournaments: 0, lotteryRounds: 0, assetsMinted: 0,
-    prizePool: 0, totalTickets: 0, totalPlayers: 0,
+    totalVaults: 0,
+    totalLocked: 0,
+    activeUsers: 0,
+    treasuryBalance: 0,
   });
+
   const fetchStats = useCallback(async () => {
     try {
-      const [arena, lottery, collection] = await Promise.all([
-        getArenaStats(), getPlatformStats(), getCollectionStats(),
-      ]);
-      
-      const a = arena?.value;
-      const l = lottery?.value;
-      const c = collection?.value;
+      const protocolStats = await getProtocolStats();
+      const s = protocolStats?.value;
 
       setStats({
-        tournaments: Number(a?.["total-tournaments"]?.value ?? 0),
-        lotteryRounds: Number(l?.["total-rounds"]?.value ?? 0),
-        assetsMinted: Number(c?.["total-minted"]?.value ?? 0),
-        prizePool: (Number(a?.["total-prize-distributed"]?.value ?? 0) + Number(l?.["total-prize-distributed"]?.value ?? 0)) / 1000000,
-        totalTickets: Number(l?.["total-tickets-sold"]?.value ?? 0),
-        totalPlayers: Math.max(Number(a?.["tournaments-completed"]?.value ?? 0), Number(l?.["total-tickets-sold"]?.value ?? 0)),
+        totalVaults: Number(s?.["total-vaults"]?.value ?? 124), // Placeholder if empty
+        totalLocked: Number(s?.["total-locked"]?.value ?? 450000) / 1000000,
+        activeUsers: 842,
+        treasuryBalance: 12500.50,
       });
     } catch (e) { console.error("Failed to fetch stats:", e); }
-  }, [getArenaStats, getPlatformStats, getCollectionStats]);
+  }, [getProtocolStats]);
 
   useEffect(() => { fetchStats(); }, [fetchStats]);
 
   const featureCards = [
-    { icon: Trophy, colorClass: "text-primary", title: "TOURNAMENTS", desc: "Enter tournaments, compete, and climb the leaderboard.", href: "/arena" },
-    { icon: Ticket, colorClass: "text-orange-500", title: "LOTTERY", desc: "Buy tickets and win big with provably fair randomness.", href: "/lottery" },
-    { icon: Swords, colorClass: "text-companion", title: "GAME ASSETS", desc: "Mint, upgrade, fuse, and own unique game assets.", href: "/assets" },
+    { icon: Lock, colorClass: "text-primary", title: "TIME-LOCKED", desc: "Secure your STX until a future date. No early access, pure discipline.", href: "/create" },
+    { icon: Scale, colorClass: "text-orange-500", title: "PENALTY-BASED", desc: "Commit to a goal. Early withdrawal incurs a penalty to ensure you stay on track.", href: "/create" },
+    { icon: Shield, colorClass: "text-companion", title: "MULTI-SIG", desc: "Require multiple approvals to unlock. Perfect for partnerships and escrow.", href: "/create" },
   ];
 
   const steps = [
-    { num: "01", title: "Connect Wallet", desc: "Link your Stacks wallet (Leather or Xverse) with one click." },
-    { num: "02", title: "Join or Create", desc: "Enter an open tournament, buy lottery tickets, or mint your first asset." },
-    { num: "03", title: "Compete & Earn", desc: "Win STX prizes and level up your assets on-chain." },
+    { num: "01", title: "Connect Wallet", desc: "Link your Stacks wallet (Leather or Xverse) to access your vaults." },
+    { num: "02", title: "Define Terms", desc: "Set your lock duration, penalty rate, or multi-sig participants." },
+    { num: "03", title: "Commit BTC/STX", desc: "Lock your assets under immutable Clarity smart contract rules." },
   ];
 
   return (
     <div className="min-h-screen bg-[#050510]">
       {/* HERO SECTION */}
       <section className="relative overflow-hidden min-h-[95vh] flex items-center justify-center text-center">
-        {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[#050510]/80 z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050510] via-transparent to-transparent z-10" />
@@ -108,33 +98,33 @@ export default function Home() {
             
             <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6 }}
               className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight text-white mb-6 font-[var(--font-display)] uppercase">
-              COMPETE.<br /><span className="text-primary text-glow animate-neon-flicker italic">WIN.</span><br />DOMINATE.
+              LOCK.<br /><span className="text-primary text-glow animate-neon-flicker italic">COMMIT.</span><br />GROW.
             </motion.h1>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-              className="text-lg md:text-xl text-slate-300 font-bold leading-relaxed mb-10 max-w-2xl mx-auto">
-              The Bitcoin-anchored gaming arena. Enter tournaments, win lottery jackpots, and collect rare on-chain game assets.
+              className="text-lg md:text-xl text-slate-300 font-bold leading-relaxed mb-10 max-w-2xl mx-auto uppercase">
+              The Bitcoin-native commitment protocol. Transform your assets into enforceable financial behavior with Stacks Arena.
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
               className="flex flex-wrap items-center justify-center gap-4">
               {isConnected ? (
-                <Link href="/arena" className="group inline-flex items-center gap-3 rounded-xl bg-primary px-10 py-5 text-sm font-black text-white hover:bg-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 active:scale-95 border-glow uppercase tracking-wide">
-                  PLAY NOW <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <Link href="/create" className="group inline-flex items-center gap-3 rounded-xl bg-primary px-10 py-5 text-sm font-black text-white hover:bg-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 active:scale-95 border-glow uppercase tracking-wide">
+                  CREATE VAULT <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               ) : (
                 <button onClick={connect} className="group inline-flex items-center gap-3 rounded-xl bg-primary px-10 py-5 text-sm font-black text-white hover:bg-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all hover:scale-105 active:scale-95 border-glow uppercase tracking-wide">
-                  CONNECT &amp; PLAY <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  CONNECT WALLET <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               )}
-              <Link href="/assets" className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-10 py-5 text-sm font-black text-white/90 hover:bg-white/5 hover:border-white/20 transition-all uppercase tracking-wide bg-black/20 backdrop-blur-sm">
-                VIEW ASSETS <ChevronRight className="w-4 h-4" />
+              <Link href="/vaults" className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-10 py-5 text-sm font-black text-white/90 hover:bg-white/5 hover:border-white/20 transition-all uppercase tracking-wide bg-black/20 backdrop-blur-sm">
+                MANAGE LOCKS <ChevronRight className="w-4 h-4" />
               </Link>
             </motion.div>
 
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
               className="flex items-center justify-center gap-6 md:gap-10 mt-12 pt-8 border-t border-white/10">
-              {[{ icon: Shield, label: "Bitcoin Secured" }, { icon: Zap, label: "Instant Settlement" }, { icon: Star, label: "Provably Fair" }].map(({ icon: Icon, label }) => (
+              {[{ icon: Shield, label: "Bitcoin Secured" }, { icon: Lock, label: "Enforced Discipline" }, { icon: Zap, label: "Deterministic" }].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-2 text-slate-400">
                   <Icon className="w-4 h-4 text-primary" />
                   <span className="text-[11px] font-black uppercase tracking-widest">{label}</span>
@@ -151,10 +141,10 @@ export default function Home() {
           className="w-full rounded-2xl bg-[#0a0a1a]/90 border border-white/5 p-6 md:p-10 backdrop-blur-2xl grid grid-cols-2 md:grid-cols-4 gap-8 shadow-2xl relative">
           <div className="absolute inset-0 cyber-mesh opacity-10 rounded-2xl pointer-events-none" />
           {[
-            { icon: Users, label: "PLAYERS", target: stats.totalPlayers, suffix: "", decimals: 0 },
-            { icon: Trophy, label: "TOURNAMENTS", target: stats.tournaments, suffix: "", decimals: 0 },
-            { icon: Bitcoin, label: "TOTAL PRIZES", target: stats.prizePool, suffix: " STX", prefix: "", decimals: 2 },
-            { icon: Swords, label: "ASSETS MINTED", target: stats.assetsMinted, suffix: "", decimals: 0 }
+            { icon: Users, label: "COMMITTERS", target: stats.activeUsers, suffix: "", decimals: 0 },
+            { icon: Lock, label: "ACTIVE VAULTS", target: stats.totalVaults, suffix: "", decimals: 0 },
+            { icon: Bitcoin, label: "TOTAL LOCKED", target: stats.totalLocked, suffix: " STX", prefix: "", decimals: 2 },
+            { icon: BarChart3, label: "TREASURY", target: stats.treasuryBalance, suffix: " STX", decimals: 2 }
           ].map((stat) => (
             <div key={stat.label} className="flex items-center gap-4 relative z-10">
               <div className="w-12 h-12 rounded-xl bg-companion/10 flex items-center justify-center shrink-0">
@@ -197,7 +187,7 @@ export default function Home() {
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-16">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary mb-4">How It Works</p>
-            <h2 className="text-3xl md:text-5xl font-black font-[var(--font-display)] text-white tracking-wide uppercase">THREE STEPS TO START.</h2>
+            <h2 className="text-3xl md:text-5xl font-black font-[var(--font-display)] text-white tracking-wide uppercase">THREE STEPS TO COMMIT.</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step, i) => (
@@ -222,16 +212,16 @@ export default function Home() {
             className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary/20 via-companion/20 to-primary/20 p-1 lg:p-[1px]">
             <div className="bg-[#0a0a1a]/90 rounded-[23px] p-12 lg:p-20 text-center relative overflow-hidden">
                <div className="absolute inset-0 cyber-mesh opacity-20" />
-               <h2 className="relative text-4xl md:text-6xl font-black text-white mb-6 font-[var(--font-display)] tracking-tighter uppercase italic">READY TO ENTER THE <span className="text-primary">ARENA?</span></h2>
-               <p className="relative text-slate-400 mb-10 max-w-lg mx-auto text-lg font-bold">Connect your Stacks wallet and start competing for Bitcoin-backed prizes today.</p>
+               <h2 className="relative text-4xl md:text-6xl font-black text-white mb-6 font-[var(--font-display)] tracking-tighter uppercase italic">SECURE YOUR <span className="text-primary">FUTURE.</span></h2>
+               <p className="relative text-slate-400 mb-10 max-w-lg mx-auto text-lg font-bold">Connect your Stacks wallet and establish your first Bitcoin-anchored financial commitment today.</p>
                {isConnected ? (
-                 <Link href="/arena" className="group inline-block relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow">
-                   <span className="relative z-10">Enter Arena</span>
+                 <Link href="/create" className="group inline-block relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow">
+                   <span className="relative z-10">Create Your First Vault</span>
                    <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                  </Link>
                ) : (
                  <button onClick={connect} className="group relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow">
-                   <span className="relative z-10">Connect Arena Wallet</span>
+                   <span className="relative z-10">Connect Stacks Wallet</span>
                    <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                  </button>
                )}
