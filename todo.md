@@ -12,9 +12,9 @@
 - [ ] **Mainnet Deployment Plan**: Define the deployment sequence for the new Clarity contracts.
 
 ## 🖥️ Frontend Integration
-- [ ] **Vault Management Dashboard**: Replace the gaming arena UI with a clean interface for creating and monitoring vaults.
-- [ ] **Clarity Integration**: Update `frontend/lib/hooks/` to interact with the new vault contracts.
-- [ ] **Visual Progress Indicators**: Implement countdowns and lock-status visualizations.
+- [x] **Vault Management Dashboard**: Replace the gaming arena UI with a clean interface for creating and monitoring vaults.
+- [x] **Clarity Integration**: Update `frontend/lib/hooks/` to interact with the new vault contracts.
+- [x] **Visual Progress Indicators**: Implement countdowns and lock-status visualizations.
 
 ## 🛠 Maintenance & Documentation
 - [ ] **Sync ABIs**: Export and sync the new contract ABIs once refactored.
