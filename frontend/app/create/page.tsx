@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Shield, Lock, Zap, Loader2, ArrowLeft, Info, Scale, Clock, Users } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Shield, Lock, Zap, Loader2, ArrowLeft, Info, Scale, Clock, Users, Wallet } from "lucide-react";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useCommitVault } from "@/lib/hooks/use-contract";
+import { useBalance } from "@/lib/hooks/use-balance";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -12,13 +13,28 @@ export default function CreateVaultPage() {
   const router = useRouter();
   const { connect, isConnected } = useStacks();
   const { createVault, loading } = useCommitVault();
+  const { formattedSTX, rawMicroStx, isLoading: balanceLoading } = useBalance();
 
   const [formData, setFormData] = useState({
-    amountSTX: "10",
+    amountSTX: "",
     targetBlockOffset: 144, // ~1 day
     penaltyRate: 10,
     threshold: 1,
   });
+
+  // Live conversion: STX display <-> microSTX
+  const amountMicroStx = useMemo(() => {
+    const val = parseFloat(formData.amountSTX);
+    if (isNaN(val) || val <= 0) return 0n;
+    return BigInt(Math.round(val * 1_000_000));
+  }, [formData.amountSTX]);
+
+  const amountInSTX = useMemo(() => {
+    if (!amountMicroStx) return "0";
+    return (Number(amountMicroStx) / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 6 });
+  }, [amountMicroStx]);
+
+  const exceedsBalance = amountMicroStx > rawMicroStx && rawMicroStx > 0n;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,12 +43,12 @@ export default function CreateVaultPage() {
       return;
     }
 
-    const amountMicro = Math.floor(parseFloat(formData.amountSTX) * 1000000);
+    if (!amountMicroStx || amountMicroStx <= 0n) return;
     const targetBlock = 0; // In a real app, we'd fetch current block and add offset
     // For MVP, we'll use a large enough absolute block number or update the hook to handle offsets
 
     await createVault(
-      amountMicro,
+      Number(amountMicroStx),
       1000000, // Placeholder target block
       formData.penaltyRate,
       formData.threshold,
@@ -64,17 +80,40 @@ export default function CreateVaultPage() {
               <div className="absolute inset-0 cyber-mesh opacity-10 pointer-events-none" />
               
               <div className="space-y-3 relative z-10">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                   <Zap className="w-3 h-3 text-primary" /> Commitment Amount (STX)
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                    <Zap className="w-3 h-3 text-primary" /> Commitment Amount (STX)
+                  </label>
+                  {isConnected && (
+                    <span className={`text-[10px] font-bold uppercase flex items-center gap-1 ${
+                      balanceLoading ? 'text-slate-600' : 'text-slate-400'
+                    }`}>
+                      <Wallet className="w-3 h-3" />
+                      Bal: {balanceLoading ? '...' : formattedSTX} STX
+                    </span>
+                  )}
+                </div>
                 <input 
-                  type="text" 
+                  type="number" 
+                  step="any"
+                  min="0.000001"
                   required 
                   value={formData.amountSTX} 
                   onChange={e => setFormData({...formData, amountSTX: e.target.value})}
-                  placeholder="100.00"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-xl font-black text-white focus:border-primary outline-none transition-all placeholder:text-slate-700" 
+                  placeholder="0.000123"
+                  className={`w-full bg-white/[0.03] border rounded-2xl px-6 py-4 text-xl font-black text-white focus:border-primary outline-none transition-all placeholder:text-slate-700 ${
+                    exceedsBalance ? 'border-red-500/60' : 'border-white/10'
+                  }`}
                 />
+                {/* Live micro-unit conversion display */}
+                <div className="flex items-center justify-between text-[10px] font-bold uppercase">
+                  <span className="text-slate-600">
+                    = {amountMicroStx.toString()} microSTX
+                  </span>
+                  {exceedsBalance && (
+                    <span className="text-red-400">Exceeds balance</span>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
