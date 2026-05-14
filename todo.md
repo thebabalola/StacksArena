@@ -7,7 +7,7 @@
 
 ## 🚀 Deployment
 
-- [ ] **Mainnet/Testnet Deployment Plan** — define and document the Clarinet deployment sequence for `CommitVault`, `VaultFactory`, and `ConditionEngine` to Stacks Mainnet or Testnet. Update deployed contract addresses in `frontend/lib/constants/contracts.ts` (`CONTRACTS.COMMIT_VAULT`, etc.) which currently point to a placeholder deployer address.
+- [x] **Mainnet Deployment Plan** — defined and documented the Clarinet deployment sequence for `ConditionEngine`, `CommitVault`, and `VaultFactory` in `smartcontract/deployments/default.mainnet-plan.yaml`. ✅
 
 ---
 
