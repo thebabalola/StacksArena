@@ -40,6 +40,16 @@ Every commitment is governed by immutable smart contract logic, anchored to the 
 
 ---
 
+## 🚀 Deployment Status
+
+**Mainnet Readiness**: Deployment plan finalized in `smartcontract/deployments/default.mainnet-plan.yaml`.  
+The protocol is ready for deployment to **Stacks Mainnet** with the following contracts:
+- `ConditionEngine`
+- `CommitVault`
+- `VaultFactory`
+
+---
+
 ## Core Features
 
 ### ⏳ Time-Locked Vaults
