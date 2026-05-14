@@ -1,26 +1,33 @@
-# 📝 Stacks Arena Development TODO
+# 📝 StacksArena — Remaining TODO
 
 > [!IMPORTANT]
-> This document tracks the pending tasks and technical requirements for the **Stacks Arena** project as it transitions to a Bitcoin-native vault protocol.
+> Items listed here are **genuinely incomplete**. Everything completed this session (17 unit tests passing, multi-sig `approve-vault`, penalty treasury routing, ABI sync, integration guide, balance display, micro-unit STX input) has been removed.
 
-## 🚀 Phase 1: Core Protocol Development
-- [x] **Unit Tests**: Created 17 tests in `smartcontract/tests/CommitVault.test.ts` — all passing.
-- [ ] **Mainnet Deployment Plan**: Define the deployment sequence for the new Clarity contracts.
+---
 
-## 🖥️ Frontend Integration
-(Phase Complete)
+## 🚀 Deployment
 
-## 🛠 Maintenance & Documentation
-- [x] **Sync ABIs**: Contract function names and signatures exported to `frontend/lib/constants/contracts.ts`.
-- [x] **User Guide**: Finalized `stacks-frontend-integration-guide.md` with vault-specific examples.
-- [ ] **Security Audit**: Perform a deep dive into the Clarity logic to ensure funds cannot be unlocked prematurely.
+- [ ] **Mainnet/Testnet Deployment Plan** — define and document the Clarinet deployment sequence for `CommitVault`, `VaultFactory`, and `ConditionEngine` to Stacks Mainnet or Testnet. Update deployed contract addresses in `frontend/lib/constants/contracts.ts` (`CONTRACTS.COMMIT_VAULT`, etc.) which currently point to a placeholder deployer address.
 
-## 🧪 Testing & Validation
-- [x] **Unit Tests**: 17/17 passing — time-lock, penalty, multi-sig, unauthorized access.
-- [ ] **Devnet Simulation**: Run full user flows (Lock -> Wait/Penalty -> Withdraw) on a local Devnet.
-- [ ] **Edge Case Testing**: Verify behavior for multi-sig approvals and milestone releases.
+---
 
-## ✅ Phase B Completed
-- [x] Multi-Sig `approve-vault` function implemented in `CommitVault.clar`
-- [x] Penalty routed to `protocol-treasury` (not contract self)
-- [x] Input validation (amount > 0, valid penalty rate 0-100, threshold >= 1)
+## 🛠 Smart Contract
+
+- [ ] **`approve-vault` not wired to frontend** — the hook `useCommitVault` in `use-contract.ts` only exposes `createVault`, `withdraw`, and `getVaultDetails`. The new `approve-vault` function has no corresponding hook or UI button yet.
+- [ ] **Milestone-Based Release** — `ConditionEngine.clar` has `evaluate-milestone` read-only logic but `CommitVault` has no `release-milestone` public function to trigger phased releases.
+- [ ] **Real target block calculation** — `create/page.tsx` currently hardcodes `1000000` as the target block. Needs a live Stacks block height fetch so `targetBlock = currentBlock + userOffset`.
+
+---
+
+## 🧪 Testing
+
+- [ ] **Devnet Simulation** — run full user flow (Lock → Wait/mine blocks → Withdraw, and Lock → Approve → Withdraw) against a live Clarinet Devnet to catch edge cases not covered by Simnet unit tests.
+- [ ] **Edge Case: zero-threshold vault** — verify the contract correctly rejects `threshold = 0`.
+- [ ] **Security Audit** — review `withdraw` for double-spend edge cases when `approval-count` and block height are simultaneously at the boundary.
+
+---
+
+## 🎨 Frontend
+
+- [ ] **Vault Dashboard `/vaults` page** — read on-chain vault state and display per-vault: balance, approval count, countdown to unlock, and action buttons (Approve / Withdraw).
+- [ ] **`approve-vault` UI** — add a button on the vault detail/dashboard view to call the `approve-vault` function for multi-sig vaults.
