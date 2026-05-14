@@ -26,7 +26,6 @@ export type WalletStatus =
 
 export type WalletAddresses = {
   mainnet?: string;
-  testnet?: string;
   btc?: string;
 };
 
@@ -96,7 +95,6 @@ export function useStacks(): UseStacksResult {
 
     return {
       mainnet: stxAddress.mainnet || stxAddress.mainnetAddress,
-      testnet: stxAddress.testnet || stxAddress.testnetAddress,
       btc: profile?.btcAddress || profile?.btc || profile?.btc_address,
     } satisfies WalletAddresses;
   }, []);

@@ -14,7 +14,7 @@
 ### Environment Variables
 Create a `.env.local` file in the `frontend/` directory:
 ```bash
-NEXT_PUBLIC_STACKS_ENV=mainnet   # or 'testnet'
+NEXT_PUBLIC_STACKS_ENV=mainnet
 NEXT_PUBLIC_DEPLOYER=SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
 ```
 
