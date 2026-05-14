@@ -8,18 +8,18 @@ requirements = []
 
 [contracts.ConditionEngine]
 path = 'contracts/ConditionEngine.clar'
-clarity_version = 4
-epoch = '3.3'
+clarity_version = 2
+epoch = '2.5'
 
 [contracts.CommitVault]
 path = 'contracts/CommitVault.clar'
-clarity_version = 4
-epoch = '3.3'
+clarity_version = 2
+epoch = '2.5'
 
 [contracts.VaultFactory]
 path = 'contracts/VaultFactory.clar'
-clarity_version = 4
-epoch = '3.3'
+clarity_version = 2
+epoch = '2.5'
 
 [repl.analysis]
 passes = ['check_checker']
