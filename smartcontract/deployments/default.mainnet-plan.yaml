@@ -1,31 +1,42 @@
 id: 0
-name: Mainnet deployment
+name: StacksArena Mainnet Deployment
 network: mainnet
 stacks-node: https://api.hiro.so
 bitcoin-node: http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332
 plan:
   batches:
+  # Batch 0: Deploy ConditionEngine first (no dependencies)
   - id: 0
     transactions:
     - transaction-type: contract-publish
-      contract-name: StacksArena-game-assets
+      contract-name: ConditionEngine
       expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-      cost: 110710
-      path: contracts/game-assets.clar
+      cost: 80000
+      path: contracts/ConditionEngine.clar
       anchor-block-only: true
-      clarity-version: 4
+      clarity-version: 2
+    epoch: '2.5'
+
+  # Batch 1: Deploy CommitVault (depends on ConditionEngine trait)
+  - id: 1
+    transactions:
     - transaction-type: contract-publish
-      contract-name: StacksArena-lottery-pool
+      contract-name: CommitVault
       expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-      cost: 91560
-      path: contracts/lottery-pool.clar
+      cost: 150000
+      path: contracts/CommitVault.clar
       anchor-block-only: true
-      clarity-version: 4
+      clarity-version: 2
+    epoch: '2.5'
+
+  # Batch 2: Deploy VaultFactory (protocol stats tracker, no vault deps)
+  - id: 2
+    transactions:
     - transaction-type: contract-publish
-      contract-name: StacksArena-tournament-manager
+      contract-name: VaultFactory
       expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-      cost: 151570
-      path: contracts/tournament-manager.clar
+      cost: 50000
+      path: contracts/VaultFactory.clar
       anchor-block-only: true
-      clarity-version: 4
-    epoch: '3.3'
+      clarity-version: 2
+    epoch: '2.5'
