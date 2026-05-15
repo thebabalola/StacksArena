@@ -49,6 +49,10 @@
 
 ;; ===== Core Vault Functions =====
 
+(define-private (track-vault (amount uint))
+    (contract-call? .VaultFactory track-new-vault amount)
+)
+
 ;; @desc Create a new vault (supports STX and SIP-010)
 (define-public (create-vault (amount uint) (target-block uint) (penalty-rate uint) (threshold uint) (token (optional principal)) (milestones uint))
     (let
@@ -81,6 +85,7 @@
             current-milestone: u0
         })
         
+        (try! (track-vault amount))
         (var-set next-vault-id (+ vault-id u1))
         (ok vault-id)
     )

@@ -5,8 +5,20 @@ stacks-node: https://api.hiro.so
 bitcoin-node: http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332
 plan:
   batches:
-  # Batch 0: Deploy ConditionEngine first (no dependencies)
+  # Batch 0: Deploy VaultFactory (Required by CommitVault for stats)
   - id: 0
+    transactions:
+    - transaction-type: contract-publish
+      contract-name: stacksarena-VaultFactory
+      expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+      cost: 50000
+      path: contracts/VaultFactory.clar
+      anchor-block-only: true
+      clarity-version: 2
+    epoch: '2.5'
+
+  # Batch 1: Deploy ConditionEngine (Standalone utility)
+  - id: 1
     transactions:
     - transaction-type: contract-publish
       contract-name: stacksarena-ConditionEngine
@@ -17,26 +29,14 @@ plan:
       clarity-version: 2
     epoch: '2.5'
 
-  # Batch 1: Deploy CommitVault (depends on ConditionEngine trait)
-  - id: 1
+  # Batch 2: Deploy CommitVault (Main logic, depends on VaultFactory)
+  - id: 2
     transactions:
     - transaction-type: contract-publish
       contract-name: stacksarena-CommitVault
       expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-      cost: 150000
+      cost: 200000
       path: contracts/CommitVault.clar
-      anchor-block-only: true
-      clarity-version: 2
-    epoch: '2.5'
-
-  # Batch 2: Deploy VaultFactory (protocol stats tracker, no vault deps)
-  - id: 2
-    transactions:
-    - transaction-type: contract-publish
-      contract-name: stacksarena-VaultFactory
-      expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-      cost: 50000
-      path: contracts/VaultFactory.clar
       anchor-block-only: true
       clarity-version: 2
     epoch: '2.5'
