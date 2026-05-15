@@ -22,6 +22,8 @@ export default function CreateVaultPage() {
     targetBlockOffset: 144, // ~1 day
     penaltyRate: 10,
     threshold: 1,
+    tokenAddress: "", // Empty for STX
+    milestones: 1,
   });
 
   // Live conversion: STX display <-> microSTX
@@ -55,6 +57,8 @@ export default function CreateVaultPage() {
       targetBlock,
       formData.penaltyRate,
       formData.threshold,
+      formData.tokenAddress || null,
+      formData.milestones,
       (data) => {
         router.push("/vaults");
       }
@@ -149,21 +153,46 @@ export default function CreateVaultPage() {
                 </div>
               </div>
 
-              <div className="space-y-3 relative z-10">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                  <Users className="w-3 h-3 text-primary" /> Multi-Sig Threshold (Signers)
-                </label>
-                <div className="flex items-center gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                    <Users className="w-3 h-3 text-primary" /> Multi-Sig Threshold
+                  </label>
                   <input 
                     type="number" 
                     min="1"
                     required 
                     value={formData.threshold} 
                     onChange={e => setFormData({...formData, threshold: Number(e.target.value)})}
-                    className="w-24 bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all" 
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all" 
                   />
-                  <p className="text-[10px] text-slate-500 font-bold leading-tight uppercase italic">Vault will require {formData.threshold} approval{formData.threshold > 1 ? 's' : ''} to execute release.</p>
                 </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                    <LayoutDashboard className="w-3 h-3 text-primary" /> Phased Milestones
+                  </label>
+                  <input 
+                    type="number" 
+                    min="1"
+                    required 
+                    value={formData.milestones} 
+                    onChange={e => setFormData({...formData, milestones: Number(e.target.value)})}
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all" 
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3 relative z-10">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                  <Box className="w-3 h-3 text-primary" /> SIP-010 Token Address (Optional)
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.tokenAddress} 
+                  onChange={e => setFormData({...formData, tokenAddress: e.target.value})}
+                  placeholder="SP... (Leave empty for STX)"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all placeholder:text-slate-700" 
+                />
               </div>
 
               <button 

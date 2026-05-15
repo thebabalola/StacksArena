@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Shield, Lock, Zap, Loader2, RefreshCw, ArrowLeft, Unlock, AlertTriangle, Clock, History } from "lucide-react";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useCommitVault } from "@/lib/hooks/use-contract";
+import { useBlockHeight } from "@/lib/hooks/use-block-height";
 import Link from "next/link";
 
 interface Vault {
@@ -15,13 +16,18 @@ interface Vault {
   targetBlock: number;
   penaltyRate: number;
   threshold: number;
+  approvalCount: number;
   isActive: boolean;
+  token: string | null;
+  totalMilestones: number;
+  currentMilestone: number;
   timeRemaining: number; // In blocks
 }
 
 export default function VaultsPage() {
   const { connect, isConnected, stxAddress } = useStacks();
-  const { getVaultDetails, withdraw, loading } = useCommitVault();
+  const { getVaultDetails, withdraw, approveVault, releaseMilestone, loading } = useCommitVault();
+  const { blockHeight } = useBlockHeight();
 
   const [vaults, setVaults] = useState<Vault[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -33,7 +39,7 @@ export default function VaultsPage() {
       // In a real app, we'd fetch vault IDs from a user-specific list or factory
       // For MVP, we'll try to fetch the first few IDs or use placeholders
       const list: Vault[] = [];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 10; i++) {
         const v = await getVaultDetails(i);
         if (v?.value) {
           const val = v.value;
@@ -45,8 +51,12 @@ export default function VaultsPage() {
             targetBlock: Number(val["target-block"]?.value ?? 0),
             penaltyRate: Number(val["penalty-rate"]?.value ?? 0),
             threshold: Number(val.threshold?.value ?? 1),
+            approvalCount: Number(val["approval-count"]?.value ?? 0),
             isActive: val["is-active"]?.value ?? false,
-            timeRemaining: Math.max(0, Number(val["target-block"]?.value ?? 0) - 1000000), // Placeholder block height
+            token: val.token?.value?.value || null,
+            totalMilestones: Number(val["total-milestones"]?.value ?? 1),
+            currentMilestone: Number(val["current-milestone"]?.value ?? 0),
+            timeRemaining: Math.max(0, Number(val["target-block"]?.value ?? 0) - (blockHeight || 0)),
           });
         }
       }
@@ -60,8 +70,16 @@ export default function VaultsPage() {
 
   useEffect(() => { fetchVaults(); }, [fetchVaults]);
 
-  const handleWithdraw = async (vaultId: number) => {
-    await withdraw(vaultId, () => fetchVaults());
+  const handleWithdraw = async (vaultId: number, token: string | null) => {
+    await withdraw(vaultId, token, () => fetchVaults());
+  };
+
+  const handleApprove = async (vaultId: number) => {
+    await approveVault(vaultId, () => fetchVaults());
+  };
+
+  const handleReleaseMilestone = async (vaultId: number, token: string | null) => {
+    await releaseMilestone(vaultId, token, () => fetchVaults());
   };
 
   return (
@@ -140,9 +158,25 @@ export default function VaultsPage() {
                     </div>
                     <div className="flex items-center gap-2 mt-2">
                       <Clock className="w-3 h-3 text-slate-500" />
-                      <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">{vault.timeRemaining} blocks remaining until release</span>
+                      <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">
+                        {vault.timeRemaining === 0 ? "Unlocked" : `${vault.timeRemaining} blocks until release`}
+                      </span>
                     </div>
                   </div>
+
+                  {vault.totalMilestones > 1 && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                        <span>Milestones</span>
+                        <span>{vault.currentMilestone} / {vault.totalMilestones}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        {Array.from({ length: vault.totalMilestones }).map((_, idx) => (
+                          <div key={idx} className={`h-1 flex-1 rounded-full ${idx < vault.currentMilestone ? "bg-primary" : "bg-white/5"}`} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
                     <div>
@@ -155,18 +189,39 @@ export default function VaultsPage() {
                     </div>
                   </div>
 
-                  <button 
-                    onClick={() => handleWithdraw(vault.id)}
-                    disabled={loading || !vault.isActive}
-                    className={`w-full py-4 rounded-2xl flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest transition-all ${
-                      vault.timeRemaining === 0 
-                      ? "bg-green-500 text-white hover:bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.3)]" 
-                      : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10 hover:text-white"
-                    }`}
-                  >
-                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : vault.timeRemaining === 0 ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-                    {vault.timeRemaining === 0 ? "Withdraw Assets" : "Early Unlock (Penalty)"}
-                  </button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button 
+                      onClick={() => handleWithdraw(vault.id, vault.token)}
+                      disabled={loading || !vault.isActive}
+                      className={`py-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${
+                        vault.timeRemaining === 0 
+                        ? "bg-green-500 text-white hover:bg-green-600 shadow-[0_0_20px_rgba(34,197,94,0.3)]" 
+                        : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      {vault.timeRemaining === 0 ? "Withdraw" : "Penalty Exit"}
+                    </button>
+                    
+                    {vault.threshold > 1 && (
+                      <button 
+                        onClick={() => handleApprove(vault.id)}
+                        disabled={loading || !vault.isActive}
+                        className="py-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all"
+                      >
+                        Approve ({vault.approvalCount}/{vault.threshold})
+                      </button>
+                    )}
+
+                    {vault.totalMilestones > 1 && vault.currentMilestone < vault.totalMilestones && (
+                      <button 
+                        onClick={() => handleReleaseMilestone(vault.id, vault.token)}
+                        disabled={loading || !vault.isActive}
+                        className="col-span-2 py-4 rounded-2xl bg-companion/10 border border-companion/20 text-companion text-[10px] font-black uppercase tracking-widest hover:bg-companion/20 transition-all"
+                      >
+                        Release Next Milestone
+                      </button>
+                    )}
+                  </div>
                   
                   {vault.timeRemaining > 0 && (
                     <div className="flex items-center gap-2 justify-center opacity-50">

@@ -65,6 +65,8 @@ export function useCommitVault() {
     targetBlock: number,
     penaltyRate: number,
     threshold: number,
+    token: string | null, // null for STX
+    milestones: number,
     onFinish: (data: any) => void
   ) => {
     setLoading(true);
@@ -75,19 +77,38 @@ export function useCommitVault() {
         Cl.uint(amount),
         Cl.uint(targetBlock),
         Cl.uint(penaltyRate),
-        Cl.uint(threshold)
+        Cl.uint(threshold),
+        token ? Cl.some(Cl.principal(token)) : Cl.none(),
+        Cl.uint(milestones)
       ],
       (data) => { setLoading(false); onFinish(data); },
       () => setLoading(false)
     );
   };
 
-  const withdraw = async (vaultId: number, onFinish: (data: any) => void) => {
+  const withdraw = async (vaultId: number, tokenContract: string | null, onFinish: (data: any) => void) => {
     setLoading(true);
     await executeContractAction(
       addr, name,
       'withdraw',
-      [Cl.uint(vaultId)],
+      [
+        Cl.uint(vaultId),
+        tokenContract ? Cl.some(Cl.principal(tokenContract)) : Cl.none()
+      ],
+      (data) => { setLoading(false); onFinish(data); },
+      () => setLoading(false)
+    );
+  };
+
+  const releaseMilestone = async (vaultId: number, tokenContract: string | null, onFinish: (data: any) => void) => {
+    setLoading(true);
+    await executeContractAction(
+      addr, name,
+      'release-milestone',
+      [
+        Cl.uint(vaultId),
+        tokenContract ? Cl.some(Cl.principal(tokenContract)) : Cl.none()
+      ],
       (data) => { setLoading(false); onFinish(data); },
       () => setLoading(false)
     );
@@ -109,6 +130,7 @@ export function useCommitVault() {
     createVault,
     withdraw,
     approveVault,
+    releaseMilestone,
     loading,
   };
 }

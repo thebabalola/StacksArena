@@ -1,26 +1,11 @@
 # 📝 StacksArena — Remaining TODO
 
 > [!IMPORTANT]
-> Items listed here are **genuinely incomplete**. All recently completed tasks (Mainnet deployment plan, `approveVault` hook, and live block height integration) have been removed.
-
----
-
-## 🛠 Smart Contract
-
-- [ ] **BTC/SIP-010 Support** — Extend `CommitVault.clar` to support locking and tracking SIP-010 tokens (like sBTC or xBTC) in addition to native STX to align with the PRD.
-- [ ] **Milestone-Based Release** — `ConditionEngine.clar` has `evaluate-milestone` read-only logic but `CommitVault` has no `release-milestone` public function to trigger phased releases.
+> Items listed here are **genuinely incomplete**. All recently completed tasks (BTC/SIP-010 support, Milestone releases, Vault Dashboard, and multi-sig UI) have been removed.
 
 ---
 
 ## 🧪 Testing
 
 - [ ] **Devnet Simulation** — run full user flow (Lock → Wait/mine blocks → Withdraw, and Lock → Approve → Withdraw) against a live Clarinet Devnet to catch edge cases not covered by Simnet unit tests.
-- [ ] **Edge Case: zero-threshold vault** — verify the contract correctly rejects `threshold = 0`.
 - [ ] **Security Audit** — review `withdraw` for double-spend edge cases when `approval-count` and block height are simultaneously at the boundary.
-
----
-
-## 🎨 Frontend
-
-- [ ] **Vault Dashboard `/vaults` page** — read on-chain vault state and display per-vault: balance, approval count, countdown to unlock, and action buttons (Approve / Withdraw).
-- [ ] **`approve-vault` UI** — add a button on the vault detail/dashboard view to call the `approve-vault` function for multi-sig vaults.
