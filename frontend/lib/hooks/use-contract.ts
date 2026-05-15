@@ -93,10 +93,22 @@ export function useCommitVault() {
     );
   };
 
+  const approveVault = async (vaultId: number, onFinish: (data: any) => void) => {
+    setLoading(true);
+    await executeContractAction(
+      addr, name,
+      'approve-vault',
+      [Cl.uint(vaultId)],
+      (data) => { setLoading(false); onFinish(data); },
+      () => setLoading(false)
+    );
+  };
+
   return {
     getVaultDetails,
     createVault,
     withdraw,
+    approveVault,
     loading,
   };
 }

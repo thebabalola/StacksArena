@@ -6,6 +6,7 @@ import { Shield, Lock, Zap, Loader2, ArrowLeft, Info, Scale, Clock, Users, Walle
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useCommitVault } from "@/lib/hooks/use-contract";
 import { useBalance } from "@/lib/hooks/use-balance";
+import { useBlockHeight } from "@/lib/hooks/use-block-height";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -14,6 +15,7 @@ export default function CreateVaultPage() {
   const { connect, isConnected } = useStacks();
   const { createVault, loading } = useCommitVault();
   const { formattedSTX, rawMicroStx, isLoading: balanceLoading } = useBalance();
+  const { blockHeight } = useBlockHeight();
 
   const [formData, setFormData] = useState({
     amountSTX: "",
@@ -44,12 +46,13 @@ export default function CreateVaultPage() {
     }
 
     if (!amountMicroStx || amountMicroStx <= 0n) return;
-    const targetBlock = 0; // In a real app, we'd fetch current block and add offset
-    // For MVP, we'll use a large enough absolute block number or update the hook to handle offsets
+    
+    // Calculate real target block from current block + user offset
+    const targetBlock = (blockHeight || 0) + formData.targetBlockOffset;
 
     await createVault(
       Number(amountMicroStx),
-      1000000, // Placeholder target block
+      targetBlock,
       formData.penaltyRate,
       formData.threshold,
       (data) => {

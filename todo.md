@@ -14,9 +14,9 @@
 ## 🛠 Smart Contract
 
 - [ ] **BTC/SIP-010 Support** — Extend `CommitVault.clar` to support locking and tracking SIP-010 tokens (like sBTC or xBTC) in addition to native STX to align with the PRD.
-- [ ] **`approve-vault` not wired to frontend** — the hook `useCommitVault` in `use-contract.ts` only exposes `createVault`, `withdraw`, and `getVaultDetails`. The new `approve-vault` function has no corresponding hook or UI button yet.
+- [x] **`approve-vault` hook wired to frontend** — implemented the `approveVault` hook in `use-contract.ts`. ✅
 - [ ] **Milestone-Based Release** — `ConditionEngine.clar` has `evaluate-milestone` read-only logic but `CommitVault` has no `release-milestone` public function to trigger phased releases.
-- [ ] **Real target block calculation** — `create/page.tsx` currently hardcodes `1000000` as the target block. Needs a live Stacks block height fetch so `targetBlock = currentBlock + userOffset`.
+- [x] **Real target block calculation** — implemented `useBlockHeight` hook and updated `create/page.tsx` to calculate target blocks dynamically. ✅
 
 ---
 
