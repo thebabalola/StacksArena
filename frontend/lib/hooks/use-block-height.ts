@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { STACKS_NETWORK_CONFIG } from './constants/contracts';
+import { STACKS_NETWORK_CONFIG } from '../constants/contracts';
 
 export function useBlockHeight() {
   const [blockHeight, setBlockHeight] = useState<number>(0);

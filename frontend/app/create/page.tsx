@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState, useMemo } from "react";
-import { Shield, Lock, Zap, Loader2, ArrowLeft, Info, Scale, Clock, Users, Wallet } from "lucide-react";
+import { Shield, Lock, Zap, Loader2, ArrowLeft, Info, Scale, Clock, Users, Wallet, LayoutDashboard, Box } from "lucide-react";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useCommitVault } from "@/lib/hooks/use-contract";
 import { useBalance } from "@/lib/hooks/use-balance";
