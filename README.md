@@ -42,11 +42,16 @@ Every commitment is governed by immutable smart contract logic, anchored to the 
 
 ## 🚀 Deployment Status
 
-**Mainnet Readiness**: Deployment plan finalized in `smartcontract/deployments/default.mainnet-plan.yaml`.  
-The protocol is ready for deployment to **Stacks Mainnet** with the following contracts:
-- `ConditionEngine`
-- `CommitVault`
-- `VaultFactory`
+**Mainnet Status**: ✅ **Live on Stacks Mainnet**
+
+The protocol is deployed to **Stacks Mainnet** with the following contracts (Deployer: `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2`):
+- **CommitVault**: `stacksarena-CommitVault`
+- **VaultFactory**: `stacksarena-VaultFactory`
+- **ConditionEngine**: `stacksarena-ConditionEngine`
+- **SIP-010 Trait**: `stacksarena-sip-010-trait`
+
+You can verify these contracts on the [Stacks Explorer](https://explorer.stacks.co/address/SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2?chain=mainnet).
+
 
 ---
 

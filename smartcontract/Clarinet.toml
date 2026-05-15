@@ -6,22 +6,22 @@ telemetry = true
 cache_dir = './.cache'
 requirements = []
 
-[contracts.ConditionEngine]
+[contracts.stacksarena-ConditionEngine]
 path = 'contracts/ConditionEngine.clar'
 clarity_version = 2
 epoch = '2.5'
 
-[contracts.CommitVault]
+[contracts.stacksarena-CommitVault]
 path = 'contracts/CommitVault.clar'
 clarity_version = 2
 epoch = '2.5'
 
-[contracts.VaultFactory]
+[contracts.stacksarena-VaultFactory]
 path = 'contracts/VaultFactory.clar'
 clarity_version = 2
 epoch = '2.5'
 
-[contracts.sip-010-trait-ft-standard]
+[contracts.stacksarena-sip-010-trait]
 path = 'contracts/sip-010-trait-ft-standard.clar'
 clarity_version = 2
 epoch = '2.5'

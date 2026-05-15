@@ -5,45 +5,46 @@ stacks-node: https://api.hiro.so
 bitcoin-node: http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332
 plan:
   batches:
-  # Batch 0: Deploy Standard Traits & Utils
-  - id: 0
-    transactions:
-    - contract-publish:
-        contract-name: stacksarena-sip-010-trait
-        expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-        cost: 30000
-        path: contracts/sip-010-trait-ft-standard.clar
-        anchor-block-only: true
-        clarity-version: 2
-    - contract-publish:
-        contract-name: stacksarena-VaultFactory
-        expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-        cost: 50000
-        path: contracts/VaultFactory.clar
-        anchor-block-only: true
-        clarity-version: 2
-    epoch: '2.5'
+  # # Batch 0: Deploy Standard Traits & Utils
+  # - id: 0
+  #   transactions:
+  #   - contract-publish:
+  #       contract-name: stacksarena-sip-010-trait
+  #       expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+  #       cost: 30000
+  #       path: contracts/sip-010-trait-ft-standard.clar
+  #       anchor-block-only: true
+  #       clarity-version: 2
+  #   - contract-publish:
+  #       contract-name: stacksarena-VaultFactory
+  #       expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+  #       cost: 50000
+  #       path: contracts/VaultFactory.clar
+  #       anchor-block-only: true
+  #       clarity-version: 2
+  #   epoch: '2.5'
 
   # Batch 1: Deploy ConditionEngine (Standalone utility)
-  - id: 1
-    transactions:
-    - contract-publish:
-        contract-name: stacksarena-ConditionEngine
-        expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
-        cost: 80000
-        path: contracts/ConditionEngine.clar
-        anchor-block-only: true
-        clarity-version: 2
-    epoch: '2.5'
+  # - id: 1
+  #   transactions:
+  #   - contract-publish:
+  #       contract-name: stacksarena-ConditionEngine
+  #       expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+  #       cost: 80000
+  #       path: contracts/ConditionEngine.clar
+  #       anchor-block-only: true
+  #       clarity-version: 2
+  #   epoch: '2.5'
 
   # Batch 2: Deploy CommitVault (Main logic)
   - id: 2
     transactions:
     - contract-publish:
-        contract-name: stacksarena-CommitVault
+        contract-name: stacksarena-CommitVaults
         expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
         cost: 250000
         path: contracts/CommitVault.clar
         anchor-block-only: true
         clarity-version: 2
     epoch: '2.5'
+

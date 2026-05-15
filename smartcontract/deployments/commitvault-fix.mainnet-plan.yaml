@@ -1,0 +1,18 @@
+id: 1
+name: StacksArena Mainnet Deployment (CommitVault Fix)
+network: mainnet
+stacks-node: https://api.hiro.so
+bitcoin-node: http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332
+plan:
+  batches:
+  # Batch 0: Deploy CommitVault (Main logic)
+  - id: 0
+    transactions:
+    - contract-publish:
+        contract-name: stacksarena-CommitVault
+        expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
+        cost: 300000
+        path: contracts/CommitVault.clar
+        anchor-block-only: true
+        clarity-version: 2
+    epoch: '2.5'

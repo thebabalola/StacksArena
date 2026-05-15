@@ -1,7 +1,7 @@
 ;; CommitVault.clar
 ;; Core vault logic for Stacks Arena - Supports STX, SIP-010 (BTC), and Milestones
 
-(use-trait sip010-trait .sip-010-trait-ft-standard.sip-010-trait)
+(use-trait sip010-trait 'SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-sip-010-trait.sip-010-trait)
 
 (define-constant ERR_UNAUTHORIZED (err u401))
 (define-constant ERR_VAULT_LOCKED (err u403))
@@ -50,7 +50,7 @@
 ;; ===== Core Vault Functions =====
 
 (define-private (track-vault (amount uint))
-    (contract-call? .VaultFactory track-new-vault amount)
+    (contract-call? 'SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-VaultFactory track-new-vault amount)
 )
 
 ;; @desc Create a new vault (supports STX and SIP-010)

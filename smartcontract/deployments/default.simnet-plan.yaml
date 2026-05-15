@@ -29,22 +29,22 @@ plan:
     - id: 0
       transactions:
         - emulated-contract-publish:
-            contract-name: VaultFactory
+            contract-name: stacksarena-VaultFactory
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/VaultFactory.clar
             clarity-version: 2
         - emulated-contract-publish:
-            contract-name: sip-010-trait-ft-standard
+            contract-name: stacksarena-sip-010-trait
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/sip-010-trait-ft-standard.clar
             clarity-version: 2
         - emulated-contract-publish:
-            contract-name: CommitVault
+            contract-name: stacksarena-CommitVault
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/CommitVault.clar
             clarity-version: 2
         - emulated-contract-publish:
-            contract-name: ConditionEngine
+            contract-name: stacksarena-ConditionEngine
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/ConditionEngine.clar
             clarity-version: 2
