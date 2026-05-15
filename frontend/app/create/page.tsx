@@ -113,12 +113,22 @@ export default function CreateVaultPage() {
                   }`}
                 />
                 {/* Live micro-unit conversion display */}
-                <div className="flex items-center justify-between text-[10px] font-bold uppercase">
-                  <span className="text-slate-600">
-                    = {amountMicroStx.toString()} microSTX
-                  </span>
-                  {exceedsBalance && (
-                    <span className="text-red-400">Exceeds balance</span>
+                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest mt-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-600">=</span>
+                    <span className="text-primary">{amountMicroStx.toString()}</span>
+                    <span className="text-slate-600">microSTX</span>
+                  </div>
+                  {exceedsBalance ? (
+                    <span className="text-red-400 animate-pulse">Insufficient Balance</span>
+                  ) : (
+                    <button 
+                      type="button"
+                      onClick={() => setFormData({...formData, amountSTX: (Number(rawMicroStx) / 1_000_000).toString()})}
+                      className="text-primary hover:text-orange-400 transition-colors"
+                    >
+                      USE MAX
+                    </button>
                   )}
                 </div>
               </div>
