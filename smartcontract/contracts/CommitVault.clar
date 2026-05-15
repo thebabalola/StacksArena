@@ -1,7 +1,7 @@
 ;; CommitVault.clar
 ;; Core vault logic for Stacks Arena - Supports STX, SIP-010 (BTC), and Milestones
 
-(use-trait sip010-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(use-trait sip010-trait .sip-010-trait-ft-standard.sip-010-trait)
 
 (define-constant ERR_UNAUTHORIZED (err u401))
 (define-constant ERR_VAULT_LOCKED (err u403))
@@ -54,10 +54,11 @@
 )
 
 ;; @desc Create a new vault (supports STX and SIP-010)
-(define-public (create-vault (amount uint) (target-block uint) (penalty-rate uint) (threshold uint) (token (optional principal)) (milestones uint))
+(define-public (create-vault (amount uint) (target-block uint) (penalty-rate uint) (threshold uint) (token-contract (optional <sip010-trait>)) (milestones uint))
     (let
         (
             (vault-id (var-get next-vault-id))
+            (token (match token-contract t (some (contract-of t)) none))
         )
         (asserts! (> amount u0) ERR_INVALID_PARAMS)
         (asserts! (>= target-block block-height) ERR_INVALID_PARAMS)
@@ -66,7 +67,7 @@
         (asserts! (>= milestones u1) ERR_INVALID_PARAMS)
         
         ;; Handle Asset Transfer
-        (match token
+        (match token-contract
             token-addr (try! (contract-call? token-addr transfer amount tx-sender (as-contract tx-sender) none))
             (try! (stx-transfer? amount tx-sender (as-contract tx-sender)))
         )
@@ -85,7 +86,7 @@
             current-milestone: u0
         })
         
-        (try! (track-vault amount))
+        (unwrap-panic (track-vault amount))
         (var-set next-vault-id (+ vault-id u1))
         (ok vault-id)
     )
