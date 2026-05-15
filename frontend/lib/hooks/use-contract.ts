@@ -100,3 +100,34 @@ export function useCommitVault() {
     loading,
   };
 }
+
+// ─── Placeholder Hooks for Future Features ───────────────────────────────
+
+export function useGameAssets() {
+  return {
+    getAsset: async (id: number) => null,
+    getCollectionStats: async () => null,
+    getWalletCount: async (addr: string) => ({ value: 0 }),
+    getWalletAssetAt: async (addr: string, i: number) => ({ value: 0 }),
+    mintAsset: async (...args: any[]) => {},
+    loading: false
+  };
+}
+
+export function useLottery() {
+  return {
+    getLotteryStats: async () => null,
+    getTicket: async (id: number) => null,
+    buyTicket: async (...args: any[]) => {},
+    loading: false
+  };
+}
+
+export function useTournament() {
+  return {
+    getTournaments: async () => [],
+    getTournament: async (id: number) => null,
+    joinTournament: async (...args: any[]) => {},
+    loading: false
+  };
+}
