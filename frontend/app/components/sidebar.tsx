@@ -13,6 +13,7 @@ const menuItems = [
   { name: "Active Locks", href: "/vaults", icon: Lock },
   { name: "Global Stats", href: "/stats", icon: BarChart3 },
   { name: "Profile", href: "/profile", icon: UserIcon },
+  { name: "Protocol", href: "https://explorer.hiro.so/txid/SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-VaultFactory?chain=mainnet", icon: ShieldCheck, external: true },
 ];
 
 const secondaryItems = [
@@ -34,7 +35,7 @@ export function Sidebar() {
     <aside className="hidden lg:flex flex-col w-64 glass-panel border-r border-white/5 h-screen sticky top-0 z-40">
       <div className="p-8">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-8 h-8 flex-shrink-0">
+          <div className="relative w-16 h-16 flex-shrink-0">
             <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full group-hover:bg-primary/40 transition-colors" />
             <img src="/stacksarena-logo.png" alt="StacksArena" className="relative z-10 w-full h-full object-contain group-hover:scale-110 transition-transform" />
           </div>
@@ -49,6 +50,16 @@ export function Sidebar() {
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
+          if (item.external) {
+            return (
+              <a key={item.name} href={item.href} target="_blank" rel="noopener noreferrer" className="relative group block">
+                <div className="relative flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5">
+                  <Icon className="w-4.5 h-4.5 opacity-70 group-hover:opacity-100" />
+                  <span className="text-xs font-bold tracking-wide">{item.name}</span>
+                </div>
+              </a>
+            );
+          }
           return (
             <Link key={item.name} href={item.href} className="relative group block">
               {isActive && (

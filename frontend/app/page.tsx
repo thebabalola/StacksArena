@@ -60,10 +60,10 @@ export default function Home() {
       const s = protocolStats?.value;
 
       setStats({
-        totalVaults: Number(s?.["total-vaults"]?.value ?? 124), // Placeholder if empty
-        totalLocked: Number(s?.["total-locked"]?.value ?? 450000) / 1000000,
-        activeUsers: 842,
-        treasuryBalance: 12500.50,
+        totalVaults: Number(s?.["total-vaults"]?.value ?? 0),
+        totalLocked: Number(s?.["total-locked"]?.value ?? 0) / 1000000,
+        activeUsers: Number(s?.["total-vaults"]?.value ?? 0), // Fallback: number of vaults as users
+        treasuryBalance: 0, // Will be updated from contract treasury function when added
       });
     } catch (e) { console.error("Failed to fetch stats:", e); }
   }, [getProtocolStats]);
@@ -83,12 +83,12 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#050510]">
+    <div className="min-h-screen bg-gradient-to-b from-[#020208] via-[#050515] to-[#010103]">
       {/* HERO SECTION */}
       <section className="relative overflow-hidden min-h-[95vh] flex items-center justify-center text-center">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[#050510]/80 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050510] via-transparent to-transparent z-10" />
+          <div className="absolute inset-0 bg-[#020208]/80 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020208] via-transparent to-transparent z-10" />
           <img src="/stacksarena-heroimg.png" alt="Hero Background" className="w-full h-full object-cover opacity-70" />
         </div>
 

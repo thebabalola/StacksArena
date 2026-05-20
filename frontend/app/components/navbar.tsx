@@ -19,7 +19,7 @@ export function Navbar() {
       <div className="flex items-center justify-between px-6 lg:px-10 h-20">
         <div className="lg:hidden">
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <img src="/stacksarena-logo.png" alt="StacksArena" className="w-8 h-8 transition-transform group-hover:scale-110" />
+            <img src="/stacksarena-logo.png" alt="StacksArena" className="w-16 h-16 transition-transform group-hover:scale-110" />
             <span className="text-lg font-black tracking-tight text-foreground font-[var(--font-display)]">
               STACKS<span className="text-primary italic">ARENA</span>
             </span>
