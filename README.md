@@ -126,3 +126,6 @@ MIT
 <p align="center">
   <strong>Secured by Bitcoin · Built on Stacks · Powered by Clarity</strong>
 </p>
+ 
+  
+   
