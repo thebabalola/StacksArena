@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${orbitron.variable} ${bebas.variable} antialiased min-h-screen bg-[#020617] text-foreground`}>
-        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" forcedTheme="dark" enableSystem={false} disableTransitionOnChange>
           <div className="flex min-h-screen">
             <Sidebar />
             <div className="flex-1 flex flex-col min-h-screen">
