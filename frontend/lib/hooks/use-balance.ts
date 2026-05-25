@@ -17,7 +17,7 @@ export interface BalanceData {
 
 export function useBalance(): BalanceData & { refresh: () => void } {
   const { stxAddress, isConnected } = useStacks();
-  const [rawMicroStx, setRawMicroStx] = useState<bigint>(0n);
+  const [rawMicroStx, setRawMicroStx] = useState<bigint>(BigInt(0));
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchBalance = useCallback(async () => {
