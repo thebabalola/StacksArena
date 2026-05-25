@@ -165,8 +165,10 @@ export function useGameAssets() {
 export function useLottery() {
   return {
     getLotteryStats: async () => null,
+    getPlatformStats: async () => null,
     getTicket: async (id: number) => null,
     buyTicket: async (...args: any[]) => {},
+    buyTickets: async (...args: any[]) => {},
     loading: false
   };
 }
@@ -175,7 +177,9 @@ export function useTournament() {
   return {
     getTournaments: async () => [],
     getTournament: async (id: number) => null,
+    getArenaStats: async () => null,
     joinTournament: async (...args: any[]) => {},
+    createTournament: async (...args: any[]) => {},
     loading: false
   };
 }
