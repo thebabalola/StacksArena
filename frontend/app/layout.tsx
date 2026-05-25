@@ -84,9 +84,9 @@ export default function RootLayout({
         className={`${orbitron.variable} ${bebas.variable} antialiased min-h-screen bg-[#020617] text-foreground`}
       >
         <ThemeProvider
-          attribute="data-theme"
+          attribute="class"
           defaultTheme="dark"
-          enableSystem={false}
+          enableSystem
           disableTransitionOnChange
         >
           <div className="flex min-h-screen">

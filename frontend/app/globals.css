@@ -35,7 +35,7 @@
   --card: #ffffff;
 }
 
-[data-theme="dark"] {
+.dark {
   --background: #0a0a1a;
   --foreground: #E8E4F0;
   --primary: #F97316;
