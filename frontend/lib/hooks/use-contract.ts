@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Cl, fetchCallReadOnlyFunction, cvToJSON } from '@stacks/transactions';
+import { useToast } from "@/components/ArenaToastProvider";
 import { CONTRACTS, STACKS_NETWORK_CONFIG } from '../constants/contracts';
 import { useStacks } from './use-stacks';
 import { executeContractAction } from '../stacks-actions';
@@ -41,6 +42,7 @@ export function useVaultFactory() {
 export function useCommitVault() {
   const { stxAddress } = useStacks();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   const [addr, name] = CONTRACTS.COMMIT_VAULT.split('.');
 
   const getVaultDetails = useCallback(async (vaultId: number) => {
@@ -88,16 +90,28 @@ export function useCommitVault() {
 
   const withdraw = async (vaultId: number, tokenContract: string | null, onFinish: (data: any) => void) => {
     setLoading(true);
-    await executeContractAction(
-      addr, name,
-      'withdraw',
-      [
-        Cl.uint(vaultId),
-        tokenContract ? Cl.some(Cl.principal(tokenContract)) : Cl.none()
-      ],
-      (data) => { setLoading(false); onFinish(data); },
-      () => setLoading(false)
-    );
+    try {
+      await executeContractAction(
+        addr, name,
+        'withdraw',
+        [
+          Cl.uint(vaultId),
+          tokenContract ? Cl.some(Cl.principal(tokenContract)) : Cl.none()
+        ],
+        (data) => {
+          setLoading(false);
+          toast("success", "Withdrawal transaction broadcasted!");
+          onFinish(data);
+        },
+        () => {
+          setLoading(false);
+          toast("info", "Withdrawal cancelled.");
+        }
+      );
+    } catch (e) {
+      setLoading(false);
+      toast("error", "Withdrawal failed.");
+    }
   };
 
   const releaseMilestone = async (vaultId: number, tokenContract: string | null, onFinish: (data: any) => void) => {

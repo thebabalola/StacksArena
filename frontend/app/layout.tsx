@@ -4,10 +4,19 @@ import { Navbar } from "./components/navbar";
 import { Sidebar } from "./components/sidebar";
 import { Footer } from "./components/footer";
 import { ThemeProvider } from "./components/providers/theme-provider";
+import { ArenaToastProvider } from "@/components/ArenaToastProvider";
 import "./globals.css";
 
-const orbitron = Orbitron({ variable: "--font-heading", subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
-const bebas = Bebas_Neue({ variable: "--font-display", subsets: ["latin"], weight: "400" });
+const orbitron = Orbitron({
+  variable: "--font-heading",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
+const bebas = Bebas_Neue({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://stacksarena.vercel.app"),
@@ -17,20 +26,40 @@ export const metadata: Metadata = {
   },
   description:
     "The premier on-chain gaming platform. Enter skill-based tournaments, win lottery jackpots, and collect rare game assets — all anchored to Bitcoin via Stacks L2.",
-  keywords: ["Stacks", "Bitcoin", "gaming", "blockchain", "tournament", "lottery", "NFT", "game assets", "L2", "DeFi"],
+  keywords: [
+    "Stacks",
+    "Bitcoin",
+    "gaming",
+    "blockchain",
+    "tournament",
+    "lottery",
+    "NFT",
+    "game assets",
+    "L2",
+    "DeFi",
+  ],
   authors: [{ name: "StacksArena Protocol" }],
   creator: "StacksArena",
   openGraph: {
     title: "StacksArena — Bitcoin Gaming Arena",
-    description: "Compete. Win. Dominate. The premier Bitcoin-secured gaming arena on Stacks L2.",
+    description:
+      "Compete. Win. Dominate. The premier Bitcoin-secured gaming arena on Stacks L2.",
     type: "website",
     siteName: "StacksArena",
-    images: [{ url: "/stacksarena-logo.svg", width: 512, height: 512, alt: "StacksArena Shield Logo" }],
+    images: [
+      {
+        url: "/stacksarena-logo.svg",
+        width: 512,
+        height: 512,
+        alt: "StacksArena Shield Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "StacksArena — Bitcoin Gaming Arena",
-    description: "Join on-chain tournaments, win lottery jackpots, collect rare game assets on Stacks L2.",
+    description:
+      "Join on-chain tournaments, win lottery jackpots, collect rare game assets on Stacks L2.",
     images: ["/stacksarena-logo.svg"],
   },
   icons: {
@@ -39,21 +68,34 @@ export const metadata: Metadata = {
     shortcut: "/stacksarena-logo.svg",
   },
   other: {
-    "talentapp:project_verification": "c3c9fbd28c251ba34f40d1a57747785d7aeaefab14d6d5091de10d1b8423b8f0a26b06ec4676a8488d6483d818523fc735c49718f21ee1f11ad14e273b602aa5",
+    "talentapp:project_verification":
+      "c3c9fbd28c251ba34f40d1a57747785d7aeaefab14d6d5091de10d1b8423b8f0a26b06ec4676a8488d6483d818523fc735c49718f21ee1f11ad14e273b602aa5",
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${orbitron.variable} ${bebas.variable} antialiased min-h-screen bg-[#020617] text-foreground`}>
-        <ThemeProvider attribute="data-theme" defaultTheme="dark" forcedTheme="dark" enableSystem={false} disableTransitionOnChange>
+      <body
+        className={`${orbitron.variable} ${bebas.variable} antialiased min-h-screen bg-[#020617] text-foreground`}
+      >
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
           <div className="flex min-h-screen">
             <Sidebar />
             <div className="flex-1 flex flex-col min-h-screen">
               <Navbar />
               <main className="flex-1">{children}</main>
               <Footer />
+              <ArenaToastProvider />
             </div>
           </div>
         </ThemeProvider>
