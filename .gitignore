@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Node
+node_modules/
+dist/
+.next/
+build/
+
+# Stacks / Clarinet
+target/
+.clarinet/
+contracts/*.clar.bak
