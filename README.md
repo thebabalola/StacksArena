@@ -42,16 +42,14 @@ Every commitment is governed by immutable smart contract logic, anchored to the 
 
 ## 🚀 Deployment Status
 
-**Mainnet Status**: ✅ **Live on Stacks Mainnet**
+| Contract | Address | Status |
+|----------|---------|--------|
+| **CommitVault** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-CommitVault` | ✅ Live |
+| **VaultFactory** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-VaultFactory` | ✅ Live |
+| **ConditionEngine** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-ConditionEngine` | ✅ Live |
+| **SIP-010 Trait** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-sip-010-trait` | ✅ Live |
 
-The protocol is deployed to **Stacks Mainnet** with the following contracts (Deployer: `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2`):
-- **CommitVault**: `stacksarena-CommitVault`
-- **VaultFactory**: `stacksarena-VaultFactory`
-- **ConditionEngine**: `stacksarena-ConditionEngine`
-- **SIP-010 Trait**: `stacksarena-sip-010-trait`
-
-You can verify these contracts on the [Stacks Explorer](https://explorer.stacks.co/address/SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2?chain=mainnet).
-
+Verify on [Stacks Explorer](https://explorer.stacks.co/address/SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2?chain=mainnet).
 
 ---
 
