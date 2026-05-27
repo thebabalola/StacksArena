@@ -4,20 +4,13 @@
 
 ---
 
-## 🧠 Overview
+## 1. Executive Summary
 
-**Stacks Arena** is a Bitcoin-native vault protocol that enables users to lock funds under enforceable rules on the Stacks L2.
-
-Users define commitments such as:
-- Time locks
-- Penalty conditions
-- Multi-party approvals
-
-Funds are governed entirely by immutable smart contract logic.
+**Stacks Arena** is a Bitcoin-native commitment protocol. It is currently **Live on Stacks Mainnet**, providing a secure way for users to lock assets under programmable conditions.
 
 ---
 
-## 🎯 Problem Statement
+## 2. Problem Statement
 
 Bitcoin is a premier store of value, but it lacks native mechanism for **behavior enforcement**. Users struggle with:
 - Financial discipline (long-term holding)
