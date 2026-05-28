@@ -82,7 +82,7 @@ export default function CreateVaultPage() {
   };
 
   return (
-    <div className="min-h-screen px-6 py-12 bg-[#050510]">
+    <div className="min-h-screen px-6 py-12 bg-background transition-colors duration-300">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/"
@@ -140,8 +140,8 @@ export default function CreateVaultPage() {
                     setFormData({ ...formData, amountSTX: e.target.value })
                   }
                   placeholder="0.000123"
-                  className={`w-full bg-white/[0.03] border rounded-2xl px-6 py-4 text-xl font-black text-white focus:border-primary outline-none transition-all placeholder:text-slate-700 ${
-                    exceedsBalance ? "border-red-500/60" : "border-white/10"
+                  className={`w-full bg-secondary/10 border rounded-2xl px-6 py-4 text-xl font-black text-foreground focus:border-primary outline-none transition-all placeholder:text-muted-foreground ${
+                    exceedsBalance ? "border-red-500/60" : "border-border"
                   }`}
                 />
                 {/* Live micro-unit conversion display */}
@@ -192,9 +192,9 @@ export default function CreateVaultPage() {
                         targetBlockOffset: Number(e.target.value),
                       })
                     }
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all"
+                    className="w-full bg-secondary/10 border border-border rounded-2xl px-6 py-4 text-sm font-bold text-foreground focus:border-primary outline-none transition-all"
                   />
-                  <p className="text-[9px] text-slate-600 font-bold uppercase">
+                  <p className="text-[9px] text-slate-600 dark:text-slate-400 font-bold uppercase">
                     ~{(formData.targetBlockOffset / 144).toFixed(1)} Days until
                     unlock
                   </p>
@@ -216,7 +216,7 @@ export default function CreateVaultPage() {
                         penaltyRate: Number(e.target.value),
                       })
                     }
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all"
+                    className="w-full bg-secondary/10 border border-border rounded-2xl px-6 py-4 text-sm font-bold text-foreground focus:border-primary outline-none transition-all"
                   />
                 </div>
               </div>
@@ -238,7 +238,7 @@ export default function CreateVaultPage() {
                         threshold: Number(e.target.value),
                       })
                     }
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all"
+                    className="w-full bg-secondary/10 border border-border rounded-2xl px-6 py-4 text-sm font-bold text-foreground focus:border-primary outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-3">
@@ -257,7 +257,7 @@ export default function CreateVaultPage() {
                         milestones: Number(e.target.value),
                       })
                     }
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all"
+                    className="w-full bg-secondary/10 border border-border rounded-2xl px-6 py-4 text-sm font-bold text-foreground focus:border-primary outline-none transition-all"
                   />
                 </div>
               </div>
@@ -274,7 +274,7 @@ export default function CreateVaultPage() {
                     setFormData({ ...formData, tokenAddress: e.target.value })
                   }
                   placeholder="SP... (Leave empty for STX)"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm font-bold text-white focus:border-primary outline-none transition-all placeholder:text-slate-700"
+                  className="w-full bg-secondary/10 border border-border rounded-2xl px-6 py-4 text-sm font-bold text-foreground focus:border-primary outline-none transition-all placeholder:text-muted-foreground"
                 />
               </div>
 

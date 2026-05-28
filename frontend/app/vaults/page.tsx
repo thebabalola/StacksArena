@@ -104,7 +104,7 @@ export default function VaultsPage() {
   };
 
   return (
-    <div className="min-h-screen px-6 py-12 bg-[#050510]">
+    <div className="min-h-screen px-6 py-12 bg-background transition-colors duration-300">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 flex items-center justify-between">
           <div>
@@ -168,19 +168,19 @@ export default function VaultsPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.1 }}
-                className="glass-panel p-8 rounded-3xl border border-white/5 relative overflow-hidden group hover:border-primary/30 transition-all"
+                className="glass-panel p-8 rounded-3xl relative overflow-hidden group hover:border-primary/30 transition-all"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 <div className="flex items-start justify-between mb-8 relative z-10">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-primary/10 transition-colors">
+                  <div className="w-12 h-12 rounded-2xl bg-secondary/15 flex items-center justify-center border border-border/50 group-hover:bg-primary/10 transition-colors">
                     <Shield className="w-6 h-6 text-primary" />
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                       Vault ID
                     </p>
-                    <p className="text-lg font-black text-white font-[var(--font-display)]">
+                    <p className="text-lg font-black text-foreground font-[var(--font-display)]">
                       #{vault.id.toString().padStart(4, "0")}
                     </p>
                   </div>
@@ -191,7 +191,7 @@ export default function VaultsPage() {
                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">
                       Locked Balance
                     </p>
-                    <p className="text-3xl font-black text-white tracking-tighter">
+                    <p className="text-3xl font-black text-foreground tracking-tighter">
                       {vault.balance.toLocaleString()}{" "}
                       <span className="text-primary italic">STX</span>
                     </p>
@@ -204,7 +204,7 @@ export default function VaultsPage() {
                         {vault.timeRemaining === 0 ? "100%" : "Locked"}
                       </span>
                     </div>
-                    <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <div className="h-2 bg-secondary/15 rounded-full overflow-hidden border border-border/50">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{

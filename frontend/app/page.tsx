@@ -152,13 +152,13 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#020208] via-[#050515] to-[#010103]">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200 dark:from-[#020208] dark:via-[#050515] dark:to-[#010103] text-foreground transition-colors duration-300">
       <ArenaOnboardingTour />
       {/* HERO SECTION */}
       <section className="relative overflow-hidden min-h-[95vh] flex items-center justify-center text-center">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[#020208]/80 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#020208] via-transparent to-transparent z-10" />
+          <div className="absolute inset-0 bg-background/80 dark:bg-[#020208]/80 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background dark:from-[#020208] via-transparent to-transparent z-10" />
           <img
             src="/stacksarena-heroimg.png"
             alt="Hero Background"
@@ -177,7 +177,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
-              className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight text-white mb-6 font-[var(--font-display)] uppercase"
+              className="text-6xl md:text-8xl font-black leading-[0.95] tracking-tight text-foreground mb-6 font-[var(--font-display)] uppercase"
             >
               LOCK.
               <br />
@@ -192,7 +192,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
-              className="text-lg md:text-xl text-slate-300 font-bold leading-relaxed mb-10 max-w-2xl mx-auto uppercase"
+              className="text-lg md:text-xl text-muted-foreground font-bold leading-relaxed mb-10 max-w-2xl mx-auto uppercase"
             >
               The Bitcoin-native commitment protocol. Transform your assets into
               enforceable financial behavior with Stacks Arena.
@@ -261,7 +261,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
-          className="w-full rounded-2xl bg-[#0a0a1a]/90 border border-white/5 p-6 md:p-10 backdrop-blur-2xl shadow-2xl relative"
+          className="w-full rounded-2xl bg-card/95 border border-border/50 p-6 md:p-10 backdrop-blur-2xl shadow-2xl relative"
         >
           <div className="absolute inset-0 cyber-mesh opacity-10 rounded-2xl pointer-events-none" />
 
@@ -308,7 +308,7 @@ export default function Home() {
                     <stat.icon className="w-5 h-5 text-companion" />
                   </div>
                   <div>
-                    <p className="text-xl md:text-2xl font-black text-white font-[var(--font-display)] tracking-wide">
+                    <p className="text-xl md:text-2xl font-black text-foreground font-[var(--font-display)] tracking-wide">
                       {stat.prefix}
                       <Counter
                         target={stat.target}
@@ -316,7 +316,7 @@ export default function Home() {
                         decimals={stat.decimals}
                       />
                     </p>
-                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                       {stat.label}
                     </p>
                   </div>
@@ -341,18 +341,18 @@ export default function Home() {
               >
                 <Link
                   href={feat.href}
-                  className="group relative block p-8 rounded-2xl bg-[#0a0a1a]/60 backdrop-blur-xl border border-white/5 hover:border-companion/40 transition-all hover:-translate-y-2 h-full shadow-2xl overflow-hidden"
+                  className="group relative block p-8 rounded-2xl bg-card/60 backdrop-blur-xl border border-border/50 hover:border-companion/40 transition-all hover:-translate-y-2 h-full shadow-2xl overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-companion/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center mb-6 relative z-10 border border-white/5">
+                  <div className="w-14 h-14 rounded-xl bg-secondary/15 flex items-center justify-center mb-6 relative z-10 border border-border/50">
                     <Icon
                       className={`w-6 h-6 ${feat.colorClass} drop-shadow-[0_0_8px_currentColor]`}
                     />
                   </div>
-                  <h3 className="text-xs font-black text-white mb-3 tracking-widest font-[var(--font-display)] relative z-10 uppercase">
+                  <h3 className="text-xs font-black text-foreground mb-3 tracking-widest font-[var(--font-display)] relative z-10 uppercase">
                     {feat.title}
                   </h3>
-                  <p className="text-[11px] text-slate-500 leading-relaxed font-bold relative z-10">
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-bold relative z-10">
                     {feat.desc}
                   </p>
                 </Link>
@@ -363,7 +363,7 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-24 px-6 bg-[#0a0a1a]/40">
+      <section className="py-24 px-6 bg-secondary/10">
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-16">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary mb-4">
