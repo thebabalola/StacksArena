@@ -157,12 +157,12 @@ export default function Home() {
       {/* HERO SECTION */}
       <section className="relative overflow-hidden min-h-[95vh] flex items-center justify-center text-center">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-background/80 dark:bg-[#020208]/80 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background dark:from-[#020208] via-transparent to-transparent z-10" />
+          <div className="absolute inset-0 bg-background/80 dark:bg-[#020208]/80 z-10 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background dark:from-[#020208] via-transparent to-transparent z-10 transition-all duration-300" />
           <img
             src="/stacksarena-heroimg.png"
             alt="Hero Background"
-            className="w-full h-full object-cover opacity-70"
+            className="w-full h-full object-cover opacity-15 dark:opacity-70 transition-opacity duration-300"
           />
         </div>
 
@@ -223,7 +223,7 @@ export default function Home() {
               )}
               <Link
                 href="/vaults"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-10 py-5 text-sm font-black text-white/90 hover:bg-white/5 hover:border-white/20 transition-all uppercase tracking-wide bg-black/20 backdrop-blur-sm"
+                className="inline-flex items-center gap-2 rounded-xl border border-border/50 px-10 py-5 text-sm font-black text-foreground hover:bg-secondary/50 hover:border-border transition-all uppercase tracking-wide bg-secondary/20 backdrop-blur-sm transition-colors duration-300"
               >
                 MANAGE LOCKS <ChevronRight className="w-4 h-4" />
               </Link>
@@ -233,7 +233,7 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
-              className="flex items-center justify-center gap-6 md:gap-10 mt-12 pt-8 border-t border-white/10"
+              className="flex items-center justify-center gap-6 md:gap-10 mt-12 pt-8 border-t border-border/40"
             >
               {[
                 { icon: Shield, label: "Bitcoin Secured" },
@@ -242,9 +242,9 @@ export default function Home() {
               ].map(({ icon: Icon, label }) => (
                 <div
                   key={label}
-                  className="flex items-center gap-2 text-slate-400"
+                  className="flex items-center gap-2 text-muted-foreground transition-colors duration-300"
                 >
-                  <Icon className="w-4 h-4 text-primary" />
+                  <Icon className="w-4 h-4 text-primary animate-pulse" />
                   <span className="text-[11px] font-black uppercase tracking-widest">
                     {label}
                   </span>
@@ -363,13 +363,13 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-24 px-6 bg-secondary/10">
+      <section className="py-24 px-6 bg-secondary/5 transition-colors duration-300">
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-16">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary mb-4">
               How It Works
             </p>
-            <h2 className="text-3xl md:text-5xl font-black font-[var(--font-display)] text-white tracking-wide uppercase">
+            <h2 className="text-3xl md:text-5xl font-black font-[var(--font-display)] text-foreground tracking-wide uppercase">
               THREE STEPS TO COMMIT.
             </h2>
           </div>
@@ -381,7 +381,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                className="relative flex flex-col gap-4 p-8 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-sm overflow-hidden"
+                className="glass-panel relative flex flex-col gap-4 p-8 rounded-2xl border border-border/40 overflow-hidden"
               >
                 <span className="text-7xl font-black text-primary/10 leading-none font-[var(--font-display)]">
                   {step.num}
@@ -391,10 +391,10 @@ export default function Home() {
                     {i + 1}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold -mt-2 font-[var(--font-display)] text-white tracking-wide">
+                <h3 className="text-xl font-bold -mt-2 font-[var(--font-display)] text-foreground tracking-wide">
                   {step.title}
                 </h3>
-                <p className="text-[11px] font-bold text-slate-500 leading-relaxed uppercase">
+                <p className="text-[11px] font-bold text-muted-foreground leading-relaxed uppercase">
                   {step.desc}
                 </p>
               </motion.div>
@@ -412,12 +412,12 @@ export default function Home() {
             viewport={{ once: true }}
             className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary/20 via-companion/20 to-primary/20 p-1 lg:p-[1px]"
           >
-            <div className="bg-[#0a0a1a]/90 rounded-[23px] p-12 lg:p-20 text-center relative overflow-hidden">
+            <div className="bg-card/95 dark:bg-[#0a0a1a]/95 rounded-[23px] p-12 lg:p-20 text-center relative overflow-hidden border border-border/40 transition-colors duration-300">
               <div className="absolute inset-0 cyber-mesh opacity-20" />
-              <h2 className="relative text-4xl md:text-6xl font-black text-white mb-6 font-[var(--font-display)] tracking-tighter uppercase italic">
+              <h2 className="relative text-4xl md:text-6xl font-black text-foreground mb-6 font-[var(--font-display)] tracking-tighter uppercase italic">
                 SECURE YOUR <span className="text-primary">FUTURE.</span>
               </h2>
-              <p className="relative text-slate-400 mb-10 max-w-lg mx-auto text-lg font-bold">
+              <p className="relative text-muted-foreground mb-10 max-w-lg mx-auto text-lg font-bold">
                 Connect your Stacks wallet and establish your first
                 Bitcoin-anchored financial commitment today.
               </p>

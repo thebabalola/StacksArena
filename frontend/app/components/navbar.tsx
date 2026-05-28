@@ -52,19 +52,6 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-30 w-full bg-transparent">
       <div className="flex items-center justify-between px-6 lg:px-10 h-20 bg-background/5 backdrop-blur-md border-b border-border/10">
-        {/* LOGO SECTION - Mobile/Tablet Only */}
-        <div className="flex lg:hidden items-center gap-2">
-          <Link href="/" className="flex items-center gap-2 shrink-0 group">
-            <img 
-              src="/stacksarena-logo.png" 
-              alt="StacksArena" 
-              className="w-10 h-10 transition-transform group-hover:scale-110 object-contain" 
-            />
-            <span className="hidden sm:inline text-lg font-black tracking-tight text-foreground font-[var(--font-display)]">
-              STACKS<span className="text-primary italic">ARENA</span>
-            </span>
-          </Link>
-        </div>
         
         {/* DESKTOP SESSION INDICATOR */}
         <div className="hidden lg:block">
