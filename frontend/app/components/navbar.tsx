@@ -52,8 +52,8 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-30 w-full bg-transparent">
       <div className="flex items-center justify-between px-6 lg:px-10 h-20 bg-background/5 backdrop-blur-md border-b border-border/10">
-        {/* LOGO SECTION - Responsive */}
-        <div className="flex items-center gap-2">
+        {/* LOGO SECTION - Mobile/Tablet Only */}
+        <div className="flex lg:hidden items-center gap-2">
           <Link href="/" className="flex items-center gap-2 shrink-0 group">
             <img 
               src="/stacksarena-logo.png" 
