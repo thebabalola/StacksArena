@@ -81,7 +81,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${orbitron.variable} ${bebas.variable} antialiased min-h-screen bg-[#020617] text-foreground`}
+        className={`${orbitron.variable} ${bebas.variable} antialiased min-h-screen bg-background text-foreground transition-colors duration-300`}
       >
         <ThemeProvider
           attribute="class"
