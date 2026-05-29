@@ -3,15 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Home,
   ShieldCheck,
   Lock,
-  History,
   BarChart3,
   Info,
-  Settings,
   HelpCircle,
-  Trophy,
   LayoutDashboard,
   User as UserIcon,
   PlusCircle,
