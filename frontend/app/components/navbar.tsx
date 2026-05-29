@@ -6,7 +6,6 @@ import { ThemeToggle } from "./ui/theme-toggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { 
   ChevronDown, 
-  LogOut, 
   User, 
   Lock, 
   PlusCircle, 
@@ -16,8 +15,6 @@ import {
   X, 
   ShieldCheck,
   User as UserIcon,
-  HelpCircle,
-  Info
 } from "lucide-react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
