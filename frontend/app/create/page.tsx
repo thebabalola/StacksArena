@@ -15,6 +15,9 @@ import {
   Wallet,
   LayoutDashboard,
   Box,
+  CheckCircle,
+  XCircle,
+  Activity
 } from "lucide-react";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useCommitVault } from "@/lib/hooks/use-contract";
@@ -38,6 +41,9 @@ export default function CreateVaultPage() {
     tokenAddress: "", // Empty for STX
     milestones: 1,
   });
+
+  const [simState, setSimState] = useState<"idle" | "simulating" | "broadcasting" | "confirmed">("idle");
+  const [txId, setTxId] = useState<string>("");
 
   // Live conversion: STX display <-> microSTX
   const amountMicroStx = useMemo(() => {
@@ -64,8 +70,13 @@ export default function CreateVaultPage() {
     }
 
     if (!amountMicroStx || amountMicroStx <= BigInt(0)) return;
+    if (exceedsBalance) return;
+    
+    setSimState("simulating");
+  };
 
-    // Calculate real target block from current block + user offset
+  const confirmTransaction = async () => {
+    setSimState("broadcasting");
     const targetBlock = (blockHeight || 0) + formData.targetBlockOffset;
 
     await createVault(
@@ -76,9 +87,15 @@ export default function CreateVaultPage() {
       formData.tokenAddress || null,
       formData.milestones,
       (data) => {
-        router.push("/vaults");
+        if(data && data.txId) setTxId(data.txId);
+        setSimState("confirmed");
+        setTimeout(() => {
+          router.push("/vaults");
+        }, 2000);
       },
     );
+    // If the user cancels the popup, loading state goes back to idle or false
+    // we might need to handle onCancel in the hook, but for now we just wait.
   };
 
   return (
@@ -331,6 +348,93 @@ export default function CreateVaultPage() {
           </div>
         </div>
       </div>
+
+      {/* Transaction Simulation Modal */}
+      {simState !== "idle" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full max-w-md bg-secondary border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden"
+          >
+            <div className="absolute inset-0 cyber-mesh opacity-10 pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col items-center text-center">
+              {simState === "simulating" && (
+                <>
+                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-6">
+                    <Activity className="w-8 h-8 text-primary animate-pulse" />
+                  </div>
+                  <h2 className="text-xl font-black uppercase mb-2">Simulating Transaction</h2>
+                  <p className="text-sm text-slate-400 mb-6">
+                    You are about to lock <span className="text-white font-bold">{formData.amountSTX} STX</span> into the protocol.
+                  </p>
+                  
+                  <div className="w-full bg-background/50 rounded-xl p-4 mb-8 text-left space-y-3">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-500 uppercase font-bold tracking-wider">Estimated Fee</span>
+                      <span className="text-white">~0.002 STX</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-500 uppercase font-bold tracking-wider">Target Unlock Block</span>
+                      <span className="text-white">{(blockHeight || 0) + formData.targetBlockOffset}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-500 uppercase font-bold tracking-wider">Penalty Rate</span>
+                      <span className="text-white">{formData.penaltyRate}%</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4 w-full">
+                    <button
+                      onClick={() => setSimState("idle")}
+                      className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmTransaction}
+                      className="flex-1 py-3 rounded-xl bg-primary hover:bg-orange-500 text-white text-xs font-black uppercase tracking-widest transition-colors shadow-[0_0_20px_rgba(249,115,22,0.3)]"
+                    >
+                      Sign & Confirm
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {simState === "broadcasting" && (
+                <>
+                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-6">
+                    <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                  </div>
+                  <h2 className="text-xl font-black uppercase mb-2">Broadcasting</h2>
+                  <p className="text-sm text-slate-400">
+                    Awaiting your signature and pushing to the Stacks network...
+                  </p>
+                </>
+              )}
+
+              {simState === "confirmed" && (
+                <>
+                  <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-6">
+                    <CheckCircle className="w-8 h-8 text-green-400" />
+                  </div>
+                  <h2 className="text-xl font-black uppercase mb-2 text-green-400">Transaction Confirmed</h2>
+                  <p className="text-sm text-slate-400 mb-2">
+                    Your commit vault has been initiated.
+                  </p>
+                  {txId && (
+                    <p className="text-xs text-slate-500 font-mono mb-4 break-all">
+                      TxID: {txId}
+                    </p>
+                  )}
+                  <p className="text-xs text-slate-500 italic">Redirecting to your vaults...</p>
+                </>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
