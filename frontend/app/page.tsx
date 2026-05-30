@@ -13,6 +13,7 @@ import {
   ChevronRight,
   PlusCircle,
   Scale,
+  Zap
 } from "lucide-react";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useVaultFactory } from "@/lib/hooks/use-contract";
