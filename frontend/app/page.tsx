@@ -10,6 +10,7 @@ import {
   Shield,
   Lock,
   BarChart3,
+  Bitcoin,
   ChevronRight,
   PlusCircle,
   Scale,
