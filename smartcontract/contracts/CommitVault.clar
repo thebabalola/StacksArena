@@ -191,3 +191,15 @@
         )
     )
 )
+
+;; ===== Admin Functions =====
+
+;; @desc Admin: Transfer treasury/admin rights to a new principal (e.g., multi-sig or DAO)
+(define-public (set-treasury (new-treasury principal))
+    (begin
+        (asserts! (is-eq tx-sender (var-get protocol-treasury)) ERR_UNAUTHORIZED)
+        (var-set protocol-treasury new-treasury)
+        (ok true)
+    )
+)
+

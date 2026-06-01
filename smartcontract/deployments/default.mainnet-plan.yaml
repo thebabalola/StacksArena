@@ -24,7 +24,7 @@ plan:
         clarity-version: 2
     epoch: '2.5'
 
-  Batch 1: Deploy ConditionEngine (Standalone utility)
+  # Batch 1: Deploy ConditionEngine (Standalone utility)
   - id: 1
     transactions:
     - contract-publish:
@@ -36,7 +36,7 @@ plan:
         clarity-version: 2
     epoch: '2.5'
 
-  Batch 2: Deploy CommitVault (Main logic)
+  # Batch 2: Deploy CommitVault (Main logic)
   - id: 2
     transactions:
     - contract-publish:
