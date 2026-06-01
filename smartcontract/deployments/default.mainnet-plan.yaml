@@ -9,14 +9,14 @@ plan:
   - id: 0
     transactions:
     - contract-publish:
-        contract-name: stacksarena-sip-010-trait
+        contract-name: stacksarena-sip-010-trait-fix
         expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
         cost: 30000
         path: contracts/sip-010-trait-ft-standard.clar
         anchor-block-only: true
         clarity-version: 2
     - contract-publish:
-        contract-name: stacksarena-VaultFactory
+        contract-name: stacksarena-VaultFactory-fix
         expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
         cost: 50000
         path: contracts/VaultFactory.clar
@@ -28,7 +28,7 @@ plan:
   - id: 1
     transactions:
     - contract-publish:
-        contract-name: stacksarena-ConditionEngine
+        contract-name: stacksarena-ConditionEngine-fix
         expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
         cost: 80000
         path: contracts/ConditionEngine.clar
@@ -40,7 +40,7 @@ plan:
   - id: 2
     transactions:
     - contract-publish:
-        contract-name: stacksarena-CommitVaults
+        contract-name: stacksarena-CommitVaults-fix
         expected-sender: SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2
         cost: 250000
         path: contracts/CommitVault.clar

@@ -1,7 +1,7 @@
 ;; CommitVault.clar
 ;; Core vault logic for Stacks Arena - Supports STX, SIP-010 (BTC), and Milestones
 
-(use-trait sip010-trait 'SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-sip-010-trait.sip-010-trait)
+(use-trait sip010-trait .stacksarena-sip-010-trait-fix.sip-010-trait)
 
 (define-constant ERR_UNAUTHORIZED (err u401))
 (define-constant ERR_VAULT_LOCKED (err u403))
@@ -19,6 +19,7 @@
     {
         owner: principal,
         balance: uint,
+        initial-balance: uint,
         lock-start: uint,
         target-block: uint,
         penalty-rate: uint,
@@ -50,7 +51,7 @@
 ;; ===== Core Vault Functions =====
 
 (define-private (track-vault (amount uint))
-    (contract-call? 'SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-VaultFactory track-new-vault amount)
+    (contract-call? .stacksarena-VaultFactory-fix track-new-vault amount)
 )
 
 ;; @desc Create a new vault (supports STX and SIP-010)
@@ -75,6 +76,7 @@
         (map-set vaults vault-id {
             owner: tx-sender,
             balance: amount,
+            initial-balance: amount,
             lock-start: block-height,
             target-block: target-block,
             penalty-rate: penalty-rate,
@@ -98,11 +100,11 @@
         (
             (vault (unwrap! (map-get? vaults vault-id) ERR_NOT_FOUND))
             (new-milestone (+ (get current-milestone vault) u1))
-            (payout (/ (get balance vault) (get total-milestones vault)))
+            (payout (/ (get initial-balance vault) (get total-milestones vault)))
         )
         (asserts! (is-eq tx-sender (get owner vault)) ERR_UNAUTHORIZED)
         (asserts! (get is-active vault) ERR_NOT_FOUND)
-        (asserts! (<= new-milestone (get total-milestones vault)) ERR_VAULT_LOCKED)
+        (asserts! (unwrap-panic (contract-call? .stacksarena-ConditionEngine-fix evaluate-milestone new-milestone (get total-milestones vault))) ERR_VAULT_LOCKED)
         
         ;; Handle Asset Transfer
         (match (get token vault)
@@ -114,6 +116,7 @@
 
         (map-set vaults vault-id (merge vault { 
             current-milestone: new-milestone,
+            balance: (- (get balance vault) payout),
             is-active: (not (is-eq new-milestone (get total-milestones vault)))
         }))
         (ok true)
@@ -140,8 +143,8 @@
     (let
         (
             (vault (unwrap! (map-get? vaults vault-id) ERR_NOT_FOUND))
-            (is-time-unlocked (>= block-height (get target-block vault)))
-            (is-multisig-met (>= (get approval-count vault) (get threshold vault)))
+            (is-time-unlocked (unwrap-panic (contract-call? .stacksarena-ConditionEngine-fix evaluate-time-lock (get target-block vault))))
+            (is-multisig-met (unwrap-panic (contract-call? .stacksarena-ConditionEngine-fix evaluate-multisig (get approval-count vault) (get threshold vault))))
         )
         (asserts! (is-eq tx-sender (get owner vault)) ERR_UNAUTHORIZED)
         (asserts! (get is-active vault) ERR_NOT_FOUND)

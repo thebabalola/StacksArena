@@ -29,23 +29,23 @@ plan:
     - id: 0
       transactions:
         - emulated-contract-publish:
-            contract-name: stacksarena-VaultFactory
+            contract-name: stacksarena-ConditionEngine-fix
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/ConditionEngine.clar
+            clarity-version: 2
+        - emulated-contract-publish:
+            contract-name: stacksarena-VaultFactory-fix
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/VaultFactory.clar
             clarity-version: 2
         - emulated-contract-publish:
-            contract-name: stacksarena-sip-010-trait
+            contract-name: stacksarena-sip-010-trait-fix
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/sip-010-trait-ft-standard.clar
             clarity-version: 2
         - emulated-contract-publish:
-            contract-name: stacksarena-CommitVault
+            contract-name: stacksarena-CommitVaults-fix
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/CommitVault.clar
-            clarity-version: 2
-        - emulated-contract-publish:
-            contract-name: stacksarena-ConditionEngine
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/ConditionEngine.clar
             clarity-version: 2
       epoch: "2.5"
