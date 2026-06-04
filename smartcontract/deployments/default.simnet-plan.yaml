@@ -44,7 +44,7 @@ plan:
             path: contracts/sip-010-trait-ft-standard.clar
             clarity-version: 2
         - emulated-contract-publish:
-            contract-name: stacksarena-CommitVaults-fix
+            contract-name: stacksarena-CommitVaults-v2
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/CommitVault.clar
             clarity-version: 2

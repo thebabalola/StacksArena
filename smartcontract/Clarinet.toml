@@ -11,7 +11,7 @@ path = 'contracts/ConditionEngine.clar'
 clarity_version = 2
 epoch = '2.5'
 
-[contracts.stacksarena-CommitVaults-fix]
+[contracts.stacksarena-CommitVaults-v2]
 path = 'contracts/CommitVault.clar'
 clarity_version = 2
 epoch = '2.5'
