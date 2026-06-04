@@ -37,6 +37,11 @@
     bool
 )
 
+;; Optional per-vault approver whitelist. If a vault has whitelist entries,
+;; only those addresses can call approve-vault.
+(define-map vault-approver-whitelist { vault-id: uint, approver: principal } bool)
+(define-map vault-uses-whitelist uint bool)
+
 (define-data-var next-vault-id uint u0)
 
 ;; ===== Read Helpers =====
@@ -90,6 +95,7 @@
         
         (unwrap-panic (track-vault amount))
         (var-set next-vault-id (+ vault-id u1))
+        (print { event: "vault-created", vault-id: vault-id, owner: tx-sender, amount: amount, target-block: target-block, milestones: milestones })
         (ok vault-id)
     )
 )
@@ -119,6 +125,7 @@
             balance: (- (get balance vault) payout),
             is-active: (not (is-eq new-milestone (get total-milestones vault)))
         }))
+        (print { event: "milestone-released", vault-id: vault-id, milestone: new-milestone, payout: payout, owner: tx-sender })
         (ok true)
     )
 )
@@ -128,12 +135,17 @@
         (
             (vault (unwrap! (map-get? vaults vault-id) ERR_NOT_FOUND))
             (already-approved (get-approval-status vault-id tx-sender))
+            (uses-whitelist (default-to false (map-get? vault-uses-whitelist vault-id)))
+            (is-whitelisted (default-to false (map-get? vault-approver-whitelist { vault-id: vault-id, approver: tx-sender })))
         )
         (asserts! (get is-active vault) ERR_NOT_FOUND)
         (asserts! (not already-approved) ERR_ALREADY_APPROVED)
+        ;; If vault owner set a whitelist, only designated approvers may sign
+        (asserts! (or (not uses-whitelist) is-whitelisted) ERR_NOT_APPROVER)
 
         (map-set vault-approvals { vault-id: vault-id, approver: tx-sender } true)
         (map-set vaults vault-id (merge vault { approval-count: (+ (get approval-count vault) u1) }))
+        (print { event: "vault-approved", vault-id: vault-id, approver: tx-sender, new-count: (+ (get approval-count vault) u1) })
         (ok true)
     )
 )
@@ -159,6 +171,7 @@
                     (try! (as-contract (stx-transfer? (get balance vault) (as-contract tx-sender) (get owner vault))))
                 )
                 (map-set vaults vault-id (merge vault { balance: u0, is-active: false }))
+                (print { event: "vault-withdrawn", vault-id: vault-id, owner: tx-sender, amount: (get balance vault), early: false })
                 (ok true)
             )
             ;; Early withdrawal with penalty
@@ -186,6 +199,7 @@
                     )
                 )
                 (map-set vaults vault-id (merge vault { balance: u0, is-active: false }))
+                (print { event: "vault-withdrawn", vault-id: vault-id, owner: tx-sender, amount: payout, penalty: penalty, early: true })
                 (ok true)
             )
         )
@@ -201,5 +215,24 @@
         (var-set protocol-treasury new-treasury)
         (ok true)
     )
+)
+
+;; @desc Vault owner: add or remove a designated approver for multi-sig vaults
+;; Once any approver is set the vault switches to whitelist-only mode.
+(define-public (set-vault-approver (vault-id uint) (approver principal) (allowed bool))
+    (let
+        (
+            (vault (unwrap! (map-get? vaults vault-id) ERR_NOT_FOUND))
+        )
+        (asserts! (is-eq tx-sender (get owner vault)) ERR_UNAUTHORIZED)
+        (map-set vault-approver-whitelist { vault-id: vault-id, approver: approver } allowed)
+        (map-set vault-uses-whitelist vault-id true)
+        (ok true)
+    )
+)
+
+;; @desc Read: check if a specific address is a whitelisted approver for a vault
+(define-read-only (is-vault-approver (vault-id uint) (approver principal))
+    (default-to false (map-get? vault-approver-whitelist { vault-id: vault-id, approver: approver }))
 )
 

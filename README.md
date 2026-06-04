@@ -44,10 +44,10 @@ Every commitment is governed by immutable smart contract logic, anchored to the 
 
 | Contract | Address | Status |
 |----------|---------|--------|
-| **CommitVault** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-CommitVault` | ✅ Live |
-| **VaultFactory** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-VaultFactory` | ✅ Live |
-| **ConditionEngine** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-ConditionEngine` | ✅ Live |
-| **SIP-010 Trait** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-sip-010-trait` | ✅ Live |
+| **CommitVault** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-CommitVaults-fix` | ✅ Live |
+| **VaultFactory** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-VaultFactory-fix` | ✅ Live |
+| **ConditionEngine** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-ConditionEngine-fix` | ✅ Live |
+| **SIP-010 Trait** | `SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-sip-010-trait-fix` | ✅ Live |
 
 Verify on [Stacks Explorer](https://explorer.stacks.co/address/SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2?chain=mainnet).
 
