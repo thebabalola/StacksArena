@@ -396,45 +396,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 px-6 mb-20">
-        <div className="mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary/20 via-companion/20 to-primary/20 p-1 lg:p-[1px]"
-          >
-            <div className="bg-card/95 dark:bg-[#0a0a1a]/95 rounded-[23px] p-12 lg:p-20 text-center relative overflow-hidden border border-border/40 transition-colors duration-300">
-              <div className="absolute inset-0 cyber-mesh opacity-20" />
-              <h2 className="relative text-4xl md:text-6xl font-black text-foreground mb-6 font-[var(--font-display)] tracking-tighter uppercase italic">
-                SECURE YOUR <span className="text-primary">FUTURE.</span>
-              </h2>
-              <p className="relative text-muted-foreground mb-10 max-w-lg mx-auto text-lg font-bold">
-                Connect your Stacks wallet and establish your first
-                Bitcoin-anchored financial commitment today.
-              </p>
-              {isConnected ? (
-                <Link
-                  href="/create"
-                  className="group inline-block relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow"
-                >
-                  <span className="relative z-10">Create Your First Vault</span>
-                  <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                </Link>
-              ) : (
-                <button
-                  onClick={connect}
-                  className="group relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow"
-                >
-                  <span className="relative z-10">Connect Stacks Wallet</span>
-                  <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                </button>
-              )}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+
     </div>
   );
 }
