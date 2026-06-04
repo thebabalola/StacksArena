@@ -148,14 +148,13 @@ export function Sidebar() {
       </nav>
 
       <div className="p-4 space-y-4">
-        {isConnected && (
           <div className="rounded-2xl bg-secondary/10 p-3 border border-border/50 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-companion to-primary/20 p-[1px]">
               <div className="w-full h-full rounded-xl bg-card flex items-center justify-center overflow-hidden">
                 <img
                   src={
                     profile?.avatarUrl ||
-                    `https://api.dicebear.com/7.x/avataaars/svg?seed=${stxAddress || "Player"}`
+                    `https://api.dicebear.com/7.x/avataaars/svg?seed=${stxAddress || "PlayerOne"}`
                   }
                   alt="Avatar"
                   className="w-full h-full object-cover"
@@ -172,12 +171,11 @@ export function Sidebar() {
               <div className="flex items-center gap-1 mt-0.5">
                 <div className="w-1 h-1 rounded-full bg-primary" />
                 <span className="text-[9px] font-black text-primary tracking-widest uppercase">
-                  {formattedSTX} STX
+                  {formattedSTX || "0"} STX
                 </span>
               </div>
             </div>
           </div>
-        )}
 
         <div className="rounded-2xl bg-secondary/5 p-4 border border-border/50">
           <div className="flex items-center gap-2">
