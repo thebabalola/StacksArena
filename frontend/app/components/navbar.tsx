@@ -15,7 +15,10 @@ import {
   X, 
   ShieldCheck,
   User as UserIcon,
+  Settings,
+  LogOut,
 } from "lucide-react";
+import { PLATFORM_CONFIG } from "@/lib/constants/contracts";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,6 +48,7 @@ export function Navbar() {
   const { isConnected, stxAddress, connect, disconnect, profile } = useStacks();
   const { formattedSTX } = useBalance();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isAdmin = stxAddress === PLATFORM_CONFIG.deployer;
 
   return (
     <header className="sticky top-0 z-30 w-full bg-transparent">
@@ -177,6 +181,21 @@ export function Navbar() {
                       </Link>
                     );
                   })}
+                  
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all mt-4 border-t border-border/50 pt-4 ${
+                        pathname === "/admin" 
+                          ? "text-companion bg-companion/10 border-l-2 border-companion font-bold" 
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/20"
+                      }`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Settings className="w-5 h-5 text-primary" />
+                      <span className="text-xs font-bold tracking-wide text-primary uppercase">Admin Panel</span>
+                    </Link>
+                  )}
                 </nav>
               </div>
 

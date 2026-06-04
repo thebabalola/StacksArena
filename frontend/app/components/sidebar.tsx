@@ -11,7 +11,9 @@ import {
   LayoutDashboard,
   User as UserIcon,
   PlusCircle,
+  Settings,
 } from "lucide-react";
+import { PLATFORM_CONFIG } from "@/lib/constants/contracts";
 import { motion } from "framer-motion";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { useBalance } from "@/lib/hooks/use-balance";
@@ -44,6 +46,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const { isConnected, stxAddress, profile } = useStacks();
   const { formattedSTX } = useBalance();
+  const isAdmin = stxAddress === PLATFORM_CONFIG.deployer;
 
   return (
     <aside className="hidden lg:flex flex-col w-64 bg-card text-card-foreground border-r border-border h-screen sticky top-0 z-40 transition-colors duration-300">
@@ -117,6 +120,31 @@ export function Sidebar() {
             </Link>
           );
         })}
+
+        {isAdmin && (
+          <Link href="/admin" className="relative group block mt-4 border-t border-border/50 pt-4">
+            {pathname === "/admin" && (
+              <motion.div
+                layoutId="activeNav"
+                className="absolute inset-0 top-4 bg-companion/10 rounded-xl border-l-2 border-companion"
+              />
+            )}
+            <div
+              className={`relative flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all ${
+                pathname === "/admin"
+                  ? "text-companion bg-companion/5"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
+              }`}
+            >
+              <Settings
+                className={`w-4.5 h-4.5 ${pathname === "/admin" ? "drop-shadow-[0_0_8px_rgba(139,92,246,0.4)]" : "opacity-70 group-hover:opacity-100"}`}
+              />
+              <span className="text-xs font-bold tracking-wide uppercase text-primary">
+                Admin Panel
+              </span>
+            </div>
+          </Link>
+        )}
       </nav>
 
       <div className="p-4 space-y-4">
