@@ -320,34 +320,41 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* FEATURE CARDS */}
-      <section className="py-10 px-6">
-        <div className="mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* FEATURE CARDS - UNIQUE LIST LAYOUT */}
+      <section className="py-16 px-6">
+        <div className="mx-auto max-w-4xl flex flex-col gap-4">
           {featureCards.map((feat, i) => {
             const Icon = feat.icon;
             return (
               <motion.div
                 key={feat.title}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.15 * i + 0.5 }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 * i }}
               >
                 <Link
                   href={feat.href}
-                  className="group relative block p-8 rounded-2xl bg-card/60 backdrop-blur-xl border border-border/50 hover:border-companion/40 transition-all hover:-translate-y-2 h-full shadow-2xl overflow-hidden"
+                  className="group flex flex-col md:flex-row items-start md:items-center justify-between p-6 rounded-xl bg-card border-l-4 border-l-primary border-y border-r border-border hover:bg-secondary/10 transition-colors shadow-sm"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-companion/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="w-14 h-14 rounded-xl bg-secondary/15 flex items-center justify-center mb-6 relative z-10 border border-border/50">
-                    <Icon
-                      className={`w-6 h-6 ${feat.colorClass} drop-shadow-[0_0_8px_currentColor]`}
-                    />
+                  <div className="flex items-center gap-6 mb-4 md:mb-0">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <Icon className={`w-6 h-6 ${feat.colorClass}`} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-black text-foreground mb-1 font-[var(--font-display)] uppercase tracking-wider">
+                        {feat.title}
+                      </h3>
+                      <p className="text-xs text-muted-foreground font-bold max-w-md">
+                        {feat.desc}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="text-xs font-black text-foreground mb-3 tracking-widest font-[var(--font-display)] relative z-10 uppercase">
-                    {feat.title}
-                  </h3>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed font-bold relative z-10">
-                    {feat.desc}
-                  </p>
+                  <div className="shrink-0 md:ml-6 pl-14 md:pl-0">
+                    <span className="text-xs font-black text-primary uppercase tracking-widest border border-primary/20 bg-primary/5 px-4 py-2 rounded-full group-hover:bg-primary group-hover:text-black transition-colors">
+                      Learn More
+                    </span>
+                  </div>
                 </Link>
               </motion.div>
             );
@@ -355,84 +362,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="py-24 px-6 bg-secondary/5 transition-colors duration-300">
-        <div className="mx-auto max-w-5xl">
-          <div className="text-center mb-16">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary mb-4">
-              How It Works
-            </p>
-            <h2 className="text-3xl md:text-5xl font-black font-[var(--font-display)] text-foreground tracking-wide uppercase">
-              THREE STEPS TO COMMIT.
+      {/* HOW IT WORKS - TIMELINE LAYOUT */}
+      <section className="py-24 px-6 border-t border-border/20 mb-20">
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-black font-[var(--font-display)] text-foreground uppercase tracking-tighter">
+              HOW TO <span className="text-primary italic">COMMIT.</span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex flex-col md:flex-row gap-12 md:gap-8">
             {steps.map((step, i) => (
               <motion.div
                 key={step.num}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="glass-panel relative flex flex-col gap-4 p-8 rounded-2xl border border-border/40 overflow-hidden"
+                transition={{ delay: i * 0.1 }}
+                className="flex-1 relative"
               >
-                <span className="text-7xl font-black text-primary/10 leading-none font-[var(--font-display)]">
-                  {step.num}
-                </span>
-                <div className="absolute top-6 right-6 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-xs font-black text-primary">
-                    {i + 1}
-                  </span>
+                {/* Connecting Line for desktop */}
+                {i !== steps.length - 1 && (
+                  <div className="hidden md:block absolute top-6 left-[60%] w-full h-[2px] bg-border/40" />
+                )}
+                <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-black font-black text-xl mb-6 relative z-10 shadow-[0_0_20px_rgba(249,115,22,0.3)]">
+                  {i + 1}
                 </div>
-                <h3 className="text-xl font-bold -mt-2 font-[var(--font-display)] text-foreground tracking-wide">
+                <h3 className="text-lg font-black font-[var(--font-display)] text-foreground uppercase tracking-widest mb-3">
                   {step.title}
                 </h3>
-                <p className="text-[11px] font-bold text-muted-foreground leading-relaxed uppercase">
+                <p className="text-[11px] font-bold text-muted-foreground leading-relaxed max-w-[250px]">
                   {step.desc}
                 </p>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-24 px-6 mb-20">
-        <div className="mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary/20 via-companion/20 to-primary/20 p-1 lg:p-[1px]"
-          >
-            <div className="bg-card/95 dark:bg-[#0a0a1a]/95 rounded-[23px] p-12 lg:p-20 text-center relative overflow-hidden border border-border/40 transition-colors duration-300">
-              <div className="absolute inset-0 cyber-mesh opacity-20" />
-              <h2 className="relative text-4xl md:text-6xl font-black text-foreground mb-6 font-[var(--font-display)] tracking-tighter uppercase italic">
-                SECURE YOUR <span className="text-primary">FUTURE.</span>
-              </h2>
-              <p className="relative text-muted-foreground mb-10 max-w-lg mx-auto text-lg font-bold">
-                Connect your Stacks wallet and establish your first
-                Bitcoin-anchored financial commitment today.
-              </p>
-              {isConnected ? (
-                <Link
-                  href="/create"
-                  className="group inline-block relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow"
-                >
-                  <span className="relative z-10">Create Your First Vault</span>
-                  <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                </Link>
-              ) : (
-                <button
-                  onClick={connect}
-                  className="group relative overflow-hidden rounded-xl bg-primary px-10 py-5 text-sm font-black text-white transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(249,115,22,0.3)] uppercase tracking-widest border-glow"
-                >
-                  <span className="relative z-10">Connect Stacks Wallet</span>
-                  <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                </button>
-              )}
-            </div>
-          </motion.div>
         </div>
       </section>
     </div>
