@@ -51,6 +51,7 @@ export function Navbar() {
   const isAdmin = stxAddress === PLATFORM_CONFIG.deployer;
 
   return (
+    <>
     <header className="sticky top-0 z-30 w-full bg-transparent">
       <div className="flex items-center justify-between px-6 lg:px-10 h-20 bg-background/5 backdrop-blur-md border-b border-border/10">
         
@@ -92,6 +93,16 @@ export function Navbar() {
               <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
             </button>
           )}
+        </div>
+
+        {/* MOBILE LOGO */}
+        <div className="flex lg:hidden items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/stacksarena-logo.png" alt="Logo" className="w-8 h-8 object-contain" />
+            <span className="text-sm font-black tracking-tight font-[var(--font-display)] text-foreground">
+              STACKS<span className="text-primary italic">ARENA</span>
+            </span>
+          </Link>
         </div>
 
         {/* MOBILE HEADER ACTIONS */}
@@ -252,5 +263,30 @@ export function Navbar() {
         )}
       </AnimatePresence>
     </header>
+
+    {/* MOBILE BOTTOM NAVIGATION BAR */}
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border/50 flex lg:hidden items-end justify-around pb-4 pt-2 px-2 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
+      {menuItems.slice(0, 5).map((item) => {
+        const Icon = item.icon;
+        const isActive = pathname === item.href;
+        return (
+          <Link
+            key={item.name}
+            href={item.href}
+            className={`group flex flex-col items-center justify-center flex-1 transition-all ${
+              isActive ? "text-companion" : "text-muted-foreground"
+            }`}
+          >
+            <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? "bg-companion/10 scale-110" : "group-hover:bg-secondary/20 group-active:bg-secondary/20 group-hover:-translate-y-1 group-active:-translate-y-1"}`}>
+              <Icon className="w-5 h-5" />
+            </div>
+            <span className={`text-[9px] font-black tracking-wider uppercase mt-1 transition-all duration-300 ${isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 group-active:opacity-100 group-active:translate-y-0"}`}>
+              {item.name}
+            </span>
+          </Link>
+        );
+      })}
+    </nav>
+    </>
   );
 }
