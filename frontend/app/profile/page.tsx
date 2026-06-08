@@ -8,7 +8,7 @@ export default function ProfilePage() {
   const { isConnected, stxAddress, connect } = useStacks();
 
   return (
-    <div className="min-h-screen px-6 py-12">
+    <div className="min-h-screen px-6 pt-28 pb-28 sm:py-12">
       <div className="mx-auto max-w-4xl">
         <h1 className="text-4xl font-black mb-10">Player <span className="text-primary">Profile</span></h1>
 
@@ -23,13 +23,13 @@ export default function ProfilePage() {
           </div>
         ) : (
           <div className="grid gap-6">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-8 rounded-2xl border border-border bg-card flex items-center gap-6">
-              <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center">
-                <User className="w-10 h-10 text-primary" />
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-6 sm:p-8 rounded-2xl border border-border bg-card flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                <User className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
               </div>
-              <div>
-                <h2 className="text-2xl font-bold mb-1">PlayerOne</h2>
-                <p className="text-muted-foreground font-mono bg-white/5 px-3 py-1 rounded-lg inline-block">{stxAddress}</p>
+              <div className="min-w-0 w-full">
+                <h2 className="text-xl sm:text-2xl font-bold mb-1">PlayerOne</h2>
+                <p className="text-muted-foreground font-mono bg-white/5 px-3 py-1.5 rounded-lg break-all text-xs inline-block max-w-full">{stxAddress}</p>
               </div>
             </motion.div>
 
