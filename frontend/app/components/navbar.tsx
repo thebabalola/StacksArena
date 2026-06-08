@@ -99,9 +99,6 @@ export function Navbar() {
         <div className="flex lg:hidden items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <img src="/stacksarena-logo.png" alt="Logo" className="w-8 h-8 object-contain" />
-            <span className="text-sm font-black tracking-tight font-[var(--font-display)] text-foreground">
-              STACKS<span className="text-primary italic">ARENA</span>
-            </span>
           </Link>
         </div>
 
