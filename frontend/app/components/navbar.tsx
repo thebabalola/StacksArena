@@ -106,162 +106,48 @@ export function Navbar() {
         </div>
 
         {/* MOBILE HEADER ACTIONS */}
-        <div className="flex lg:hidden items-center gap-3">
+        <div className="flex lg:hidden items-center gap-2 shrink-0">
           <ThemeToggle />
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="p-2 rounded-xl bg-secondary/10 border border-border/50 text-foreground"
-            aria-label="Open menu"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          {isConnected ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary/10 hover:bg-secondary/20 transition-all border border-border/50 shadow-2xl group overflow-hidden relative">
+                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="w-5 h-5 rounded-md bg-primary/20 flex items-center justify-center relative z-10">
+                    <User className="w-3 h-3 text-primary" />
+                  </div>
+                  <span className="font-bold text-[10px] text-foreground relative z-10">{formatAddress(stxAddress)}</span>
+                  <ChevronDown className="w-3 h-3 text-muted-foreground group-data-[state=open]:rotate-180 transition-transform relative z-10" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 glass-panel p-1.5 text-foreground border-border/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
+                <div className="px-2.5 py-2 border-b border-border/50 mb-1 flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center overflow-hidden shrink-0">
+                    <img
+                      src={profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${stxAddress || "Player"}`}
+                      alt="Avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-black truncate text-foreground">{profile?.username || "Committer"}</p>
+                    <p className="text-[9px] font-black text-primary truncate">{formattedSTX || "0"} STX</p>
+                  </div>
+                </div>
+                <DropdownMenuItem onClick={disconnect} className="flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer text-red-500 focus:text-red-500 focus:bg-red-500/10 transition-colors">
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="font-bold text-[10px] uppercase tracking-wider">Disconnect</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <button onClick={connect} className="group relative overflow-hidden rounded-xl bg-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider text-white transition-all hover:scale-105 active:scale-95 shadow-[0_10px_25px_rgba(249,115,22,0.3)]">
+              <span className="relative z-10">Connect</span>
+              <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+            </button>
+          )}
         </div>
       </div>
-
-      {/* MOBILE NAVIGATION DRAWER */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
-            />
-
-            {/* Drawer */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
-              className="fixed right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-card border-l border-border/50 p-6 shadow-2xl z-50 flex flex-col justify-between lg:hidden text-foreground"
-            >
-              <div>
-                {/* Header inside drawer */}
-                <div className="flex items-center justify-between pb-6 border-b border-border/50 mb-6">
-                  <div className="flex items-center gap-2">
-                    <img src="/stacksarena-logo.png" alt="Logo" className="w-8 h-8 object-contain" />
-                    <span className="text-sm font-black tracking-tight font-[var(--font-display)]">
-                      STACKS<span className="text-primary italic">ARENA</span>
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-1.5 rounded-lg bg-secondary/10 hover:bg-secondary/20 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* Navigation inside drawer */}
-                <nav className="space-y-1">
-                  {menuItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = pathname === item.href;
-                    if (item.external) {
-                      return (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary/20 transition-all"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          <Icon className="w-5 h-5 opacity-70" />
-                          <span className="text-xs font-bold tracking-wide">{item.name}</span>
-                        </a>
-                      );
-                    }
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                          isActive 
-                            ? "text-companion bg-companion/10 border-l-2 border-companion font-bold" 
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/20"
-                        }`}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <Icon className="w-5 h-5" />
-                        <span className="text-xs font-bold tracking-wide">{item.name}</span>
-                      </Link>
-                    );
-                  })}
-                  
-                  {isAdmin && (
-                    <Link
-                      href="/admin"
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all mt-4 border-t border-border/50 pt-4 ${
-                        pathname === "/admin" 
-                          ? "text-companion bg-companion/10 border-l-2 border-companion font-bold" 
-                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/20"
-                      }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Settings className="w-5 h-5 text-primary" />
-                      <span className="text-xs font-bold tracking-wide text-primary uppercase">Admin Panel</span>
-                    </Link>
-                  )}
-                </nav>
-              </div>
-
-              {/* Footer / Account section inside drawer */}
-              <div className="space-y-4 pt-6 border-t border-border/50">
-                {isConnected ? (
-                  <div className="space-y-3">
-                    <div className="rounded-xl bg-secondary/10 p-3 border border-border flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-companion to-primary/20 p-[1px]">
-                        <div className="w-full h-full rounded-lg bg-card flex items-center justify-center overflow-hidden">
-                          <img
-                            src={profile?.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${stxAddress || "Player"}`}
-                            alt="Avatar"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-black truncate">{profile?.username || "Committer"}</p>
-                        <p className="text-[9px] font-bold text-muted-foreground truncate">{formatAddress(stxAddress)}</p>
-                        <p className="text-[9px] font-black text-primary tracking-wider uppercase mt-0.5">{formattedSTX} STX</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        disconnect();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500/20 transition-all text-xs font-bold uppercase tracking-widest"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Terminate Session
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      connect();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full py-4 rounded-xl bg-primary text-white text-xs font-black uppercase tracking-widest text-center shadow-lg hover:scale-105 active:scale-95 transition-all"
-                  >
-                    Connect Wallet
-                  </button>
-                )}
-                
-                <div className="flex items-center justify-center gap-2 text-[9px] font-black text-muted-foreground uppercase tracking-widest">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                  <span>Protocol Live</span>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </header>
 
     {/* MOBILE BOTTOM NAVIGATION BAR */}
@@ -280,7 +166,7 @@ export function Navbar() {
             <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? "bg-companion/10 scale-110" : "group-hover:bg-secondary/20 group-active:bg-secondary/20 group-hover:-translate-y-1 group-active:-translate-y-1"}`}>
               <Icon className="w-5 h-5" />
             </div>
-            <span className={`text-[9px] font-black tracking-wider uppercase mt-1 transition-all duration-300 ${isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 group-active:opacity-100 group-active:translate-y-0"}`}>
+            <span className={`text-[9px] font-black tracking-wider uppercase mt-1 text-center block w-full transition-all duration-300 ${isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 group-active:opacity-100 group-active:translate-y-0"}`}>
               {item.name}
             </span>
           </Link>
