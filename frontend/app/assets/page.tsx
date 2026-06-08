@@ -127,7 +127,7 @@ export default function AssetsPage() {
   };
 
   return (
-    <div className="min-h-screen px-6 py-12 lg:px-12 bg-[#050510]">
+    <div className="min-h-screen px-6 pt-28 pb-28 sm:py-12 lg:px-12 bg-[#050510]">
       <div className="mx-auto max-w-7xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>

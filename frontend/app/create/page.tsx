@@ -99,7 +99,7 @@ export default function CreateVaultPage() {
   };
 
   return (
-    <div className="min-h-screen px-6 py-12 bg-background transition-colors duration-300">
+    <div className="min-h-screen px-6 pt-28 pb-28 sm:py-12 bg-background transition-colors duration-300">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/"

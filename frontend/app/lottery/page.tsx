@@ -40,7 +40,7 @@ export default function LotteryPage() {
   useEffect(() => { fetchStats(); }, [fetchStats]);
 
   return (
-    <div className="min-h-screen px-6 py-12">
+    <div className="min-h-screen px-6 pt-28 pb-28 sm:py-12">
       <div className="mx-auto max-w-4xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between mb-10">
           <div>

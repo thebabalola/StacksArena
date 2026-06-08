@@ -140,7 +140,7 @@ export default function StatsPage() {
   const multiPercent = totalActive > 0 ? (computed.multiSig / totalActive) * 100 : 0;
 
   return (
-    <div className="min-h-screen px-4 md:px-8 py-12 bg-background transition-colors duration-300">
+    <div className="min-h-screen px-4 md:px-8 pt-28 pb-28 md:py-12 bg-background transition-colors duration-300">
       <div className="mx-auto max-w-6xl">
         
         {/* Navigation back */}

@@ -99,7 +99,7 @@ export default function TournamentsPage() {
   useEffect(() => { fetchTournaments(); }, [fetchTournaments]);
 
   return (
-    <div className="min-h-screen px-6 py-12">
+    <div className="min-h-screen px-6 pt-28 pb-28 sm:py-12">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
            <Link href="/arena" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors mb-4">

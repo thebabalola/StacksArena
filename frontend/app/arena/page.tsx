@@ -35,7 +35,7 @@ export default function ArenaDashboard() {
   }, [getArenaStats]);
 
   return (
-    <div className="min-h-screen px-6 py-12">
+    <div className="min-h-screen px-6 pt-28 pb-28 sm:py-12">
       <div className="mx-auto max-w-6xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
           <h1 className="text-4xl font-black mb-2">Battle <span className="text-primary">Dashboard</span></h1>
