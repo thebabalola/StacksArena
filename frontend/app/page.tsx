@@ -85,11 +85,24 @@ export default function Home() {
       const protocolStats = await getProtocolStats();
       const s = protocolStats?.value;
 
+      // Fetch Treasury STX Balance
+      const deployerAddress = "SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2";
+      let tBal = 0;
+      try {
+        const tr = await fetch(`https://api.mainnet.hiro.so/extended/v1/address/${deployerAddress}/balances`);
+        if (tr.ok) {
+          const tData = await tr.json();
+          tBal = Number(tData.stx.balance) / 1000000;
+        }
+      } catch (err) {
+        console.error("Treasury fetch error:", err);
+      }
+
       setStats({
         totalVaults: Number(s?.["total-vaults"]?.value ?? 0),
         totalLocked: Number(s?.["total-locked"]?.value ?? 0) / 1000000,
         activeUsers: Number(s?.["total-vaults"]?.value ?? 0),
-        treasuryBalance: 0,
+        treasuryBalance: tBal,
       });
     } catch (e) {
       console.error("Failed to fetch stats:", e);
