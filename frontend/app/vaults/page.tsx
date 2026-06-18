@@ -64,7 +64,7 @@ export default function VaultsPage() {
           const val = v.value.value;
           const ownerAddress = val.owner?.value;
           
-          if (ownerAddress === stxAddress) {
+          if (ownerAddress === stxAddress && val["is-active"]?.value === true) {
             list.push({
               id: i,
               owner: ownerAddress,
