@@ -57,35 +57,46 @@ export default function VaultsPage() {
       const totalVaults = Number(s?.["total-vaults"]?.value ?? 0);
 
       const list: Vault[] = [];
-      const limit = Math.min(totalVaults, 50);
-      for (let i = 0; i < limit; i++) {
-        const v = await getVaultDetails(i);
-        if (v?.value && v.value.value) {
-          const val = v.value.value;
-          const ownerAddress = val.owner?.value;
-          
-          if (ownerAddress === stxAddress && val["is-active"]?.value === true) {
-            list.push({
-              id: i,
-              owner: ownerAddress,
-              balance: Number(val.balance?.value ?? 0) / 1000000,
-              lockStart: Number(val["lock-start"]?.value ?? 0),
-              targetBlock: Number(val["target-block"]?.value ?? 0),
-              penaltyRate: Number(val["penalty-rate"]?.value ?? 0),
-              threshold: Number(val.threshold?.value ?? 1),
-              approvalCount: Number(val["approval-count"]?.value ?? 0),
-              isActive: val["is-active"]?.value ?? false,
-              token: val.token?.value?.value || null,
-              totalMilestones: Number(val["total-milestones"]?.value ?? 1),
-              currentMilestone: Number(val["current-milestone"]?.value ?? 0),
-              timeRemaining: Math.max(
-                0,
-                Number(val["target-block"]?.value ?? 0) - (blockHeight || 0),
-              ),
-            });
-          }
-        }
+      const startIdx = Math.max(0, totalVaults - 50);
+
+      const fetchPromises = [];
+      for (let i = totalVaults - 1; i >= startIdx; i--) {
+        fetchPromises.push(
+          getVaultDetails(i).then((v) => {
+            if (v?.value && v.value.value) {
+              const val = v.value.value;
+              const ownerAddress = val.owner?.value;
+              
+              if (ownerAddress === stxAddress && val["is-active"]?.value === true) {
+                return {
+                  id: i,
+                  owner: ownerAddress,
+                  balance: Number(val.balance?.value ?? 0) / 1000000,
+                  lockStart: Number(val["lock-start"]?.value ?? 0),
+                  targetBlock: Number(val["target-block"]?.value ?? 0),
+                  penaltyRate: Number(val["penalty-rate"]?.value ?? 0),
+                  threshold: Number(val.threshold?.value ?? 1),
+                  approvalCount: Number(val["approval-count"]?.value ?? 0),
+                  isActive: val["is-active"]?.value ?? false,
+                  token: val.token?.value?.value || null,
+                  totalMilestones: Number(val["total-milestones"]?.value ?? 1),
+                  currentMilestone: Number(val["current-milestone"]?.value ?? 0),
+                  timeRemaining: Math.max(
+                    0,
+                    Number(val["target-block"]?.value ?? 0) - (blockHeight || 0),
+                  ),
+                };
+              }
+            }
+            return null;
+          })
+        );
       }
+
+      const results = await Promise.all(fetchPromises);
+      results.forEach((res) => {
+        if (res) list.push(res);
+      });
       setVaults(list);
     } catch (e) {
       console.error("Failed to fetch vaults:", e);
