@@ -31,34 +31,25 @@ export default function ProfilePage() {
       const totalVaults = Number(s?.["total-vaults"]?.value ?? 0);
 
       const list: Vault[] = [];
-      const startIdx = Math.max(0, totalVaults - 50);
+      const startIdx = Math.max(0, totalVaults - 25);
 
-      const fetchPromises = [];
       for (let i = totalVaults - 1; i >= startIdx; i--) {
-        fetchPromises.push(
-          getVaultDetails(i).then((v) => {
-            if (v?.value && v.value.value) {
-              const val = v.value.value;
-              const ownerAddress = val.owner?.value;
-              
-              if (ownerAddress === stxAddress && val["is-active"]?.value === false) {
-                return {
-                  id: i,
-                  balance: Number(val.balance?.value ?? 0) / 1000000,
-                  penaltyRate: Number(val["penalty-rate"]?.value ?? 0),
-                  isActive: false,
-                };
-              }
-            }
-            return null;
-          })
-        );
+        const v = await getVaultDetails(i);
+        if (v?.value && v.value.value) {
+          const val = v.value.value;
+          const ownerAddress = val.owner?.value;
+          
+          if (ownerAddress === stxAddress && val["is-active"]?.value === false) {
+            list.push({
+              id: i,
+              balance: Number(val.balance?.value ?? 0) / 1000000,
+              penaltyRate: Number(val["penalty-rate"]?.value ?? 0),
+              isActive: false,
+            });
+          }
+        }
       }
 
-      const results = await Promise.all(fetchPromises);
-      results.forEach((res) => {
-        if (res) list.push(res);
-      });
       setInactiveVaults(list);
     } catch (e) {
       console.error("Failed to fetch inactive vaults:", e);
