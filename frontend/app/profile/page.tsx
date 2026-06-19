@@ -31,7 +31,7 @@ export default function ProfilePage() {
       const totalVaults = Number(s?.["total-vaults"]?.value ?? 0);
 
       const list: Vault[] = [];
-      const startIdx = Math.max(0, totalVaults - 25);
+      const startIdx = Math.max(0, totalVaults - 150);
 
       for (let i = totalVaults - 1; i >= startIdx; i--) {
         const v = await getVaultDetails(i);

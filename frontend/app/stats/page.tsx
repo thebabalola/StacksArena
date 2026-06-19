@@ -78,19 +78,22 @@ export default function StatsPage() {
       let multiCount = 0;
       let balanceSum = 0;
 
-      // Scan first 20 vaults on-chain
-      for (let i = 0; i < 20; i++) {
+      const totalVaults = Number(val["total-vaults"]?.value ?? 0);
+      
+      // Scan up to 150 most recent vaults on-chain
+      const startIdx = Math.max(0, totalVaults - 150);
+      for (let i = totalVaults - 1; i >= startIdx; i--) {
         const v = await getVaultDetails(i);
         if (v?.value) {
-          const val = v.value;
+          const valVault = v.value;
           const vaultItem: VaultStats = {
             id: i,
-            owner: val.owner?.value || "",
-            balance: Number(val.balance?.value ?? 0) / 1000000,
-            penaltyRate: Number(val["penalty-rate"]?.value ?? 0),
-            threshold: Number(val.threshold?.value ?? 1),
-            isActive: val["is-active"]?.value ?? false,
-            totalMilestones: Number(val["total-milestones"]?.value ?? 1),
+            owner: valVault.owner?.value || "",
+            balance: Number(valVault.balance?.value ?? 0) / 1000000,
+            penaltyRate: Number(valVault["penalty-rate"]?.value ?? 0),
+            threshold: Number(valVault.threshold?.value ?? 1),
+            isActive: valVault["is-active"]?.value ?? false,
+            totalMilestones: Number(valVault["total-milestones"]?.value ?? 1),
           };
           list.push(vaultItem);
 
