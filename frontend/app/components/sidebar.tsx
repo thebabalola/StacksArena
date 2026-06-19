@@ -26,7 +26,7 @@ const menuItems = [
   { name: "Profile", href: "/profile", icon: UserIcon },
   {
     name: "Protocol",
-    href: "https://explorer.hiro.so/txid/SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-VaultFactory?chain=mainnet",
+    href: "https://explorer.hiro.so/txid/SPZYY7560YPR8BY63XNTDX36HBY1G8K0TST365B2.stacksarena-VaultFactory-fix?chain=mainnet",
     icon: ShieldCheck,
     external: true,
   },
