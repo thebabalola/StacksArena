@@ -39,10 +39,10 @@ export default function ProfilePage() {
           const val = v.value.value;
           const ownerAddress = val.owner?.value;
           
-          if (ownerAddress === stxAddress && val["is-active"]?.value === false) {
+          if (ownerAddress?.toLowerCase() === stxAddress?.toLowerCase() && val["is-active"]?.value === false) {
             list.push({
               id: i,
-              balance: Number(val.balance?.value ?? 0) / 1000000,
+              balance: Number(val["initial-balance"]?.value ?? 0) / 1000000,
               penaltyRate: Number(val["penalty-rate"]?.value ?? 0),
               isActive: false,
             });

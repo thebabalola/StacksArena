@@ -84,8 +84,8 @@ export default function StatsPage() {
       const startIdx = Math.max(0, totalVaults - 150);
       for (let i = totalVaults - 1; i >= startIdx; i--) {
         const v = await getVaultDetails(i);
-        if (v?.value) {
-          const valVault = v.value;
+        if (v?.value && v.value.value) {
+          const valVault = v.value.value;
           const vaultItem: VaultStats = {
             id: i,
             owner: valVault.owner?.value || "",
