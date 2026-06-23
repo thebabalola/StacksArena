@@ -81,7 +81,8 @@ export function useCommitVault() {
         Cl.uint(penaltyRate),
         Cl.uint(threshold),
         token ? Cl.some(Cl.principal(token)) : Cl.none(),
-        Cl.uint(milestones)
+        Cl.uint(milestones),
+        Cl.contractPrincipal(CONTRACTS.VAULT_FACTORY.split('.')[0], CONTRACTS.VAULT_FACTORY.split('.')[1])
       ],
       (data) => { setLoading(false); onFinish(data); },
       () => setLoading(false)
