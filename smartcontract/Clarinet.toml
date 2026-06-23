@@ -26,6 +26,11 @@ path = 'contracts/sip-010-trait-ft-standard.clar'
 clarity_version = 2
 epoch = '2.5'
 
+[contracts.vault-factory-trait]
+path = 'contracts/vault-factory-trait.clar'
+clarity_version = 2
+epoch = '2.5'
+
 [repl.analysis]
 passes = ['check_checker']
 
