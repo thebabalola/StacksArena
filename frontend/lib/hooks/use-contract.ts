@@ -6,6 +6,7 @@ import { useToast } from '@/components/features/core/ArenaToastProvider';
 import { CONTRACTS, STACKS_NETWORK_CONFIG } from '../constants/contracts';
 import { useStacks } from './use-stacks';
 import { executeContractAction } from '../stacks-actions';
+import { useTransactionFlow } from './use-transaction-flow';
 
 // ─── Vault Factory ────────────────────────────────────────────────────────
 
@@ -41,7 +42,7 @@ export function useVaultFactory() {
 
 export function useCommitVault() {
   const { stxAddress } = useStacks();
-  const [loading, setLoading] = useState(false);
+  const txFlow = useTransactionFlow();
   const { toast } = useToast();
   const [addr, name] = CONTRACTS.COMMIT_VAULT.split('.');
 
@@ -71,7 +72,7 @@ export function useCommitVault() {
     milestones: number,
     onFinish: (data: any) => void
   ) => {
-    setLoading(true);
+    txFlow.handlePending();
     await executeContractAction(
       addr, name,
       'create-vault',
@@ -84,13 +85,13 @@ export function useCommitVault() {
         Cl.uint(milestones),
         Cl.contractPrincipal(CONTRACTS.VAULT_FACTORY.split('.')[0], CONTRACTS.VAULT_FACTORY.split('.')[1])
       ],
-      (data) => { setLoading(false); onFinish(data); },
-      () => setLoading(false)
+      (data) => { txFlow.handleFinish(data); onFinish(data); },
+      () => txFlow.handleCancel()
     );
   };
 
   const withdraw = async (vaultId: number, tokenContract: string | null, onFinish: (data: any) => void) => {
-    setLoading(true);
+    txFlow.handlePending();
     try {
       await executeContractAction(
         addr, name,
@@ -100,23 +101,23 @@ export function useCommitVault() {
           tokenContract ? Cl.some(Cl.principal(tokenContract)) : Cl.none()
         ],
         (data) => {
-          setLoading(false);
+          txFlow.handleFinish(data);
           toast("success", "Withdrawal transaction broadcasted!");
           onFinish(data);
         },
         () => {
-          setLoading(false);
+          txFlow.handleCancel();
           toast("info", "Withdrawal cancelled.");
         }
       );
     } catch (e) {
-      setLoading(false);
+      txFlow.handleError(e);
       toast("error", "Withdrawal failed.");
     }
   };
 
   const releaseMilestone = async (vaultId: number, tokenContract: string | null, onFinish: (data: any) => void) => {
-    setLoading(true);
+    txFlow.handlePending();
     await executeContractAction(
       addr, name,
       'release-milestone',
@@ -124,19 +125,19 @@ export function useCommitVault() {
         Cl.uint(vaultId),
         tokenContract ? Cl.some(Cl.principal(tokenContract)) : Cl.none()
       ],
-      (data) => { setLoading(false); onFinish(data); },
-      () => setLoading(false)
+      (data) => { txFlow.handleFinish(data); onFinish(data); },
+      () => txFlow.handleCancel()
     );
   };
 
   const approveVault = async (vaultId: number, onFinish: (data: any) => void) => {
-    setLoading(true);
+    txFlow.handlePending();
     await executeContractAction(
       addr, name,
       'approve-vault',
       [Cl.uint(vaultId)],
-      (data) => { setLoading(false); onFinish(data); },
-      () => setLoading(false)
+      (data) => { txFlow.handleFinish(data); onFinish(data); },
+      () => txFlow.handleCancel()
     );
   };
 
@@ -146,7 +147,7 @@ export function useCommitVault() {
     withdraw,
     approveVault,
     releaseMilestone,
-    loading,
+    ...txFlow,
   };
 }
 
