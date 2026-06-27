@@ -4,6 +4,9 @@ import { useMemo } from "react";
 
 import { useStacks } from "@/lib/hooks/use-stacks";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 function formatAddress(address?: string | null) {
   if (!address) return "—";
   return address.length <= 10
@@ -42,70 +45,68 @@ export function WalletPanel() {
   }, [status]);
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200 bg-white/60 p-6 shadow-sm backdrop-blur">
-      <div className="flex items-start justify-between gap-4">
+    <Card className="w-full">
+      <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-slate-500">Wallet status</p>
-          <p className="text-xl font-semibold text-slate-900">{statusCopy}</p>
+          <p className="text-sm font-medium text-muted-foreground">Wallet status</p>
+          <CardTitle className="text-xl mt-1">{statusCopy}</CardTitle>
           {providerName ? (
-            <p className="text-sm text-slate-500">Provider: {providerName}</p>
+            <p className="text-sm text-muted-foreground mt-1">Provider: {providerName}</p>
           ) : null}
         </div>
         <div className="flex gap-2">
-          <button
-            type="button"
+          <Button
+            variant="outline"
             onClick={refresh}
-            className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
             disabled={isLoading}
           >
             Refresh
-          </button>
+          </Button>
           {isConnected ? (
-            <button
-              type="button"
+            <Button
+              variant="secondary"
               onClick={disconnect}
-              className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
               disabled={isLoading}
             >
               Disconnect
-            </button>
+            </Button>
           ) : (
-            <button
-              type="button"
+            <Button
               onClick={connect}
-              className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:opacity-50"
               disabled={isLoading || isPending}
             >
               {isPending ? "Opening wallet…" : "Connect wallet"}
-            </button>
+            </Button>
           )}
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 rounded-xl bg-slate-50 p-4 sm:grid-cols-2">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            STX Address
-          </p>
-          <p className="mt-1 font-mono text-sm text-slate-900">
-            {formatAddress(stxAddress)}
-          </p>
+      <CardContent>
+        <div className="grid grid-cols-1 gap-4 rounded-xl bg-secondary/20 p-4 sm:grid-cols-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              STX Address
+            </p>
+            <p className="mt-1 font-mono text-sm text-foreground">
+              {formatAddress(stxAddress)}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              BTC Address
+            </p>
+            <p className="mt-1 font-mono text-sm text-foreground">
+              {formatAddress(btcAddress)}
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            BTC Address
-          </p>
-          <p className="mt-1 font-mono text-sm text-slate-900">
-            {formatAddress(btcAddress)}
-          </p>
-        </div>
-      </div>
 
-      {error ? (
-        <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
-        </p>
-      ) : null}
-    </div>
+        {error ? (
+          <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {error}
+          </p>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useStacks } from "@/lib/hooks/use-stacks";
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import { 
   ChevronDown, 
   User, 
@@ -88,10 +89,10 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <button onClick={connect} className="group relative overflow-hidden rounded-xl bg-primary px-7 py-3 text-xs font-black uppercase tracking-widest text-white transition-all hover:scale-105 active:scale-95 shadow-[0_15px_40px_rgba(249,115,22,0.35)]">
+            <Button onClick={connect} className="group relative overflow-hidden rounded-xl px-7 py-3 text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_15px_40px_rgba(249,115,22,0.35)]">
               <span className="relative z-10">Connect Wallet</span>
               <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-            </button>
+            </Button>
           )}
         </div>
 
@@ -138,10 +139,10 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <button onClick={connect} className="group relative overflow-hidden rounded-xl bg-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider text-white transition-all hover:scale-105 active:scale-95 shadow-[0_10px_25px_rgba(249,115,22,0.3)]">
+            <Button size="sm" onClick={connect} className="group relative overflow-hidden rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-[0_10px_25px_rgba(249,115,22,0.3)]">
               <span className="relative z-10">Connect</span>
               <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-            </button>
+            </Button>
           )}
         </div>
       </div>
