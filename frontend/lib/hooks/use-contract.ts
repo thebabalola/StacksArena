@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Cl, fetchCallReadOnlyFunction, cvToJSON } from '@stacks/transactions';
-import { useToast } from "@/components/ArenaToastProvider";
+import { useToast } from '@/components/features/core/ArenaToastProvider';
 import { CONTRACTS, STACKS_NETWORK_CONFIG } from '../constants/contracts';
 import { useStacks } from './use-stacks';
 import { executeContractAction } from '../stacks-actions';

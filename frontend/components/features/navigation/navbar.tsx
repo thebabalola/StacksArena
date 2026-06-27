@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useStacks } from "@/lib/hooks/use-stacks";
-import { ThemeToggle } from "./ui/theme-toggle";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { 
   ChevronDown, 
   User, 

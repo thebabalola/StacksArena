@@ -1,6 +1,6 @@
 "use client";
 
-import { VaultListSkeleton } from "@/components/ArenaSkeletons";
+import { VaultListSkeleton } from '@/components/features/arena/ArenaSkeletons';
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import {

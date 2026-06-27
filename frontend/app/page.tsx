@@ -1,7 +1,7 @@
 "use client";
 
-import ArenaOnboardingTour from "@/components/ArenaOnboardingTour";
-import { StatsSkeleton } from "@/components/ArenaSkeletons";
+import ArenaOnboardingTour from '@/components/features/onboarding/ArenaOnboardingTour';
+import { StatsSkeleton } from '@/components/features/arena/ArenaSkeletons';
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Orbitron, Bebas_Neue } from "next/font/google";
-import { Navbar } from "./components/navbar";
-import { Sidebar } from "./components/sidebar";
-import { Footer } from "./components/footer";
-import { ThemeProvider } from "./components/providers/theme-provider";
-import { ArenaToastProvider } from "@/components/ArenaToastProvider";
+import { Navbar } from '@/components/features/navigation/navbar';
+import { Sidebar } from '@/components/features/navigation/sidebar';
+import { Footer } from '@/components/features/core/footer';
+import { ThemeProvider } from '@/components/providers/theme-provider';
+import { ArenaToastProvider } from '@/components/features/core/ArenaToastProvider';
 import "./globals.css";
 
 const orbitron = Orbitron({

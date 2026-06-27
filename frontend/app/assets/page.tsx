@@ -35,7 +35,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/app/components/ui/dialog";
+} from '@/components/ui/dialog';
 
 export default function AssetsPage() {
   const { connect, isConnected, stxAddress } = useStacks();
