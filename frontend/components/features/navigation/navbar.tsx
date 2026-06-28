@@ -72,14 +72,14 @@ export function Navbar() {
           {isConnected ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary/10 hover:bg-secondary/20 transition-all border border-border/50 shadow-2xl group overflow-hidden relative">
+                <Button variant="secondary" className="flex items-center gap-2 px-4 py-2 rounded-xl transition-all border border-border/50 shadow-2xl group overflow-hidden relative">
                   <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center relative z-10">
                     <User className="w-3.5 h-3.5 text-primary" />
                   </div>
                   <span className="font-bold text-xs text-foreground relative z-10">{formatAddress(stxAddress)}</span>
                   <ChevronDown className="w-3.5 h-3.5 text-muted-foreground group-data-[state=open]:rotate-180 transition-transform relative z-10" />
-                </button>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52 glass-panel p-2 text-foreground border-border/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
                 <DropdownMenuItem onClick={disconnect} className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer text-red-500 focus:text-red-500 focus:bg-red-500/10 transition-colors">
@@ -109,14 +109,14 @@ export function Navbar() {
           {isConnected ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary/10 hover:bg-secondary/20 transition-all border border-border/50 shadow-2xl group overflow-hidden relative">
+                <Button variant="secondary" className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all border border-border/50 shadow-2xl group overflow-hidden relative">
                   <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="w-5 h-5 rounded-md bg-primary/20 flex items-center justify-center relative z-10">
                     <User className="w-3 h-3 text-primary" />
                   </div>
                   <span className="font-bold text-[10px] text-foreground relative z-10">{formatAddress(stxAddress)}</span>
                   <ChevronDown className="w-3 h-3 text-muted-foreground group-data-[state=open]:rotate-180 transition-transform relative z-10" />
-                </button>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 glass-panel p-1.5 text-foreground border-border/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
                 <div className="px-2.5 py-2 border-b border-border/50 mb-1 flex items-center gap-2">
