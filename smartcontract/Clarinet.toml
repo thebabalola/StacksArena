@@ -8,28 +8,28 @@ requirements = []
 
 [contracts.stacksarena-ConditionEngine-fix]
 path = 'contracts/ConditionEngine.clar'
-clarity_version = 2
-epoch = '2.5'
+clarity_version = 4
+epoch = '3.3'
 
 [contracts.stacksarena-CommitVaults-v2]
 path = 'contracts/CommitVault.clar'
-clarity_version = 2
-epoch = '2.5'
+clarity_version = 4
+epoch = '3.3'
 
 [contracts.stacksarena-VaultFactory-fix]
 path = 'contracts/VaultFactory.clar'
-clarity_version = 2
-epoch = '2.5'
+clarity_version = 4
+epoch = '3.3'
 
 [contracts.stacksarena-sip-010-trait-fix]
 path = 'contracts/sip-010-trait-ft-standard.clar'
-clarity_version = 2
-epoch = '2.5'
+clarity_version = 4
+epoch = '3.3'
 
 [contracts.vault-factory-trait]
 path = 'contracts/vault-factory-trait.clar'
-clarity_version = 2
-epoch = '2.5'
+clarity_version = 4
+epoch = '3.3'
 
 [repl.analysis]
 passes = ['check_checker']
