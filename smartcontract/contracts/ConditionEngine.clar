@@ -11,20 +11,19 @@
 (define-constant CONDITION_MILESTONE u4)
 
 ;; @desc Evaluates a time-based condition
-;; @param target-block: The block height at which the vault unlocks
-(define-read-only (evaluate-time-lock (target-block uint))
-    (if (>= block-height target-block)
+;; @param target-time: The timestamp at which the vault unlocks
+(define-read-only (evaluate-time-lock (target-time uint))
+    (if (>= stacks-block-time target-time)
         (ok true)
         (ok false)
     )
 )
 
 ;; @desc Evaluates if a penalty-based unlock is eligible
-;; @param current-block: The current block height
 ;; @param lock-start: When the lock started
 ;; @param duration: Minimum duration for no penalty
 (define-read-only (is-penalty-period (lock-start uint) (duration uint))
-    (if (< block-height (+ lock-start duration))
+    (if (< stacks-block-time (+ lock-start duration))
         (ok true) ;; Still in penalty period
         (ok false) ;; Penalty period over
     )
