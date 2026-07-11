@@ -125,7 +125,7 @@
         balance: uint,
         initial-balance: uint,
         lock-start: uint,
-        target-block: uint,
+        target-time: uint,
         penalty-rate: uint,
         threshold: uint,
         approval-count: uint,
@@ -167,14 +167,14 @@
 )
 
 ;; @desc Create a new vault (supports STX and SIP-010)
-(define-public (create-vault (amount uint) (target-block uint) (penalty-rate uint) (threshold uint) (token-contract (optional <sip010-trait>)) (milestones uint) (factory-contract <vault-factory-trait>))
+(define-public (create-vault (amount uint) (target-time uint) (penalty-rate uint) (threshold uint) (token-contract (optional <sip010-trait>)) (milestones uint) (factory-contract <vault-factory-trait>))
     (let
         (
             (vault-id (var-get next-vault-id))
             (token (match token-contract t (some (contract-of t)) none))
         )
         (asserts! (> amount u0) ERR_INVALID_PARAMS)
-        (asserts! (>= target-block block-height) ERR_INVALID_PARAMS)
+        (asserts! (>= target-time stacks-block-time) ERR_INVALID_PARAMS)
         (asserts! (<= penalty-rate u100) ERR_INVALID_PARAMS)
         (asserts! (>= threshold u1) ERR_INVALID_PARAMS)
         (asserts! (>= milestones u1) ERR_INVALID_PARAMS)
@@ -189,8 +189,8 @@
             owner: tx-sender,
             balance: amount,
             initial-balance: amount,
-            lock-start: block-height,
-            target-block: target-block,
+            lock-start: stacks-block-time,
+            target-time: target-time,
             penalty-rate: penalty-rate,
             threshold: threshold,
             approval-count: u0,
@@ -202,7 +202,7 @@
         
         (unwrap-panic (track-vault amount factory-contract))
         (var-set next-vault-id (+ vault-id u1))
-        (print { event: "vault-created", vault-id: vault-id, owner: tx-sender, amount: amount, target-block: target-block, milestones: milestones })
+        (print { event: "vault-created", vault-id: vault-id, owner: tx-sender, amount: amount, target-time: target-time, milestones: milestones })
         (ok vault-id)
     )
 )
@@ -262,7 +262,7 @@
     (let
         (
             (vault (unwrap! (map-get? vaults vault-id) ERR_NOT_FOUND))
-            (is-time-unlocked (unwrap-panic (contract-call? .stacksarena-ConditionEngine-fix evaluate-time-lock (get target-block vault))))
+            (is-time-unlocked (unwrap-panic (contract-call? .stacksarena-ConditionEngine-fix evaluate-time-lock (get target-time vault))))
             (is-multisig-met (unwrap-panic (contract-call? .stacksarena-ConditionEngine-fix evaluate-multisig (get approval-count vault) (get threshold vault))))
         )
         (asserts! (is-eq tx-sender (get owner vault)) ERR_UNAUTHORIZED)
